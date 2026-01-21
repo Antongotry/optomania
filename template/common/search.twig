@@ -1,0 +1,122 @@
+<div class="pr-header-search flex-grow-1">
+	<div class="d-flex align-items-center gap-3 px-3 px-md-0 py-2 py-md-0">
+		<form id="search" class="w-100 d-block position-relative">
+			<input id="searchInput" type="text" name="search" value="{{ search }}" placeholder="{{ search_input_header_text }}" class="pr-header-search-input br-8 border-2 py-2 px-3 fsz-12 w-100">
+			<button type="button" id="pr-search-button" class="no-btn position-absolute" aria-label="Search">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 19" fill="none">
+					<path d="M1 17.5L4.86057 13.6394M17 8.61111C17 12.5385 13.8162 15.7222 9.88889 15.7222C5.96153 15.7222 2.77778 12.5385 2.77778 8.61111C2.77778 4.68375 5.96153 1.5 9.88889 1.5C13.8162 1.5 17 4.68375 17 8.61111Z" stroke="var(--pr-primary-light-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</button>
+		</form>
+		<button type="button" class="pr-header-search-close button-close d-md-none br-8" aria-label="Close search">
+			<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+				<path d="M1 1L13 13M13 1L1 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+		</button>
+	</div>
+	{% if oct_live_search_status %}
+		<div id="liveSearch" class="pr-livesearch bg-grey p-3 p-md-0 d-none">
+			<div class="pr-livesearch-inner content-block d-flex flex-column px-0"></div>
+		</div>
+	{% endif %}
+</div>
+
+{% if oct_live_search_status %}
+	<script>
+		function clearLiveSearch() {
+			$('#overlay').removeClass('active');
+			$('#overlay').removeClass('transparent');
+			$('#liveSearch').removeClass('expanded').addClass('d-none');
+			$('.pr-livesearch-inner').html('');
+			$('#searchInput').val('').removeClass('active');
+			$('body').removeClass('no-scroll');
+			
+			if(!$('.pr-header-search').hasClass('active')) {
+				$('header').removeAttr('style');
+			}
+		}
+
+		$(document).ready(function() {
+
+			let timer, delay = {{ delay_setting }}, searchCloseBtn = document.querySelector('.pr-header-search-close');
+
+			searchCloseBtn.addEventListener('click', function() {
+				clearLiveSearch();
+			});
+
+			$('#searchInput').keyup(function(event) {
+				switch(event.keyCode) {
+					case 37:
+					case 39:
+					case 38:
+					case 40:
+						return;
+					case 27:
+						clearLiveSearch();
+						return;
+				}
+
+				clearTimeout(timer);
+
+				timer = setTimeout(function() {
+					let value = $('#search input[name=\'search\']').val();
+					const overlay = document.getElementById('overlay');
+
+					if (value.length >= {{ count_symbol }}) {
+						let key = encodeURIComponent(value);
+						octsearch.search(key, 'desktop');
+					} else if (value.length === 0) {
+						clearLiveSearch();
+					}
+
+					overlay.addEventListener('click', (e) => {
+						const target = e.target;
+						target.classList.remove('active');
+						clearLiveSearch();
+					});
+
+				}, delay );
+			});
+		});
+
+		var octsearch = {
+			'search': function(key, type) {
+				$.ajax({
+					url: 'index.php?route=octemplates/module/oct_live_search',
+					type: 'post',
+					data: 'key=' + key,
+					dataType: 'html',
+					cache: false,
+					beforeSend: function() {
+						let width = window.innerWidth;
+
+						$('#liveSearch').addClass('expanded').removeClass('d-none');
+
+						if (width > 992) {
+							$('header').attr('style', 'z-index: 12002;');
+						}
+
+						masked('body', true);
+
+						$('body').addClass('no-scroll');
+					},
+					success: function(data) {
+						$('.pr-livesearch-inner').html(data);
+						$('#searchInput, #overlay').addClass('active');
+						$('#overlay').addClass('transparent');
+					},
+					complete: function() {
+						$('#search .spinner-border').remove();
+						masked('body', false);
+						
+						$('header').click(function(e) {
+							if (!$(e.target).closest('.pr-header-search').length) {
+								clearLiveSearch();
+							}
+						});
+					}
+				});
+			}
+		}
+	</script>
+{% endif %}

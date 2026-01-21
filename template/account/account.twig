@@ -1,0 +1,97 @@
+{{ header }}
+<div id="account-account" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if success %}
+		<script>
+			prNotify('success', '{{ success }}');
+		</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+			    <div class="content-block pr-account-account">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 22 23" fill="none">
+							<path d="M2.35115 20.8307L3.45034 19.2919C4.70175 17.5399 6.72222 16.5001 8.87523 16.5001H13.1248C15.2778 16.5001 17.2983 17.5399 18.5497 19.2919L19.6489 20.8307M4.33333 1.50012H17.6667C19.5076 1.50012 21 2.99251 21 4.83346V18.1668C21 20.0077 19.5076 21.5001 17.6667 21.5001H4.33333C2.49238 21.5001 1 20.0077 1 18.1668V4.83346C1 2.99251 2.49238 1.50012 4.33333 1.50012ZM14.6111 9.00012C14.6111 10.9945 12.9944 12.6112 11 12.6112C9.00564 12.6112 7.38889 10.9945 7.38889 9.00012C7.38889 7.00576 9.00564 5.38901 11 5.38901C12.9944 5.38901 14.6111 7.00576 14.6111 9.00012Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+						</svg>
+						<h1>{{ heading_title }}</h1>
+					</div>
+			      	<div class="fsz-14 dark-grey-text mb-3 border-bottom pb-3 pb-xl-4">
+			      		<p>{{ oct_account_main_text }}</p>
+						<p>{{ oct_account_main_text_contact }} <a href="{{ url_contacts }}">"{{ oct_account_main_contacts }}"</a>.</p>
+			      	</div>
+					<div class="pr-account-block-title dark-text fw-600 mb-3 d-flex align-items-center">{{ oct_account_main_info }}</div>
+					<div class="table-responsive fsz-14 fw-300 br-8">
+					    <table class="table table-bordered">
+					       	<thead>
+					         	<tr>
+						            <th scope="col">{{ oct_account_name }}</th>
+						            <th scope="col">{{ oct_account_email }}</th>
+					            </tr>
+					        </thead>
+					        <tbody>
+					            <tr>
+					                <td>{{ firstname }}</td>
+					            	<td>
+					            		<div class"d-flex justify-content-between"><span class="me-3">{{ email }}</span>&nbsp;<a href="{{ edit }}" class="blue-link">{{ oct_account_edit }}</a></div>
+					            	</td>
+					          	</tr>
+					        </tbody>
+					    </table>
+					</div>
+					<div class="pr-account-block-title dark-text fw-600 mb-3 d-flex align-items-center">{{ text_order }}</div>
+					<div class="table-responsive fsz-14 fw-300 br-8">
+					    <table class="table table-hover table-bordered">
+					       	<thead>
+					         	<tr>
+						            <th scope="col">{{ oct_account_n_order }}</th>
+						            <th scope="col">{{ oct_account_order_status }}</th>
+						            <th scope="col">{{ oct_account_order_date }}</th>
+						            <th scope="col">{{ oct_account_order_amount }}</th>
+					            </tr>
+					        </thead>
+					        <tbody>
+								{% if orders|length >= 1 %}
+									{% for order in orders %}
+									<tr>
+										<td><a href="{{ order.href }}">#{{ order.order_id }}</a></td>
+										<td>{{ order.status }}</td>
+										<td>{{ order.date_added }}</td>
+										<td>{{ order.total }}</td>
+									</tr>
+									{% endfor %}
+								{% else %}
+									<tr>
+										<td colspan="4">{{ oct_account_no_orders }}</td>
+									</tr>
+								{% endif %}
+					        </tbody>
+					    </table>
+					</div>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

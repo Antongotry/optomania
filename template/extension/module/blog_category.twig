@@ -1,0 +1,27 @@
+<div class="content-block p-0 overflow-hidden">
+	<ul class="list-unstyled pr-column-categories fw-500 fsz-14 p-0">
+		{% for category in categories %}
+			<li class="pr-column-categories-item{% if category.blog_category_id == blog_category_id %} active{% endif %}">
+				<span class="d-flex justify-content-between">
+					<a href="{{ category.href }}">{{ category.name }}</a>
+					{% if category.children %}
+						<button type="button" class="pr-column-categories-toggle pr-btn pr-btn-secondary pr-btn-with-icon br-4 p-0 d-flex align-items-center justify-content-center" aria-label="Expand">
+							<span class="pr-btn-icon pr-btn-icon-chevron"></span>
+						</button>
+					{% endif %}
+				</span>
+				{% if category.children %}
+					<ul class="pr-column-categories-children pr-categories-2 list-unstyled ps-0">
+						{% for child in category.children %}
+							<li class="pr-column-categories-item{% if child.blog_category_id == child_id %} active{% endif %}">
+								<span class="d-flex justify-content-between">
+									<a href="{{ child.href }}">{{ child.name }}</a>
+								</span>
+							</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+</div>

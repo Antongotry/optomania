@@ -1,0 +1,96 @@
+<div class="modal fade" id="subscribeModal" tabindex="-1" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+			<div class="modal-header p-4 bg-grey">
+	            <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="subscribeModalLabel">{{ heading_title }}</h5>
+	            <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <div id="subscribe-main-block" class="modal-body p-4">
+	            <div class="subscribe-text">
+	            	{{ promo_text }}
+	            </div>
+				{% if thumb %}
+					<img class="d-block mx-auto" src="image/{{ thumb }}" alt="subscribe-img" width="390" height="290">
+				{% endif %}
+	            <div class="input-group mt-4">
+					<span class="input-group-text" id="emailSubscribeIcon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+							<path d="M17 3.0001V11.0001C17 12.3256 15.9255 13.4001 14.6 13.4001H3.4C2.07452 13.4001 1 12.3256 1 11.0001V3.0001M17 3.0001C17 1.67461 15.9255 0.600098 14.6 0.600098H3.4C2.07452 0.600098 1 1.67461 1 3.0001M17 3.0001V3.25406C17 3.83757 16.6823 4.37481 16.1711 4.65601L10.1566 7.96396C9.43641 8.36007 8.56359 8.36007 7.8434 7.96396L1.82893 4.65601C1.31765 4.37481 1 3.83757 1 3.25406V3.0001" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+						</svg>
+					</span>
+					<div class="form-floating">
+						<input type="email" name="email" value="{{ email }}" class="form-control" id="inputEmailSubscribe" placeholder="{{ enter_email }}" inputmode="email" aria-label="email" aria-describedby="emailSubscribeIcon">
+						<label class="px-3 secondary-text fsz-14" for="inputEmailSubscribe">{{ enter_email }}</label>
+					</div>
+				</div>
+				{% if text_terms %}
+					<div class="form-check d-flex align-items-center gap-2 py-3">
+						<input id="agreeSubscribeCheck" type="checkbox" class="form-check-input" name="agree">
+						<label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="agreeSubscribeCheck">
+							{{ text_terms }}
+						</label>
+					</div>
+				{% endif %}
+				<button type="submit" id="make_subscribe" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_subscribe }}</button>
+				<div class="pr-popup-successs d-none flex-column align-items-center">
+                    <div id="popupSuccessSubscribeText" class="dark-text fw-500 text-center"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="164" height="164" viewBox="0 0 164 164" fill="none" class="oct-success-svg">
+						<rect class="oct-outer-circle" width="164" height="164" rx="82" fill="#E0FFE5"/>
+						<rect class="oct-inner-circle" x="32" y="32" width="100" height="100" rx="50" fill="#4CD964"/>
+						<path class="oct-checkmark" d="M100.04 68.6039L97.6421 66.6739C96.4601 65.7239 95.7731 65.7349 94.7611 66.9849L77.3321 88.4939L69.2211 81.7549C68.1021 80.8149 67.4021 80.8649 66.4821 82.0149L64.6311 84.4249C63.6921 85.6069 63.8121 86.2779 64.9221 87.2049L76.4821 96.7669C77.6721 97.7669 78.3421 97.6639 79.2621 96.5449L100.341 71.4839C101.331 70.2939 101.271 69.5829 100.04 68.6039Z" fill="white"/>
+					</svg>
+                    <button type="button" class="button button-primary button-large w-100 py-3 fsz-14" data-bs-dismiss="modal">{{ oct_info_bar_close }}</button>
+                </div>
+			</div>
+	    </div>
+	</div>
+<script>
+	const subscribePopupUrl = '{{ ajax_subscribe_url|raw }}';
+
+	$("#inputEmailSubscribe, #agreeSubscribeCheck").on("change paste keyup", function() {
+		$(this).removeClass('error_style');
+	});
+
+	$('#make_subscribe').on('click', function() {
+		$.ajax({
+			type: 'post',
+			url: subscribePopupUrl,
+			dataType: 'json',
+			cache: false,
+			data: $('#subscribeModal input[type=\'email\'], #subscribeModal input[type=\'checkbox\']').serialize(),
+			beforeSend: function() {
+				masked('body', true);
+
+				$('#make_subscribe').data('original-content', $('#make_subscribe').html());
+				$('#make_subscribe').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+			},
+			complete: function() {
+				masked('body', false);
+
+				setTimeout(function() {
+					$('#make_subscribe').html($('#make_subscribe').data('original-content')).prop('disabled', false);
+				}, 600);
+			},
+			success: function(json) {
+				if (json['error']) {
+					$('#subscribeModal .text-danger').remove();
+					let errorOption = '';
+
+					$.each(json['error'], function(i, val) {
+						$('#subscribeModal [name="' + i + '"]').addClass('error_style');
+						errorOption += '<div class="alert-text-item">' + val + '</div>';
+					});
+
+					prNotify('danger', errorOption);
+				} else {
+					if (json['output']) {
+						$('#popupSuccessSubscribeText').html(json['output']);
+						$("#subscribe-main-block").html($(".pr-popup-successs"));
+						$(".pr-popup-successs").removeClass("d-none").addClass("d-flex");
+					}
+				}
+			}
+		});
+	});
+</script>
+</div>

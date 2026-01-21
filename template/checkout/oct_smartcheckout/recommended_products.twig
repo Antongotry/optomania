@@ -1,0 +1,40 @@
+{% if recommended_poducts %}
+<div class="pr-smart-checkout-title fsz-20 fw-700 dark-text d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 pb-4 mb-4 border-bottom">{% if not title %}{{ text_recommended_products }}{% else %}{{ title }}{% endif %}</div>
+{% if description %}
+    <div class="pr-cart-column-description fsz-14 grey-text mb-3">{{ description }}</div>
+{% endif %}
+<div class="pr-sidebar-cart-recommended-products d-flex overflow-x-auto gap-3">
+    {% for product in recommended_poducts %}
+        <div class="pr-sidebar-cart-recommended-product checkout-recommended-products position-relative content-block br-12 d-flex flex-column">
+            <div class="pr-sidebar-cart-recommended-product-image">
+                <a href="{{ product.href }}">
+                    <img class="d-block mx-auto" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}"/>
+                </a>
+            </div>
+            <a href="{{ product.href }}" class="pr-sidebar-cart-recommended-product-title fsz-14 fw-500 my-3 d-inline-block">{{ product.name }}</a>
+            <div class="pr-sidebar-cart-recommended-product-price d-flex justify-content-between align-items-end mt-auto">
+                <div class="pr-sidebar-cart-recommended-product-price fw-500">
+                {% if product.special %}
+                    <div class="pr-sidebar-cart-recommended-product-price-old fsz-12 light-text text-decoration-line-through">
+                        {{ product.price }}
+                    </div>
+                    <div class="pr-sidebar-cart-recommended-product-price red fsz-22 fw-600">
+                        {{ product.special }}
+                    </div>
+                {% else %}
+                    <div class="pr-sidebar-cart-recommended-product-price fsz-22 fw-600">
+                        {{ product.price }}
+                    </div>
+                {% endif %}
+                </div>
+                <button type="button" onclick="addToCartFromCheckout({{ product.product_id }});" aria-label="To cart" class="button button-primary button-cart pr-sidebar-cart-recommended-product-button br-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M15.4031 13.7993H6.9931C5.83794 13.7993 4.84659 12.9766 4.6337 11.8412L2.84511 2.302C2.70318 1.54508 2.04228 0.996582 1.27218 0.996582H1M6.20111 16.5999C6.20111 16.8209 6.02198 17 5.80102 17C5.58006 17 5.40094 16.8209 5.40094 16.5999M6.20111 16.5999C6.20111 16.3789 6.02198 16.1998 5.80102 16.1998C5.58006 16.1998 5.40094 16.3789 5.40094 16.5999M6.20111 16.5999H5.40094M15.003 16.5999C15.003 16.8209 14.8239 17 14.6029 17C14.3819 17 14.2028 16.8209 14.2028 16.5999M15.003 16.5999C15.003 16.3789 14.8239 16.1998 14.6029 16.1998C14.3819 16.1998 14.2028 16.3789 14.2028 16.5999M15.003 16.5999H14.2028M2.9004 2.59692H15.3993C16.3784 2.59692 17.1279 3.46815 16.9817 4.43621L16.2568 9.23723C16.1386 10.0199 15.4659 10.5986 14.6744 10.5986H4.40072L2.9004 2.59692Z" stroke="#FFFDFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+                <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}

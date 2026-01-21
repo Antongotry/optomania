@@ -1,0 +1,68 @@
+{{ header }}
+<div id="account-download" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+				<div class="content-block pr-account-account">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+					{% if downloads %}
+						<div class="table-responsive fsz-14 fw-300">
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th>{{ column_order_id }}</th>
+										<th>{{ column_name }}</th>
+										<th>{{ column_size }}</th>
+										<th>{{ column_date_added }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for download in downloads %}
+										<tr>
+											<td>{{ download.order_id }}</td>
+											<td>{{ download.name }} <a href="{{ download.href }}" data-toggle="tooltip" title="{{ button_download }}"><i class="fa fa-file-download"></i></a></td>
+											<td>{{ download.size }}</td>
+											<td>{{ download.date_added }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="row my-3 dark-text fsz-14">
+							<div class="col-sm-6 text-left">{{ pagination }}</div>
+							<div class="col-sm-6 text-right">{{ results }}</div>
+						</div>
+					{% else %}
+						<div class="fw-500 mb-3 dark-text">{{ text_empty }}</div>
+					{% endif %}
+					<a href="{{ continue }}" class="button button-secondary button-large">{{ button_continue }}</a>
+				</div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

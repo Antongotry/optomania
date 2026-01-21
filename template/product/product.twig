@@ -1,0 +1,1735 @@
+{{ header }}
+<div id="product-product" class="container-xl flex-grow-1 pr-product">
+ 	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    {% if oct_promo_data.micro is defined and oct_promo_data.micro %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+            {% for breadcrumb in breadcrumbs %}
+                {% if loop.first %}
+                {% else %}
+                {
+                    "@type": "ListItem",
+                    "position": {{ loop.index -1 }},
+                    "item":
+                    {
+                        "@id": "{{ breadcrumb.href }}",
+                        "name": "{{ breadcrumb.text }}"
+                    }
+                }{% if not loop.last %},{% endif %}
+                {% endif %}
+            {% endfor %}
+        ]
+    }
+    </script>
+    {% endif %}
+    <main>
+        <div class="content-top-box">{{ content_top }}</div>
+        <div id="content" class="pr-product-main position-relative">
+            <div class="pr-product-main-block col-lg-7 col-xl-8">
+                <div class="pr-product-tabs sticky-top bg-white br-12 mb-3 overflow-hidden pr-sticky-column">
+                    <div id="oct-tabs" class="pr-product-tabs-box d-flex align-items-stretch w-100 overflow-x-auto fsz-14 fw-500 dark-text">
+                        <div data-tab-target=".pr-product-tab-main-content" class="pr-product-tabs-item d-flex align-items-center justify-content-center active">
+                            {{ oct_product_maintab }}
+                        </div>
+                        {% if description %}
+                            <div data-tab-target=".pr-product-tab-description" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                                {{ oct_product_description }}
+                            </div>
+                        {% endif %}
+                        {% if attribute_groups %}
+                            <div data-tab-target=".pr-product-tab-attributes" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                                {{ tab_attribute }}
+                            </div>
+                        {% endif %}
+                        {% if review_status %}
+                            <div data-tab-target=".pr-product-tab-reviews" class="pr-product-tabs-item pr-product-review-toggle d-flex align-items-center justify-content-center gap-2">
+                                {{ oct_product_tab_reviews }}
+                                <span class="pr-product-tabs-badge d-grid fsz-10 fw-700">{{ total_reviews }}</span>
+                            </div>
+                        {% endif %}
+                        {% if oct_product_faq %}
+                            <div data-tab-target=".pr-product-tab-faq" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                                {{ tab_oct_faq }}
+                            </div>
+                        {% endif %}
+                        {% if (dop_tab.title is defined and dop_tab.title) and (dop_tab.text is defined and dop_tab.text) %}
+                        <div data-tab-target=".pr-product-tab-dop_tab" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                            {{ dop_tab.title }}
+                        </div>
+                        {% endif %}
+                        {% if oct_product_extra_tabs %}
+                            {% set key = 0 %}
+                            {% for extra_tab in oct_product_extra_tabs %}
+                                {% set key = key + 1 %}
+                                <div data-tab-target=".pr-product-tab-extra_tab-{{ key }}" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                                    {{ extra_tab.title }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if products %}
+                            <div data-tab-target=".pr-product-tab-related" class="pr-product-tabs-item d-flex align-items-center justify-content-center">
+                                {{ oct_related_products }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <script>
+                        window.addEventListener('DOMContentLoaded', () => {
+                            octProductTabs();
+                        });
+                    </script>
+                </div>
+                <div class="content-block pr-product-tab-main-content pr-product-tab-content">
+                    <div class="row flex-column flex-xl-row g-3 g-lg-4">
+                        <div class="col-xl-5">
+                            <div class="pr-product-images sticky-top pr-sticky-column pr-product-sticky-block-column z-1">
+                                {% if oct_product_stickers %}
+                                    <div class="pr-product-stickers position-absolute">
+                                        <div class="pr-module-item-stickers-box d-flex justify-content-between align-items-start fsz-12 fw-500 gap-2">
+                                            <div class="pr-module-item-stickers-images d-flex gap-1">
+                                                {% for key, oct_sticker in oct_product_stickers %}
+                                                    {% if oct_sticker is iterable and oct_sticker.image is defined %}
+                                                        <img src="{{ oct_sticker.image }}" alt="{{ oct_sticker.title }}" data-bs-html="true" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover" title="{{ oct_sticker.title }}" data-bs-content="{{ oct_sticker.description }}" width="{{ oct_sticker.image_width|default(20) }}" height="{{ oct_sticker.image_height|default(20) }}" />
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="pr-module-item-stickers d-flex align-items-start gap-1 white-text flex-wrap">
+                                                {% for key, oct_sticker in oct_product_stickers %}
+                                                    {% if oct_sticker is not iterable %}
+                                                        <div class="pr-module-item-sticker pr-module-item-sticker-sale br-4 px-2 pr-module-sticker-{{ key }}">{{ oct_sticker }}</div>
+                                                    {% elseif oct_sticker is iterable and oct_sticker.image is not defined %}
+                                                        <div class="pr-module-item-sticker pr-module-item-sticker-sale br-4 px-2 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                    {% elseif oct_sticker is iterable and oct_sticker.image is defined and not oct_sticker.image_only %}
+                                                        <div class="pr-module-item-sticker pr-module-item-sticker-sale br-4 px-2 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if thumb or images or youtube_videos %}
+                                    {% if thumb %}
+                                        {% set totalSlides = 1 + images|length + (youtube_videos|length|default(0)) %}
+                                        {% if totalSlides == 1 %}
+                                            <div class="pr-product-images-main" style="aspect-ratio: {{ thumb_width }} / {{ thumb_height }};">
+                                                <div class="mb-5 mb-xl-0">
+                                                    <span data-fancybox="gallery" data-src="{{ popup }}" class="oct-gallery d-block">
+                                                        <img src="{{ thumb }}" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ thumb_width }}" height="{{ thumb_height }}" loading="lazy" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        {% elseif totalSlides > 1 %}
+                                            <div class="pr-product-images-main swiper" style="aspect-ratio: {{ thumb_width }} / {{ thumb_height }};">
+                                                <div class="swiper-wrapper mb-5 mb-xl-0">
+                                                    <div class="swiper-slide">
+                                                        <span data-fancybox="gallery" data-src="{{ popup }}" class="oct-gallery d-block">
+                                                            <img src="{{ thumb }}" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ thumb_width }}" height="{{ thumb_height }}" loading="lazy" />
+                                                        </span>
+                                                    </div>
+                                                    {% for key, image in images %}
+                                                        {% set i = key + 1 %}
+                                                        {% if loop.index0 > 0 %}
+                                                            <div class="swiper-slide">
+                                                                <span data-fancybox="gallery" data-src="{{ image.popup_fancy }}" class="oct-gallery d-block">
+                                                                    <img src="{{ image.popup }}" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ thumb_width }}" height="{{ thumb_height }}" loading="lazy" />
+                                                                </span>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if youtube_videos %}
+                                                        {% for video in youtube_videos %}
+                                                            <div class="swiper-slide pr-product-video-slide" data-video-id="{{ video.video_id }}">
+                                                                <span data-fancybox="gallery" data-src="https://www.youtube.com/embed/{{ video.video_id }}?autoplay=1&rel=0" class="oct-gallery oct-gallery-video d-block pr-product-video-wrapper position-relative" style="cursor: pointer;">
+                                                                    <img src="https://img.youtube.com/vi/{{ video.video_id }}/maxresdefault.jpg" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ thumb_width }}" height="{{ thumb_height }}" loading="lazy" />
+                                                                    <div class="pr-video-play-button position-absolute top-50 start-50 translate-middle">
+                                                                        <svg width="68" height="48" viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+                                                                            <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+                                                                        </svg>
+                                                                    </div>
+                                                                </span>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="swiper-button swiper-button-next button button-light p-2" tabindex="0" role="button" aria-label="Next slide">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                                                    <path d="M1 13L7 7L1 1" stroke="#121715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="swiper-button swiper-button-prev button button-light p-2" tabindex="0" role="button" aria-label="Previous slide">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                                                        <path d="M7 1L1 7L7 13" stroke="#121715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if images or youtube_videos %}
+                                        <div class="pr-product-images-additional mt-3 mt-lg-4 swiper">
+                                            <div class="swiper-wrapper">
+                                                {% if images %}
+                                                    {% for key, image in images %}
+                                                        {% set i = key + 1 %}
+                                                        <div class="swiper-slide">
+                                                            <span class="pr-product-images-additional-item d-block" data-href="{{ image.popup }}">
+                                                                <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" width="{{ image.images_width }}" height="{{ image.images_height }}" />
+                                                            </span>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if youtube_videos %}
+                                                    {% for video in youtube_videos %}
+                                                        <div class="swiper-slide">
+                                                            <span class="pr-product-images-additional-item pr-product-video-thumb d-block position-relative" data-video-id="{{ video.video_id }}">
+                                                                <img src="https://img.youtube.com/vi/{{ video.video_id }}/default.jpg" title="{{ heading_title }}" alt="{{ heading_title }}" width="{{ images[0].images_width|default(100) }}" height="{{ images[0].images_height|default(100) }}" />
+                                                                <span class="pr-video-thumb-icon position-absolute top-50 start-50 translate-middle">
+                                                                    <svg width="24" height="24" viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+                                                                        <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+                                                                    </svg>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <script>
+
+                                        window.addEventListener('DOMContentLoaded', () => {
+
+                                            function sliderProducts() {
+                                                var sliderProducts = $('.pr-product-images-main .oct-gallery');
+
+                                                sliderProducts.on('click', function(e) {
+                                                    e.preventDefault();
+
+                                                    var totalSlides = $(this).parents('.pr-product-images-main').find('.swiper-slide').length,
+                                                    dataIndex = $(this).parents('.swiper-slide').data('swiper-slide-index');
+
+                                                    $.fancybox.open(sliderProducts, {backFocus: false, hideScrollbar: false, loop : true}, dataIndex);
+
+                                                    return false;
+                                                });
+                                            }
+
+                                            sliderProducts();
+
+                                            {% if images %}
+                                                var additionalImagesSwiper = new Swiper(".pr-product-images-additional", {
+                                                    loop: true,
+                                                    spaceBetween: 8,
+                                                    slidesPerView: 8,
+                                                    slideToClickedSlide: true,
+                                                    speed: 500,
+                                                    breakpoints: {
+                                                        0: {
+                                                            slidesPerView: 5,
+                                                            loop: {{ images|length > 5 ? 'true' : 'false' }},
+                                                        },
+                                                        360: {
+                                                            slidesPerView: 6,
+                                                            loop: {{ images|length > 6 ? 'true' : 'false' }},
+                                                        },
+                                                        420: {
+                                                            slidesPerView: 7,
+                                                            loop: {{ images|length > 7 ? 'true' : 'false' }},
+                                                        },
+                                                        576: {
+                                                            slidesPerView: 10,
+                                                            loop: {{ images|length > 10 ? 'true' : 'false' }},
+                                                        },
+                                                        768: {
+                                                            slidesPerView: 14,
+                                                            loop: {{ images|length > 14 ? 'true' : 'false' }},
+                                                        },
+                                                        992: {
+                                                            slidesPerView: 12,
+                                                            loop: {{ images|length > 12 ? 'true' : 'false' }},
+                                                        },
+                                                        1200: {
+                                                            slidesPerView: 5,
+                                                            loop: {{ images|length > 5 ? 'true' : 'false' }},
+                                                        },
+                                                        1400: {
+                                                            slidesPerView: 7,
+                                                            loop: {{ images|length > 7 ? 'true' : 'false' }},
+                                                        },
+                                                        1600: {
+                                                            slidesPerView: 8,
+                                                            loop: {{ images|length > 8 ? 'true' : 'false' }},
+                                                        }
+                                                    }
+                                                });
+
+                                                const mainImageSwiperContainer = document.querySelector('.pr-product-images-main');
+
+                                                let mainImagesSwiper;
+
+                                                function initMainSwiper() {
+                                                    mainImagesSwiper = new Swiper('.pr-product-images-main', {
+                                                        loop: true,
+                                                        spaceBetween: 0,
+                                                        slidesPerView: 1,
+                                                        slideToClickedSlide: true,
+                                                        speed: 500,
+                                                        navigation: {
+                                                            enabled: true,
+                                                            nextEl: '.swiper-button-next',
+                                                            prevEl: '.swiper-button-prev',
+                                                        },
+                                                        thumbs: {
+                                                            swiper: additionalImagesSwiper,
+                                                        },
+                                                    });
+                                                }
+
+                                                requestAnimationFrame(() => {
+                                                    initMainSwiper();
+                                                });
+
+                                                $(document).on('click', '.pr-product-video-slide .pr-product-video-wrapper', function(e) {
+                                                    e.preventDefault();
+                                                    const videoId = $(this).closest('.pr-product-video-slide').data('video-id');
+                                                    const iframe = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="pr-product-video-iframe"></iframe>`;
+                                                    $(this).html(iframe);
+                                                });
+
+                                                $(document).on('click', '.pr-product-video-thumb', function(e) {
+                                                    const allThumbs = $('.pr-product-images-additional .swiper-slide');
+                                                    const clickedIndex = $(this).closest('.swiper-slide').index();
+                                                    
+                                                    if (mainImagesSwiper) {
+                                                        mainImagesSwiper.slideToLoop(clickedIndex);
+                                                    }
+                                                });
+
+                                            {% else %}
+                                                var mainImagesSwiper = new Swiper('.pr-product-images-main-swiper', {
+                                                    spaceBetween: 0,
+                                                    slidesPerView: 1,
+                                                    pagination: {
+                                                        enabled: false
+                                                    },
+                                                    navigation: {
+                                                        enabled: false
+                                                    }
+                                                });
+                                            {% endif %}
+
+                                            {% if oct_product_main_image_option_status is defined and oct_product_main_image_option_status %}
+                                                $(document).on('change', '#pr-product-options .radio', function() {
+                                                    const additionalPhotos = document.querySelector('.pr-product-images-additional');
+
+                                                    if (!additionalPhotos) {
+                                                        return;
+                                                    }
+
+                                                    let videoMainSlides = [];
+                                                    let videoThumbSlides = [];
+                                                    
+                                                    $('.pr-product-images-main .pr-product-video-slide:not(.swiper-slide-duplicate)').each(function() {
+                                                        videoMainSlides.push($(this).clone().get(0).outerHTML);
+                                                    });
+                                                    
+                                                    $('.pr-product-images-additional .pr-product-video-thumb:not(.swiper-slide-duplicate)').each(function() {
+                                                        videoThumbSlides.push($(this).closest('.swiper-slide').clone().get(0).outerHTML);
+                                                    });
+
+                                                    $.ajax({
+                                                        url: 'index.php?route=product/product/getPImages&product_id={{ product_id }}',
+                                                        type: 'post',
+                                                        data: $('#pr-product-options input[type=\'radio\']:checked'),
+                                                        dataType: 'json',
+                                                        success: function(json) {
+                                                            if (json['images']) {
+                                                                $('.pr-product-images-main').addClass('updating');
+
+                                                                let mainSlides = [];
+                                                                let thumbSlides = [];
+                                                                
+                                                                const obj = JSON.parse(JSON.stringify(json['images']));
+                                                                
+                                                                Object.keys(obj).forEach(el => {
+                                                                    const popupImage = obj[el].popup,
+                                                                        thumbImage = obj[el].thumb,
+                                                                        sliderImage = obj[el].thumb_slider,
+                                                                        width = obj[el].width,
+                                                                        height = obj[el].height,
+                                                                        thumbHeight = obj[el].thumb_height,
+                                                                        thumbWidth = obj[el].thumb_width;
+                                                                    
+                                                                    if (typeof additionalImagesSwiper !== 'undefined') {
+                                                                        thumbSlides.push(`
+                                                                            <span class="pr-product-images-additional-item swiper-slide d-block" href="${thumbImage}" data-href="${thumbImage}">
+                                                                                <img src="${thumbImage}" width="${thumbWidth}" height="${thumbHeight}" />
+                                                                            </span>
+                                                                        `);
+                                                                    }       
+                                                                    
+                                                                    mainSlides.push(`
+                                                                        <div class="pr-product-images-slide swiper-slide pr-product-images-slide-opt">
+                                                                            <span data-fancybox="gallery" data-src="${popupImage}" class="oct-gallery d-block">
+                                                                                <img src="${sliderImage}" width="${width}" height="${height}" class="d-block mx-auto br-4" />
+                                                                            </span>
+                                                                        </div>
+                                                                    `);
+                                                                });
+
+                                                                $.fancybox.destroy();
+                                                                
+                                                                setTimeout(function() {
+                                                                    mainImagesSwiper.removeAllSlides();
+                                                                    mainSlides.forEach(function(slideHTML) {
+                                                                        mainImagesSwiper.appendSlide(slideHTML);
+                                                                    });
+                                                                    
+                                                                    videoMainSlides.forEach(function(slideHTML) {
+                                                                        mainImagesSwiper.appendSlide(slideHTML);
+                                                                    });
+                                                                    
+                                                                    mainImagesSwiper.update();
+                                                                    
+                                                                    if (typeof additionalImagesSwiper !== 'undefined') {
+                                                                        additionalImagesSwiper.removeAllSlides();
+                                                                        thumbSlides.forEach(function(slideHTML) {
+                                                                            additionalImagesSwiper.appendSlide(slideHTML);
+                                                                        });
+                                                                        
+                                                                        videoThumbSlides.forEach(function(slideHTML) {
+                                                                            additionalImagesSwiper.appendSlide(slideHTML);
+                                                                        });
+                                                                        
+                                                                        additionalImagesSwiper.update();
+
+                                                                        var additionalImagesCount = $('.pr-product-images-additional .swiper-slide').length;
+
+                                                                        if (additionalImagesCount < 6) {
+                                                                            $('.pr-product-images-additional .swiper-slider-btn').hide();
+                                                                        } else {
+                                                                            $('.pr-product-images-additional .swiper-slider-btn').show();
+                                                                        }
+                                                                    }
+                                                                    
+                                                                    $('.pr-product-images-main').removeClass('updating');
+                                                                    
+                                                                    {% if oct_promo_data.product_zoom is defined and oct_promo_data.product_zoom %}
+                                                                        $(".oct-gallery:not(.oct-gallery-video)").zoom();
+                                                                    {% endif %}
+                                                                    
+                                                                    $(document).on('click', '.pr-product-images-slide .oct-gallery', function(e) {
+                                                                        e.preventDefault();
+                                                                        $.fancybox.destroy();
+
+                                                                        const $slide = $(this).closest('.pr-product-images-slide-opt');
+                                                                        const $allSlides = $('.pr-product-images-slide-opt:not(.swiper-slide-duplicate)');
+                                                                        const slideIndex = $(this).parents('.pr-product-images-slide-opt').data('swiper-slide-index');
+
+                                                                        $.fancybox.open(
+                                                                            $allSlides.find('.oct-gallery'),
+                                                                            { backFocus: false, hideScrollbar: false, loop: true },
+                                                                            slideIndex
+                                                                        );
+                                                                    });
+                                                                }, 200);
+                                                            }
+                                                        }
+                                                    });
+                                                });
+                                            {% endif %}
+
+                                            stickyColumn();
+                                        });
+                                    </script>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-xl-7">
+                            <div class="pr-product-main-info d-flex flex-column">
+                                <div class="pr-page-title border-bottom pb-3 pb-xl-4">
+                                    <h1>{{ heading_title }}</h1>
+                                </div>
+                                <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mt-4 pb-4 border-bottom">
+                                    {% if review_status %}
+                                        <div class="pr-module-item-rating d-flex align-items-center">
+                                            <div class="pr-module-item-rating-stars d-flex align-items-center me-2" data-rating="{{ oct_rating }}">
+                                                {% for i in 1..5 %}
+                                                    <span class="pr-module-item-rating-star">
+                                                        <span class="pr-module-item-rating-star-inner"></span>
+                                                    </span>
+                                                {% endfor %}
+                                            </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                <path d="M4.20107 7C4.20107 7.16569 4.06676 7.3 3.90107 7.3C3.73539 7.3 3.60107 7.16569 3.60107 7M4.20107 7C4.20107 6.83431 4.06676 6.7 3.90107 6.7C3.73539 6.7 3.60107 6.83431 3.60107 7M4.20107 7H3.60107M6.90107 7C6.90107 7.16569 6.76676 7.3 6.60107 7.3C6.43539 7.3 6.30107 7.16569 6.30107 7M6.90107 7C6.90107 6.83431 6.76676 6.7 6.60107 6.7C6.43539 6.7 6.30107 6.83431 6.30107 7M6.90107 7H6.30107M9.60107 7C9.60107 7.16569 9.46676 7.3 9.30107 7.3C9.13539 7.3 9.00107 7.16569 9.00107 7M9.60107 7C9.60107 6.83431 9.46676 6.7 9.30107 6.7C9.13539 6.7 9.00107 6.83431 9.00107 7M9.60107 7H9.00107M2.35843 2.75736C4.70158 0.414214 8.50057 0.414214 10.8437 2.75736C13.1869 5.1005 13.1869 8.8995 10.8437 11.2426C8.9095 13.1769 5.98325 13.5144 3.70277 12.2553L1.55314 12.7714C1.1175 12.876 0.725061 12.4836 0.829653 12.0479L1.34575 9.8983C0.0866548 7.61783 0.424217 4.69158 2.35843 2.75736Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            <span class="pr-module-item-rating-count ms-1 fsz-12 fw-500 dark-text">{{ total_reviews }}</span>
+                                            <span class="blue-link fsz-12 ms-2 fw-500 pr-scroll-to-reviews">{{ text_review_add }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if oct_promo_data.product_model is defined and oct_promo_data.product_model == 'on' %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_model }} {{ model }}</span>
+                                    {% endif %}
+                                    {% if oct_product_sku_show and sku %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_sku }} {{ sku }}</span>
+                                    {% endif %}
+                                    {% if oct_product_upc_show and upc %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_upc }} {{ upc }}</span>
+                                    {% endif %}
+                                    {% if oct_product_ean_show and ean %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_ean }} {{ ean }}</span>
+                                    {% endif %}
+                                    {% if oct_product_jan_show and jan %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_jan }} {{ jan }}</span>
+                                    {% endif %}
+                                    {% if oct_product_isbn_show and isbn %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_isbn }} {{ isbn }}</span>
+                                    {% endif %}
+                                    {% if oct_product_mpn_show and mpn %}
+                                        <span class="pr-product-main-info-code grey-text fsz-12 fw-500">{{ text_mpn }} {{ mpn }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="pr-product-sticky-block col-lg-5 col-xl-4">
+                                    <div class="d-flex flex-column gap-lg-3 ms-lg-4 sticky-top pr-sticky-column pr-product-sticky-block-column">
+                                        {% if official_rep_block %}
+                                            <div class="official-rep content-block no-hover-shadow order-1 order-lg-0 d-flex align-items-center py-3 py-lg-4 border-top border-bottom border-lg-0">
+                                                {% if official_rep_logo %}
+                                                    <a href="{{ official_rep_link }}" class="official-rep-logo-link text-decoration-none" title="{{ manufacturer }}">
+                                                        <img src="{{ official_rep_logo }}"
+                                                            alt="{{ manufacturer }}"
+                                                            width="{{ official_rep_logo_width }}" 
+                                                            height="{{ official_rep_logo_height }}" 
+                                                            class="official-rep-logo"/>
+                                                    </a>
+                                                {% endif %}
+                                                <div class="official-rep-text secondary-text fsz-14{% if official_rep_logo %} ms-3 ps-3 border-start{% endif %}">
+                                                    {{ official_rep_block }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div id="product" class="content-block pr-product-actions order-0 order-lg-1 d-flex flex-column gap-4 overflow-y-auto" data-product-id="{{ product_id }}">
+                                            <div class="pr-product-actions-info d-flex flex-column gap-3 pb-4 border-bottom position-relative">
+                                                <div class="pr-product-actions-buttons d-flex gap-2 position-absolute end-0">
+                                                    <button class="pr-module-item-button pr-module-item-button-wishlist button button-light p-2" onclick="wishlist.add('{{ product_id }}');" title="{{ button_wishlist }}" aria-label="Wishlist button">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                            <path d="M6.80165 3.0415L6.80078 3.03971M6.80078 3.03971C6.50027 2.41728 5.76091 0.9104 3.86208 0.9104C2.23678 0.9104 0.742537 2.59985 0.802528 4.43946C0.843052 5.80634 1.7624 6.92471 2.84224 7.98094C3.91774 9.03293 4.92721 9.98253 5.65768 10.66C6.30491 11.2603 7.29817 11.2601 7.94521 10.6596C8.67584 9.98149 9.68533 9.03145 10.7593 7.98094C11.8392 6.92471 12.7585 5.80634 12.799 4.43946C12.859 2.59985 11.3648 0.9104 9.73948 0.9104C7.84066 0.9104 7.10129 2.41728 6.80078 3.03971ZM6.80078 3.03971L6.79991 3.0415" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="pr-module-item-button pr-module-item-button-compare button button-light p-2"  onclick="compare.add('{{ product_id }}');" title="{{ button_compare }}" aria-label="Compare button">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                                            <path d="M1.40039 11.2103H10.4004C11.3945 11.2103 12.2004 10.4044 12.2004 9.41025V7.61025M1.40039 11.2103L3.20039 9.41025M1.40039 11.2103L3.20039 13.0103M12.2004 2.81025H3.20039C2.20628 2.81025 1.40039 3.61614 1.40039 4.61025L1.40039 6.41025M12.2004 2.81025L10.4004 4.61025M12.2004 2.81025L10.4004 1.01025" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="pr-product-actions-stock fsz-14 fw-500{% if out_of_stock %} red{% else %} green{% endif %}">
+                                                    {% if oct_stock_display and not out_of_stock %} {{ oct_product_config_stock_display }} {% endif %}{{ stock }}
+                                                </div>
+                                                {% if price %}
+                                                    <div class="pr-product-price d-flex flex-column">
+                                                        {% if not special %}
+                                                            <div class="pr-product-price-new fw-600 fsz-28">{{ price }}</div>
+                                                        {% else %}
+                                                            <div class="pr-product-price d-flex flex-column">
+                                                                <div class="d-flex gap-2 align-items-center">
+                                                                    <span class="pr-product-price-old grey-text text-decoration-line-through fw-500">{{ price }}</span>
+                                                                    {% if oct_sticker_you_save %}
+                                                                        <span class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">{{ you_save }}</span>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="pr-product-price-new fw-600 fsz-28 red">{{ special }}</div>
+                                                                <div class="pr-product-price-discount fsz-12 mt-1 grey-text">{{ oct_product_you_save }} <span id="main-product-you-save">{{ you_save_price }}</span></div>
+                                                                {% if tax %}
+                                                                    <div class="price-tax fsz-10 fw-300 mt-1">{{ text_tax }}
+                                                                        <span>{{ tax }}</span>
+                                                                    </div>
+                                                                {% endif %}
+                                                                {% if product_timer %}
+                                                                    <div class="pr-product-timer d-inline-flex flex-column p-3 br-12 mt-3 text-center bg-grey">
+                                                                        <div class="pr-product-timer-text dark-text fw-500 fsz-12">{{ oct_product_timer }}</div>
+                                                                        <div class="pr-product-timer-inner d-inline-flex align-items-start justify-content-center">
+                                                                            <div class="pr-product-timer-item d-flex flex-column align-items-center">
+                                                                                <div id="pr-timer-days" class="pr-product-timer-number red fsz-20 fw-600"></div>
+                                                                                <span class="dark-text fsz-10">{{ oct_product_timer_days }}</span>
+                                                                            </div>
+                                                                            <div class="pr-product-timer-delimiter animated secondary-text fsz-16">:</div>
+                                                                            <div class="pr-product-timer-item d-flex flex-column align-items-center">
+                                                                                <div id="pr-timer-hours" class="pr-product-timer-number red fsz-20 fw-600"></div>
+                                                                                <span class="dark-text fsz-10">{{ oct_product_timer_hours }}</span>
+                                                                            </div>
+                                                                            <div class="pr-product-timer-delimiter animated secondary-text fsz-16">:</div>
+                                                                            <div class="pr-product-timer-item d-flex flex-column align-items-center">
+                                                                                <div id="pr-timer-minutes" class="pr-product-timer-number red fsz-20 fw-600"></div>
+                                                                                <span class="dark-text fsz-10">{{ oct_product_timer_minutes }}</span>
+                                                                            </div>
+                                                                            <div class="pr-product-timer-delimiter animated secondary-text fsz-16">:</div>
+                                                                            <div class="pr-product-timer-item d-flex flex-column align-items-center">
+                                                                                <div id="pr-timer-seconds" class="pr-product-timer-number red fsz-20 fw-600"></div>
+                                                                                <span class="dark-text fsz-10">{{ oct_product_timer_seconds }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if discounts %}
+                                                            {% for discount in discounts %}
+                                                                <div class="pr-product-price-discount fsz-12 mt-1 grey-text">{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</div>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        {% if minimum > 1 %}
+                                                            <div class="pr-product-option-minquant fsz-12 mt-1 grey-text">{{ text_minimum }}</div>
+                                                        {% endif %}
+                                                        {% if points %}
+                                                            <div class="pr-product-option-bonus fsz-12 mt-1 grey-text">{{ text_points }}
+                                                                {{ points }}</div>
+                                                            {% if reward %}
+                                                                <div class="pr-product-option-bonus fsz-12 mt-1 grey-text">{{ text_reward }}
+                                                                    {{ reward }}</div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                        {% if recurrings %}
+                                                            <div class="form-group d-flex flex-column flex-md-row align-items-md-center">
+                                                                <div class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ text_payment_recurring }}
+                                                                    <span class="required"> *</span></div>
+                                                                <div class="form-group">
+                                                                    <select name="recurring_id" class="form-select form-control">
+                                                                        <option value="">{{ text_select }}</option>
+                                                                        {% for recurring in recurrings %}
+                                                                            <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <div class="help-block" id="recurring-description"></div>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if oct_price_tracker_status is defined and oct_price_tracker_status == 'on' %}
+                                                        <span class="pr-product-price-tracker blue-link fsz-12 fw-500 d-inline-block mt-3" onclick="octPopupPriceTracker('{{ product_id }}');">{{ oct_product_price_tracker }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if oct_popup_found_cheaper_status is defined and oct_popup_found_cheaper_status == 'on' and can_buy %}
+                                                        <span class="pr-product-found-cheaper blue-link fsz-12 fw-500" onclick="octPopupFoundCheaper('{{ product_id }}');">{{ oct_product_cheaper }}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            {% if can_buy %}
+                                                {% if options %}
+                                                    <div id="pr-product-options" class="pr-product-options d-flex flex-column gap-4 pb-4 border-bottom">
+                                                        {% for option in options %}
+                                                            {% if option.type == 'select' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>
+                                                                        {% endif %}
+                                                                    </label>
+                                                                    <select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-select form-control">
+                                                                        <option value="">{{ text_select }}</option>
+                                                                        {% for option_value in option.product_option_value %}
+                                                                            <option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                                                                                {% if option_value.price %}
+                                                                                    ({{ option_value.price_prefix }}{{ option_value.price }})
+                                                                                {% endif %}
+                                                                            </option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'radio' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <div id="input-option{{ option.product_option_id }}" class="options-box d-flex gap-2 flex-wrap">
+                                                                        {% for option_value in option.product_option_value %}
+                                                                            <div class="radio">
+                                                                                <label
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-bs-placement="top"
+                                                                                    class="option optid-{{ option.product_option_id }} not-selected{% if option_value.image %} radio-img{% else %} pr-radio{% endif %}{% if option.option_id in allowed_options_ids and loop.index == 1 %} auto-choose{% endif %}"
+                                                                                    title="{{ option_value.name }} {% if option_value.price %}{{ option_value.price_prefix }}{{ option_value.price }}{% endif %}">
+                                                                                    <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" class="input-radio"/>
+                                                                                    {% if option_value.image %}
+                                                                                        <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" width="50" height="50" loading="lazy" />
+                                                                                    {% else %}
+                                                                                        {{ option_value.name }}
+                                                                                    {% endif %}
+                                                                                </label>
+                                                                                <script>
+                                                                                    $(document).ready(function() {
+                                                                                        $(document).on('click', 'label.optid-{{ option.product_option_id }}', function(event) {
+                                                                                            $('label.optid-{{ option.product_option_id }}').removeClass('selected').addClass('not-selected');
+                                                                                            $(this).removeClass('not-selected').addClass('selected');
+                                                                                        });
+                                                                                    });
+                                                                                </script>
+                                                                            </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'checkbox' %}
+                                                                <div class="form-checkbox-group">
+                                                                    <div class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </div>
+                                                                    <div id="input-option{{ option.product_option_id }}">
+                                                                        {% for option_value in option.product_option_value %}
+                                                                            <div class="form-check d-flex align-items-center gap-2">
+                                                                                <input type="checkbox" id="option[{{ option.product_option_id }}][{{ option_value.product_option_value_id }}]" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" class="form-check-input"/>
+                                                                                <label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="option[{{ option.product_option_id }}][{{ option_value.product_option_value_id }}]">
+                                                                                    {% if option_value.image %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="36" height="36" loading="lazy" />{% endif %}
+                                                                                    {{ option_value.name }}
+                                                                                    {% if option_value.price %}
+                                                                                        ({{ option_value.price_prefix }}{{ option_value.price }})
+                                                                                    {% endif %}
+                                                                                </label>
+                                                                            </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'text' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>
+                                                                        {% endif %}
+                                                                    </label>
+                                                                    <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control" inputmode="text">
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'textarea' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'file' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2 d-block">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="button button-secondary">
+                                                                        <i class="fa fa-upload me-2"></i>
+                                                                        {{ button_upload }}</button>
+                                                                    <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}"/>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'date' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <div class="input-group date">
+                                                                        <input type="date" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'datetime' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <div class="input-group datetime">
+                                                                        <input type="datetime-local" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if option.type == 'time' %}
+                                                                <div class="form-group">
+                                                                    <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                        {% if option.required %}
+                                                                            <span class="required option-required"> *</span>{% endif %}
+                                                                    </label>
+                                                                    <div class="input-group time">
+                                                                        <input type="time" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="pr-product-buttons d-flex flex-column gap-4 pb-4 border-bottom">
+                                                    <div class="d-flex align-items-stretch gap-4">
+                                                        <div class="pr-product-buttons-quantity buttons-quantity button-quantity position-relative{% if not product_quantity_show %} d-none{% endif %}">
+                                                            <input class="number fw-500 border-end-0 p-0 text-center fsz-14 fw-500" type="number" name="quantity" value="{{ minimum }}" id="input-quantity" aria-label="Quantity" inputmode="numeric">
+                                                            <div class="controls d-flex flex-column">
+                                                                <button class="plus p-0" type="button" onclick="updateValueProduct(false, true, false);" aria-label="Increase quantity">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 6 6" fill="none">
+                                                                        <path d="M3.40002 0.997314V4.99731M1.40002 2.99731H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                    </svg>
+                                                                </button>
+                                                                <button class="minus p-0" type="button" onclick="updateValueProduct(true, false, false);" aria-label="Decrease quantity">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="3" viewBox="0 0 6 2" fill="none">
+                                                                        <path d="M1.40002 0.999023H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                    </svg>
+                                                                </button>
+                                                                <input id="oct-product-id" type="hidden" name="product_id" value="{{ product_id }}"/>
+                                                                <input type="hidden" id="min-product-quantity" value="{{ minimum }}" name="min_quantity">
+                                                                <input type="hidden" id="max-product-quantity" value="{{ max_quantity }}" name="max_quantity">
+                                                            </div>
+                                                        </div>
+                                                        <button id="button-cart" data-product-id="{{ product_id }}" data-loading-text="{{ text_loading }}" type="button" class="button button-primary large flex-grow-1 fsz-14 gap-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none">
+                                                                <path d="M15.9031 14.1665H7.4931C6.33794 14.1665 5.34659 13.3437 5.1337 12.2084L3.34511 2.66919C3.20318 1.91227 2.54228 1.36377 1.77218 1.36377H1.5M6.70111 16.9671C6.70111 17.1881 6.52198 17.3672 6.30102 17.3672C6.08006 17.3672 5.90094 17.1881 5.90094 16.9671M6.70111 16.9671C6.70111 16.7461 6.52198 16.567 6.30102 16.567C6.08006 16.567 5.90094 16.7461 5.90094 16.9671M6.70111 16.9671H5.90094M15.503 16.9671C15.503 17.1881 15.3239 17.3672 15.1029 17.3672C14.8819 17.3672 14.7028 17.1881 14.7028 16.9671M15.503 16.9671C15.503 16.7461 15.3239 16.567 15.1029 16.567C14.8819 16.567 14.7028 16.7461 14.7028 16.9671M15.503 16.9671H14.7028M3.4004 2.96411H15.8993C16.8784 2.96411 17.6279 3.83534 17.4817 4.8034L16.7568 9.60442C16.6386 10.3871 15.9659 10.9658 15.1744 10.9658H4.90072L3.4004 2.96411Z" stroke="#FFFDFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                            <span class="button-text">{{ button_cart }}</span>
+                                                        </button>
+                                                    </div>
+                                                    {% if oct_popup_purchase_status is defined and can_buy %}
+                                                        <button type="button" class="button button-light button-large w-100 fsz-14" onclick="octPopPurchase('{{ product_id }}')">{{ oct_product_quickbuy }}</button>
+                                                    {% endif %}
+                                                </div>
+                                                {{ oct_byoneclick }}
+                                            {% else %}   
+                                                {% if oct_stock_notifier_status is defined and oct_stock_notifier_status is not empty %}
+                                                    <button onclick="octStockNotifier('{{ product_id }}');" type="button" class="button button-primary w-100 pr-stock-notifier-btn">
+                                                        <span class="button-text">{{ oct_stock_notifier_text }}</span>
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pr-product-info">
+                                    {% if oct_attributs %}
+                                        <div class="pr-product-main-attributes fsz-14 dark-text d-none d-md-flex flex-column gap-2 py-4 border-bottom">
+                                            <div class="fw-700 dark-text fsz-14 mb-2">{{ oct_product_main_attributes }}</div>
+                                            {% for attribute in oct_attributs %}
+                                                <div class="pr-module-attributes-item d-flex justify-content-between gap-2">
+                                                    <span class="grey-text">{{ attribute.name }}:</span>
+                                                    <span class="text-start">{{ attribute.text }}</span>
+                                                </div>
+                                            {% endfor %}
+                                            <span class="pr-scroll-to-attributes blue-link fsz-12 fw-500 mt-1">{{ oct_product_all_attributes }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <!-- Product advantages delivery -->
+                                    {% if (oct_product_delivery is defined and oct_product_delivery is not empty) %}
+                                        <div class="pr-product-delivery d-flex flex-column gap-3 py-4 border-bottom">
+                                            <div class="fw-700 dark-text fsz-14">{{ oct_product_delivery_text }}</div>
+                                            {% for delivery_item in oct_product_delivery %}
+                                                <div class="pr-product-delivery-item d-flex justify-content-between">
+                                                    <div class="pr-product-delivery-item-info d-flex align-items-center gap-3">
+                                                        <div class="pr-product-delivery-item-icon">
+                                                            <img src="{{ delivery_item.image }}" alt="{{ delivery_item.title }}" width="24" height="24"/>
+                                                        </div>
+                                                        <div class="pr-product-delivery-item-text d-flex flex-column">
+                                                            <span class="fsz-14 fw-500">{{ delivery_item.title }}</span>
+                                                            <span class="fsz-12 grey-text">{{ delivery_item.delivery_time }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center justify-content-end gap-2">
+                                                        <span class="grey-text fsz-12 text-end">{{ delivery_item.price }}</span>
+                                                        {% if delivery_item.link %}
+                                                            <a href="{{ delivery_item.link }}" target="_blank" rel="noopener noreferrer" class="p-0" aria-label="Delivery link">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                                                    <path d="M8 16.3529C3.58847 16.3529 0 12.7644 0 8.35291C0 3.94137 3.58847 0.352905 8 0.352905C12.4115 0.352905 16 3.94137 16 8.35291C16 12.7644 12.4115 16.3529 8 16.3529ZM8 1.46918C4.20391 1.46918 1.11628 4.55681 1.11628 8.35291C1.11628 12.149 4.20391 15.2366 8 15.2366C11.7961 15.2366 14.8837 12.149 14.8837 8.35291C14.8837 4.55681 11.7961 1.46918 8 1.46918ZM8.55814 11.7017V8.30003C8.55814 7.99194 8.30809 7.7419 8 7.7419C7.69191 7.7419 7.44186 7.99194 7.44186 8.30003V11.7017C7.44186 12.0098 7.69191 12.2599 8 12.2599C8.30809 12.2599 8.55814 12.0098 8.55814 11.7017ZM8.75908 5.74825C8.75908 5.33746 8.42643 5.00407 8.0149 5.00407H8.00745C7.59666 5.00407 7.2669 5.33746 7.2669 5.74825C7.2669 6.15904 7.60411 6.49244 8.0149 6.49244C8.42569 6.49244 8.75908 6.15904 8.75908 5.74825Z" fill="var(--pr-grey-color)"/>
+                                                                </svg>
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <!-- Product advantages payments -->
+                                    {% if (oct_product_payment is defined and oct_product_payment is not empty) %}
+                                        <div class="pr-product-payments d-flex flex-column gap-3 pt-4 fsz-12">
+                                            <div class="fw-700 dark-text fsz-14">{{ oct_product_payment_text }}</div>
+                                            <div class="pr-product-payments-box d-flex flex-wrap gap-2">
+                                                {% for payment_item in oct_product_payment %}
+                                                    <div class="pr-product-payments-item p-2 br-8 primary-text d-inline-flex align-items-center gap-2 bg-grey">
+                                                        {% if payment_item.image %}
+                                                            <img class="align-self-stretch" src="{{ payment_item.image }}" alt="{{ payment_item.title }}" width="20" height="20" loading="lazy"/>
+                                                        {% endif %}
+                                                        {% if payment_item.title %}
+                                                            {{ payment_item.title }}
+                                                        {% endif %}  
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if product_js_button is defined and product_js_button %}
+                                        <div class="pr-product-social-buttons mt-3">{{ product_js_button }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if bought_together_products %}
+                        {{ bought_together_products }}
+                    {% endif %}
+                </div>
+                {% if product_sets is defined and product_sets %}
+                    {{ product_sets }}
+                {% endif %}
+                {% if description %}
+                    <div class="pr-product-tab-description pr-product-description pr-product-tab-content content-block mt-3">
+                        <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" viewBox="0 0 18 21" fill="none">
+                                <path d="M12.75 1.5H14C15.6569 1.5 17 2.84315 17 4.5V17.5C17 19.1569 15.6569 20.5 14 20.5H4C2.34315 20.5 1 19.1569 1 17.5V4.5C1 2.84315 2.34315 1.5 4 1.5H5.25M9 8.505L13 8.495M9 12.505L13 12.495M9 16.505L13 16.495M5 16.5V16.51M5 12.5V12.51M5 8.5V8.51M5.5 4H12.5C12.7761 4 13 3.77614 13 3.5V2.5C13 1.39543 12.1046 0.5 11 0.5H7C5.89543 0.5 5 1.39543 5 2.5V3.5C5 3.77614 5.22386 4 5.5 4ZM5.25 16.5C5.25 16.6381 5.13807 16.75 5 16.75C4.86193 16.75 4.75 16.6381 4.75 16.5C4.75 16.3619 4.86193 16.25 5 16.25C5.13807 16.25 5.25 16.3619 5.25 16.5ZM5.25 12.5C5.25 12.6381 5.13807 12.75 5 12.75C4.86193 12.75 4.75 12.6381 4.75 12.5C4.75 12.3619 4.86193 12.25 5 12.25C5.13807 12.25 5.25 12.3619 5.25 12.5ZM5.25 8.5C5.25 8.63807 5.13807 8.75 5 8.75C4.86193 8.75 4.75 8.63807 4.75 8.5C4.75 8.36193 4.86193 8.25 5 8.25C5.13807 8.25 5.25 8.36193 5.25 8.5Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            {{ oct_product_description }}
+                        </div>
+                        <div class="pr-product-tab-content-text">
+                            {{ description }}
+                            {% if tags %}
+                                <p class="pr-product-tags">{{ text_oct_tags }}
+                                    {% for i in 0..tags | length - 1 %}
+                                        <a href="{{ tags[i].href }}">{{ tags[i].tag }}</a>{% if i < (tags|length - 1) %},{% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if attribute_groups %}
+                    <div class="pr-product-tab-attributes pr-product-attributes pr-product-tab-content content-block mt-3">
+                        <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17" fill="none">
+                                <path d="M21 1.83333H7.66667M21 8.49999H7.66667M21 15.1667H7.66667M2.11111 1.83333C2.11111 2.14015 1.86238 2.38888 1.55556 2.38888C1.24873 2.38888 1 2.14015 1 1.83333M2.11111 1.83333C2.11111 1.5265 1.86238 1.27777 1.55556 1.27777C1.24873 1.27777 1 1.5265 1 1.83333M2.11111 1.83333H1M2.11111 8.49999C2.11111 8.80682 1.86238 9.05555 1.55556 9.05555C1.24873 9.05555 1 8.80682 1 8.49999M2.11111 8.49999C2.11111 8.19317 1.86238 7.94444 1.55556 7.94444C1.24873 7.94444 1 8.19317 1 8.49999M2.11111 8.49999H1M2.11111 15.1667C2.11111 15.4735 1.86238 15.7222 1.55556 15.7222C1.24873 15.7222 1 15.4735 1 15.1667M2.11111 15.1667C2.11111 14.8598 1.86238 14.6111 1.55556 14.6111C1.24873 14.6111 1 14.8598 1 15.1667M2.11111 15.1667H1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            {{ oct_product_attributes_tab }}
+                        </div>
+                        <div class="pr-product-attributes-items dark-text fsz-14 w-100 d-flex flex-column gap-2 gap-md-3">
+                            {% for attribute_group in attribute_groups %}
+                                <div class="fw-700 dark-text fsz-14 mb-2">{{ attribute_group.name }}</div>
+                                {% for attribute in attribute_group.attribute %}
+                                    <div class="pr-module-attributes-item d-flex flex-column flex-md-row justify-content-md-between gap-2">
+                                        <span>{{ attribute.name }}</span>
+                                        <span class="grey-text">{{ attribute.text }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if review_status %}
+                    <div class="pr-product-tab-reviews pr-product-reviews pr-product-tab-content content-block mt-3">
+                        <div class="pr-product-tab-content-title d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 pb-4 mb-4 border-bottom">
+                            <span class="pr-product-tab-content-title-icon d-flex align-items-center gap-3 dark-text fsz-20 fw-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="20" viewBox="0 0 22 20" fill="none">
+                                    <path d="M1 3.50026C1 1.84341 2.34315 0.500259 4 0.500259H18C19.6569 0.500259 21 1.84341 21 3.50026V13.5003C21 15.1571 19.6569 16.5003 18 16.5003H12.874C12.3032 16.5003 11.7443 16.6631 11.2628 16.9696L7.53706 19.3417C6.87134 19.7655 6 19.2873 6 18.4981V16.5003H4C2.34315 16.5003 1 15.1571 1 13.5003V3.50026Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M10.7782 4.63574C10.8689 4.4551 11.1311 4.4551 11.2218 4.63574L12.3238 6.82982L14.788 7.18166C14.9908 7.21063 15.0718 7.4556 14.925 7.59621L13.142 9.30406L13.5629 11.7156C13.5975 11.9141 13.3855 12.0655 13.204 11.9718L11 10.8332L8.79599 11.9718C8.61454 12.0655 8.40246 11.9141 8.43712 11.7156L8.85804 9.30406L7.07496 7.59621C6.92816 7.4556 7.00917 7.21063 7.21204 7.18166L9.6762 6.82982L10.7782 4.63574Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                {{ tab_review_view }}
+                            </span>
+                            {% if review_guest %}
+                                <button type="button" class="button button-light button-large fsz-14" data-bs-toggle="modal" data-bs-target="#reviewModal">{{ tab_review_add }}</button>
+                                <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header p-4 bg-grey">
+                                                <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="reviewModalLabel">{{ text_write }}</h5>
+                                                <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <form id="popup_review_form">
+                                                    <div class="d-flex">
+                                                        <div class="modal-body-product-img br-8 overflow-hidden me-1 flex-grow-1">
+                                                            <img src="{{ thumb }}" alt="{{ heading_title }}" width="120" height="120" loading="lazy">
+                                                        </div>
+                                                        <div class="modal-body-product-info ps-4 dark-text flex-grow-1 d-flex flex-column">
+                                                            <div class="modal-body-product-title fsz-14 fw-500 mb-3">{{ heading_title }}</div>
+                                                            <div class="fw-700 dark-text">{{ text_oct_review }}</div>
+                                                            <div class="pr-module-rating-stars d-flex align-items-center mt-2">
+                                                                <div class="pr-store-reviews-rating-stars d-flex align-items-center justify-content-center">
+                                                                    <label class="pr-store-reviews-rating-star pr-store-reviews-rating-star-is"><input class="d-none" type="radio" name="rating" value="1" checked/></label>
+                                                                    <label class="pr-store-reviews-rating-star pr-store-reviews-rating-star-is"><input class="d-none" type="radio" name="rating" value="2" checked/></label>
+                                                                    <label class="pr-store-reviews-rating-star pr-store-reviews-rating-star-is"><input class="d-none" type="radio" name="rating" value="3" checked/></label>
+                                                                    <label class="pr-store-reviews-rating-star pr-store-reviews-rating-star-is"><input class="d-none" type="radio" name="rating" value="4" checked/></label>
+                                                                    <label class="pr-store-reviews-rating-star pr-store-reviews-rating-star-is"><input class="d-none" type="radio" name="rating" value="5" checked/></label>
+                                                                </div>
+                                                            </div>
+                                                            <script>
+                                                                window.addEventListener('DOMContentLoaded', () => {
+                                                                    reviewsRating('#popup_review_form');
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group mt-4">
+                                                        <span class="input-group-text" id="reviewUsernameIcon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                                <path d="M8.73803 10.9984H5.11457C2.84216 10.9984 1 12.8405 1 15.1129C1 15.4917 1.30703 15.7987 1.68576 15.7987H6.647M13.4308 10.8284L15.571 12.9685M10.8007 4.79794C10.8007 6.67584 9.27834 8.19817 7.40044 8.19817C5.52254 8.19817 4.00021 6.67584 4.00021 4.79794C4.00021 2.92004 5.52254 1.39771 7.40044 1.39771C9.27834 1.39771 10.8007 2.92004 10.8007 4.79794ZM11.546 16.3612L10.1232 16.5983C9.93373 16.6299 9.76942 16.4656 9.80101 16.2761L10.0381 14.8533C10.1204 14.3599 10.3547 13.9044 10.7085 13.5507L14.5084 9.75083C14.977 9.28216 15.7369 9.28216 16.2055 9.75083L16.6485 10.1938C17.1172 10.6625 17.1172 11.4223 16.6485 11.891L12.8486 15.6909C12.4949 16.0446 12.0395 16.279 11.546 16.3612Z" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                        </span>
+                                                        <div class="form-floating">
+                                                            <input type="text" name="name" class="form-control" id="inputReviewName" placeholder="{{ entry_name }}" inputmode="text" aria-label="Username" aria-describedby="reviewUsernameIcon">
+                                                            <label class="px-3 secondary-text fsz-14" for="inputReviewName">{{ entry_name }}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group my-3">
+                                                        <span class="input-group-text" id="positiveIcon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 15 18" fill="none">
+                                                                <path d="M10.4 1.8H11.4C12.7255 1.8 13.8 2.87452 13.8 4.2V14.6C13.8 15.9255 12.7255 17 11.4 17H3.4C2.07452 17 1 15.9255 1 14.6V4.2C1 2.87452 2.07452 1.8 3.4 1.8H4.4M7.4 8.2V10.6M7.4 10.6V13M7.4 10.6H5M7.4 10.6H9.8M4.6 3.8H10.2C10.4209 3.8 10.6 3.62091 10.6 3.4V2.6C10.6 1.71634 9.88366 1 9 1H5.8C4.91634 1 4.2 1.71634 4.2 2.6V3.4C4.2 3.62091 4.37909 3.8 4.6 3.8Z" stroke="#4AB246" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                        </span>
+                                                        <div class="form-floating">
+                                                            <input type="text" name="positive_text" value="" class="form-control positive" id="inputPositive" placeholder="{{ oct_product_inputpluces }}" aria-label="Positive" aria-describedby="positiveIcon">
+                                                            <label class="px-3 secondary-text fsz-14" for="inputPositive">{{ oct_product_inputpluces }}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="negativeIcon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 15 18" fill="none">
+                                                                <path d="M10.4 1.8H11.4C12.7255 1.8 13.8 2.87452 13.8 4.2V14.6C13.8 15.9255 12.7255 17 11.4 17H3.4C2.07452 17 1 15.9255 1 14.6V4.2C1 2.87452 2.07452 1.8 3.4 1.8H4.4M5 10.6H9.8M4.6 3.8H10.2C10.4209 3.8 10.6 3.62091 10.6 3.4V2.6C10.6 1.71634 9.88366 1 9 1H5.8C4.91634 1 4.2 1.71634 4.2 2.6V3.4C4.2 3.62091 4.37909 3.8 4.6 3.8Z" stroke="#D51F1F" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                        </span>
+                                                        <div class="form-floating">
+                                                            <input type="text" name="negative_text" value="" class="form-control negative" id="inputNegative" placeholder="{{ oct_product_inputpminuses }}" aria-label="Negative" aria-describedby="negativeIcon">
+                                                            <label class="px-3 secondary-text fsz-14" for="inputNegative">{{ oct_product_inputpminuses }}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group my-3">
+                                                        <textarea id="inputReviewComment" name="text" class="form-control" placeholder="{{ oct_product_yourreview }}" rows="7"></textarea>
+                                                    </div>
+                                                    {% if captcha %}
+                                                        <div class="form-group pb-4">
+                                                            {{ captcha }}
+                                                        </div>
+                                                    {% endif %}
+                                                    <button type="button" id="button-review" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_continue }}</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if oct_rating %}
+                            <div class="pr-store-reviews-rating d-flex flex-column flex-md-row align-items-center justify-content-between my-3 pb-3 mb-3 position-relative">
+                                <div>
+                                    <div class="pr-store-reviews-rating-main text-center mb-3 mb-md-0 p-4 d-flex flex-column align-items-center justify-content-center gap-3 br-12">
+                                        <div class="dark-text fsz-18 fw-700">{{ tab_review_c }}</div>
+                                        <div class="pr-store-reviews-rating-main-value position-relative d-flex align-items-center justify-content-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 84 84" fill="none">
+                                                <path d="M57.5587 23.3218L48.4866 4.22157C45.8153 -1.40263 38.1847 -1.40264 35.5134 4.22156L26.4413 23.3218L6.22862 26.3736C0.253859 27.2757 -2.11851 35.0123 2.22929 39.416L16.7989 54.1726L13.3518 75.0558C12.3255 81.2734 18.5134 86.0369 23.8381 83.1282L42 73.2069L60.1619 83.1282C65.4866 86.0369 71.6745 81.2734 70.6482 75.0558L67.2011 54.1726L81.7707 39.416C86.1185 35.0123 83.7461 27.2757 77.7714 26.3736L57.5587 23.3218Z" fill="#FFC445"></path>
+                                            </svg>
+                                            <span class="position-relative z-1 white-text fsz-24 fw-700 lh-sm">{{ oct_rating }}</span>
+                                        </div>
+                                        <span class="grey-text">{{ text_total_reviews }} {{ total_reviews }}</span>
+                                    </div>
+                                </div>
+                                <div class="pr-product-reviews-rating d-flex flex-column align-items-end flex-md-grow-1 w-100">
+                                    {% for oct_key, oct_raiting_stat in oct_raiting_stats %}
+                                        <div class="pr-product-reviews-rating-item d-flex align-items-center justify-content-center px-3 py-1 br-8 fsz-14 gap-2">
+                                            <div class="pr-product-reviews-rating-item-stars d-flex align-items-center gap-2">
+                                                {{ oct_key }}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M6.64043 0.418447L7.93511 3.18342C8.03245 3.39166 8.22045 3.53568 8.43845 3.56886L11.4271 4.02624C11.9751 4.11024 12.1938 4.82179 11.7971 5.2298L9.63645 7.44984C9.47845 7.6122 9.40641 7.84584 9.44374 8.07525L9.93772 11.1134C10.0377 11.7297 9.4264 12.1998 8.9024 11.9097L6.31044 10.4732C6.11577 10.3652 5.88375 10.3652 5.68975 10.4732L3.09974 11.9082C2.57508 12.1991 1.96172 11.7282 2.06239 11.1106L2.55645 8.07525C2.59378 7.84584 2.52174 7.6122 2.36374 7.44984L0.203097 5.2298C-0.194236 4.82179 0.0243849 4.11024 0.573052 4.02624L3.56174 3.56886C3.77907 3.53568 3.96708 3.39166 4.06508 3.18342L5.35975 0.418447C5.62042 -0.142738 6.37777 -0.142738 6.64043 0.418447Z" fill="#FBC756" />
+                                                </svg>
+                                            </div>
+                                            <div class="pr-product-reviews-rating-item-line br-8 w-100">
+                                                <span class="pr-product-reviews-rating-item-line-value" style="width: {{ oct_raiting_stat.raiting }}%;"></span>
+                                            </div>
+                                            <div class="pr-product-reviews-rating-item-qty">{{ oct_raiting_stat.sum }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div id="review" class="pr-product-reviews-content">
+                            {% if oct_p_reviews is not empty %}
+                                {{ oct_p_reviews }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if oct_product_faq is defined and oct_product_faq %}
+                    {{ oct_product_faq }}
+                {% endif %}
+                {% if (dop_tab.title is defined and dop_tab.title) and (dop_tab.text is defined and dop_tab.text) %}
+                    <div id="product_dop_tab" class="pr-product-tab-dop_tab pr-product-tab-content content-block mt-3">
+                        <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                <path d="M11.01 10.5H11.51C11.51 10.2239 11.2861 10 11.01 10V10.5ZM10.5 10C10.2239 10 10 10.2239 10 10.5C10 10.7761 10.2239 11 10.5 11V10.5V10ZM10 14.5C9.72386 14.5 9.5 14.7239 9.5 15C9.5 15.2761 9.72386 15.5 10 15.5V15V14.5ZM12 15.5C12.2761 15.5 12.5 15.2761 12.5 15C12.5 14.7239 12.2761 14.5 12 14.5V15V15.5ZM11.5 7C11.5 6.72386 11.2761 6.5 11 6.5C10.7239 6.5 10.5 6.72386 10.5 7H11H11.5ZM10.5 7.01C10.5 7.28614 10.7239 7.51 11 7.51C11.2761 7.51 11.5 7.28614 11.5 7.01H11H10.5ZM21 11H20.5C20.5 16.2467 16.2467 20.5 11 20.5V21V21.5C16.799 21.5 21.5 16.799 21.5 11H21ZM11 21V20.5C5.75329 20.5 1.5 16.2467 1.5 11H1H0.5C0.5 16.799 5.20101 21.5 11 21.5V21ZM1 11H1.5C1.5 5.75329 5.75329 1.5 11 1.5V1V0.5C5.20101 0.5 0.5 5.20101 0.5 11H1ZM11 1V1.5C16.2467 1.5 20.5 5.75329 20.5 11H21H21.5C21.5 5.20101 16.799 0.5 11 0.5V1ZM11.01 15H11.51V10.5H11.01H10.51V15H11.01ZM10.5 10.5V11H11.01V10.5V10H10.5V10.5ZM10 15V15.5H11.01V15V14.5H10V15ZM11.01 15V15.5H12V15V14.5H11.01V15ZM11.25 7H10.75C10.75 6.86193 10.8619 6.75 11 6.75V7.25V7.75C11.4142 7.75 11.75 7.41421 11.75 7H11.25ZM11 7.25V6.75C11.1381 6.75 11.25 6.86193 11.25 7H10.75H10.25C10.25 7.41421 10.5858 7.75 11 7.75V7.25ZM10.75 7H11.25C11.25 7.13807 11.1381 7.25 11 7.25V6.75V6.25C10.5858 6.25 10.25 6.58579 10.25 7H10.75ZM11 6.75V7.25C10.8619 7.25 10.75 7.13807 10.75 7H11.25H11.75C11.75 6.58579 11.4142 6.25 11 6.25V6.75ZM11 7H10.5V7.01H11H11.5V7H11Z" fill="var(--pr-black-color)"/>
+                            </svg>
+                            {{ dop_tab.title }}
+                        </div>
+                        <div class="pr-product-tab-content-text">{{ dop_tab.text }}</div>
+                    </div>
+                {% endif %}
+                {% if oct_product_extra_tabs %}
+                    {% set key = 0 %}
+                    {% for extra_tab in oct_product_extra_tabs %}
+                        {% set key = key + 1 %}
+                            <div class="pr-product-tab-extra_tab-{{ key }} pr-product-tab-content content-block mt-3">
+                                <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                        <path d="M11.01 10.5H11.51C11.51 10.2239 11.2861 10 11.01 10V10.5ZM10.5 10C10.2239 10 10 10.2239 10 10.5C10 10.7761 10.2239 11 10.5 11V10.5V10ZM10 14.5C9.72386 14.5 9.5 14.7239 9.5 15C9.5 15.2761 9.72386 15.5 10 15.5V15V14.5ZM12 15.5C12.2761 15.5 12.5 15.2761 12.5 15C12.5 14.7239 12.2761 14.5 12 14.5V15V15.5ZM11.5 7C11.5 6.72386 11.2761 6.5 11 6.5C10.7239 6.5 10.5 6.72386 10.5 7H11H11.5ZM10.5 7.01C10.5 7.28614 10.7239 7.51 11 7.51C11.2761 7.51 11.5 7.28614 11.5 7.01H11H10.5ZM21 11H20.5C20.5 16.2467 16.2467 20.5 11 20.5V21V21.5C16.799 21.5 21.5 16.799 21.5 11H21ZM11 21V20.5C5.75329 20.5 1.5 16.2467 1.5 11H1H0.5C0.5 16.799 5.20101 21.5 11 21.5V21ZM1 11H1.5C1.5 5.75329 5.75329 1.5 11 1.5V1V0.5C5.20101 0.5 0.5 5.20101 0.5 11H1ZM11 1V1.5C16.2467 1.5 20.5 5.75329 20.5 11H21H21.5C21.5 5.20101 16.799 0.5 11 0.5V1ZM11.01 15H11.51V10.5H11.01H10.51V15H11.01ZM10.5 10.5V11H11.01V10.5V10H10.5V10.5ZM10 15V15.5H11.01V15V14.5H10V15ZM11.01 15V15.5H12V15V14.5H11.01V15ZM11.25 7H10.75C10.75 6.86193 10.8619 6.75 11 6.75V7.25V7.75C11.4142 7.75 11.75 7.41421 11.75 7H11.25ZM11 7.25V6.75C11.1381 6.75 11.25 6.86193 11.25 7H10.75H10.25C10.25 7.41421 10.5858 7.75 11 7.75V7.25ZM10.75 7H11.25C11.25 7.13807 11.1381 7.25 11 7.25V6.75V6.25C10.5858 6.25 10.25 6.58579 10.25 7H10.75ZM11 6.75V7.25C10.8619 7.25 10.75 7.13807 10.75 7H11.25H11.75C11.75 6.58579 11.4142 6.25 11 6.25V6.75ZM11 7H10.5V7.01H11H11.5V7H11Z" fill="var(--pr-black-color)"/>
+                                    </svg>
+                                    {{ extra_tab.title }}
+                                </div>
+                                <div class="pr-product-tab-content-text">{{ extra_tab.text }}</div>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+                {% if products %}
+                    <div class="pr-product-tab-related pr-product-tab-content">
+                        {{ products }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    
+    {% if oct_promo_data.micro is defined and oct_promo_data.micro %}
+        <script type="application/ld+json">
+            {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "url": "{{ share }}",
+            "category": "{{ oct_product_categories }}",
+            "image": "{{ thumb }}",
+            {% if manufacturer %}
+            "brand": {
+                "@type": "Brand",
+                "name": "{{ manufacturer|e('html') }}"
+            },
+            "manufacturer": "{{ manufacturer|e('html') }}",
+            {% endif %}
+            "model": "{{ model|e('html') }}",
+            "productID": "{{ product_id }}",
+            {% if upc is defined and upc %}
+            "gtin12": "{{ upc }}",
+            {% endif %}
+            {% if ean is defined and ean %}
+            "gtin": "{{ ean }}",
+            {% endif %}
+            {% if mpn is defined and mpn %}
+            "mpn": "{{ mpn|e('html') }}",
+            {% endif %}
+            {% if sku is defined and sku %}
+            "sku": "{{ sku|e('html') }}",
+            {% endif %}
+            {% if rating %}
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "{{ rating }}",
+                "ratingCount": "{{ total_reviews }}",
+                "reviewCount": "{{ total_reviews }}",
+                "bestRating": "5",
+                "worstRating": "1"
+            },
+            {% endif %}
+            "description": "{{ oct_description_microdata|e('html') }}",
+            "name": "{{ oct_micro_heading_title|e('html') }}",
+            "offers": {
+                "@type": "Offer",
+                "url": "{{ share }}",
+                {% if oct_special_microdata %}
+                {% set special_date = 'now'|date_modify("+30 day") %}
+                "priceValidUntil": "{{ special_date|date('Y-m-d') }}",
+                {% else %}
+                "priceValidUntil": "{{ 'now'|date_modify("+60 days")|date("Y-m-d") }}",
+                {% endif %}
+                {% if out_of_stock %}
+                "availability": "https://schema.org/OutOfStock",
+                {% else %}
+                "availability": "https://schema.org/InStock",
+                {% endif %}
+                "price": "{% if not oct_special_microdata %}{{ oct_price_microdata }}{% else %}{{ oct_special_microdata }}{% endif %}",
+                "priceCurrency": "{{ oct_price_currency }}",
+                "itemCondition": "https://schema.org/NewCondition",
+                "seller": {
+                "@type": "Organization",
+                "name": "{{ config_name|e('html') }}"
+                },
+                {% if oct_shipping_cost is defined and oct_shipping_cost is not null %}
+                "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "{{ oct_shipping_cost }}",
+                    "currency": "{{ oct_price_currency }}"
+                },
+                {% if oct_area_served is defined and oct_area_served %}
+                "shippingDestination": [
+                    {% for country in oct_area_served %}
+                    {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "{{ country }}"
+                    }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                {% endif %}
+                "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": {{ oct_processing_time }},
+                    "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 1,
+                    "maxValue": {{ oct_delivery_time }},
+                    "unitCode": "DAY"
+                    }
+                }
+                },
+                {% endif %}
+                "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "{{ oct_applicable_country }}",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": {{ oct_return_time }},
+                "returnMethod": "https://schema.org/ReturnByMail",
+                "returnFees": "https://schema.org/FreeReturn",
+                "refundType": "https://schema.org/FullRefund"
+                }
+            }{% if rating and oct_reviews_all is defined and oct_reviews_all %},
+            "review": [
+                {% for rew_one in oct_reviews_all %}
+                {
+                "@type": "Review",
+                "author": {
+                    "@type": "Person",
+                    "name": "{{ rew_one.author|e('html') }}"
+                },
+                "datePublished": "{{ rew_one.date_added }}",
+                "description": "{{ rew_one.text|e('html') }}",
+                "reviewRating": {
+                    "@type": "Rating",
+                    "bestRating": "5",
+                    "ratingValue": "{{ rew_one.rating }}",
+                    "worstRating": "1"
+                }
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+            {% endif %}
+            }
+        </script>
+    {% endif %}
+    </main>
+    {% if oct_related_articles %}
+        <div id="pr-related-article" class="pr-module-news mt-4 pr-module">
+            <div class="pr-page-title fw-700 dark-text mb-3">{{ oct_product_related_articles }}</div>
+            <div class="pr-module-news-items d-flex align-items-lg-stretch gap-3 flex-wrap">
+                {% for article in oct_related_articles %}
+                    <div class="pr-module-news-item content-block p-0 d-flex flex-column overflow-hidden">
+    					<a href="{{ article.href }}" title="{{ article.name }}" class="pr-module-news-item-image">
+    						<img src="{{ article.thumb }}" class="img-fluid" alt="{{ article.name }}" width="{{ article.width }}" height="{{ article.height }}" loading="lazy" />
+    					</a>
+    					<div class="pr-module-news-item-caption d-flex flex-column justify-content-between gap-3 p-3 h-100">
+    						<a href="{{ article.href }}" class="pr-module-news-item-title dark-link fw-700 fsz-14 lh-sm">{{ article.name }}</a>
+    						<div class="pr-module-news-item-info d-flex align-items-center justify-content-between gap-3 fsz-12 grey-text">
+    							<div class="pr-module-news-item-info-date d-flex align-items-center gap-1">
+    								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+    									<path d="M1 4.67102H13M3.66667 0.671021V2.00435M10.3333 0.671021V2.00435M4 7.33769C4 7.52178 3.85076 7.67102 3.66667 7.67102C3.48257 7.67102 3.33333 7.52178 3.33333 7.33769M4 7.33769C4 7.15359 3.85076 7.00435 3.66667 7.00435C3.48257 7.00435 3.33333 7.15359 3.33333 7.33769M4 7.33769H3.33333M7.33333 7.33769C7.33333 7.52178 7.1841 7.67102 7 7.67102C6.81591 7.67102 6.66667 7.52178 6.66667 7.33769M7.33333 7.33769C7.33333 7.15359 7.1841 7.00435 7 7.00435C6.81591 7.00435 6.66667 7.15359 6.66667 7.33769M7.33333 7.33769H6.66667M10.6667 7.33769C10.6667 7.52178 10.5174 7.67102 10.3333 7.67102C10.1492 7.67102 10 7.52178 10 7.33769M10.6667 7.33769C10.6667 7.15359 10.5174 7.00435 10.3333 7.00435C10.1492 7.00435 10 7.15359 10 7.33769M10.6667 7.33769H10M4 10.671C4 10.8551 3.85076 11.0044 3.66667 11.0044C3.48257 11.0044 3.33333 10.8551 3.33333 10.671M4 10.671C4 10.4869 3.85076 10.3377 3.66667 10.3377C3.48257 10.3377 3.33333 10.4869 3.33333 10.671M4 10.671H3.33333M7.33333 10.671C7.33333 10.8551 7.1841 11.0044 7 11.0044C6.81591 11.0044 6.66667 10.8551 6.66667 10.671M7.33333 10.671C7.33333 10.4869 7.1841 10.3377 7 10.3377C6.81591 10.3377 6.66667 10.4869 6.66667 10.671M7.33333 10.671H6.66667M10.6667 10.671C10.6667 10.8551 10.5174 11.0044 10.3333 11.0044C10.1492 11.0044 10 10.8551 10 10.671M10.6667 10.671C10.6667 10.4869 10.5174 10.3377 10.3333 10.3377C10.1492 10.3377 10 10.4869 10 10.671M10.6667 10.671H10M3 13.3377H11C12.1046 13.3377 13 12.4423 13 11.3377V3.33769C13 2.23312 12.1046 1.33769 11 1.33769H3C1.89543 1.33769 1 2.23312 1 3.33769V11.3377C1 12.4423 1.89543 13.3377 3 13.3377Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+    								</svg>
+    								{{ article.date_added }}
+    							</div>
+    							<div class="pr-module-news-item-info-category d-flex align-items-center gap-1">
+    								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+    									<path d="M2.8 11.4044H11.2C12.1941 11.4044 13 10.5985 13 9.60437V4.20437C13 3.21026 12.1941 2.40437 11.2 2.40437H7.84853C7.6894 2.40437 7.53679 2.34116 7.42426 2.22863L5.97574 0.780106C5.86321 0.667584 5.7106 0.60437 5.55147 0.60437H2.8C1.80589 0.60437 1 1.41026 1 2.40437V9.60437C1 10.5985 1.80589 11.4044 2.8 11.4044Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+    								</svg>
+    								{% set key = 0 %}
+    								{% for blog_category_name in article.blog_categories %}
+    									{% set key = key + 1 %}
+    									{{ blog_category_name }}{% if key < article.blog_categories|length %}, {% endif %}
+    								{% endfor %}
+    							</div>
+    						</div>
+    					</div>
+    				</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {{ content_bottom }}
+</div>
+
+<script>
+    // product timer
+    {% if product_timer %}
+        function timerSpecial(id, deadline) {
+            const addZero = (num) => {
+                if (num <= 9) {
+                    return '0' + num;
+                } else {
+                    return num;
+                }
+            };
+
+            const getTimeRemaining = (endtime) => {
+                const t = Date.parse(endtime) - Date.parse(new Date()),
+                    seconds = Math.floor((t / 1000) % 60),
+                    minutes = Math.floor((t / 1000 / 60) % 60),
+                    hours = Math.floor((t / (1000 * 60 * 60)) % 24),
+                    days = Math.floor((t / (1000 * 60 * 60 * 24)));
+
+                return {
+                    'total': t,
+                    'days': days,
+                    'hours': hours,
+                    'minutes': minutes,
+                    'seconds': seconds
+                };
+            };
+
+            const setClock = (selector, endtime) => {
+                const timer = document.querySelector(selector),
+                    days = timer.querySelector('#pr-timer-days'),
+                    hours = timer.querySelector('#pr-timer-hours'),
+                    minutes = timer.querySelector('#pr-timer-minutes'),
+                    seconds = timer.querySelector('#pr-timer-seconds'),
+                    timeInterval = setInterval(updateClock, 1000);
+
+                updateClock();
+
+                function updateClock() {
+                    const t = getTimeRemaining(endtime);
+
+                    days.textContent = addZero(t.days);
+                    hours.textContent = addZero(t.hours);
+                    minutes.textContent = addZero(t.minutes);
+                    seconds.textContent = addZero(t.seconds);
+
+                    if (t.total <= 0) {
+                        days.textContent = "00";
+                        hours.textContent = "00";
+                        minutes.textContent = "00";
+                        seconds.textContent = "00";
+
+                        clearInterval(timeInterval);
+                    }
+                }
+            };
+
+            setClock(id, deadline);
+        }
+        
+        {% if end_date_today %}
+            timerSpecial('.pr-product-timer', '{{ special_date_end }}T23:59:59');
+        {% else %}
+            timerSpecial('.pr-product-timer', '{{ special_date_end }}T00:00:00');
+        {% endif %}
+
+    {% endif %}
+
+    $('select[name=\'recurring_id\'], input[name="quantity"]').change(function() {
+        $.ajax({
+            url: 'index.php?route=product/product/getRecurringDescription',
+            type: 'post',
+            data: $('input[name=\'product_id\'], input[name=\'quantity\'], select[name=\'recurring_id\']'),
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() {
+                $('#recurring-description').html('');
+            },
+            success: function(json) {
+                $('.alert-dismissible, .text-danger').remove();
+
+                if (json['success']) {
+                    $('#recurring-description').html(json['success']);
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $('body').on('click', '#button-cart, .pr-product-fixed-cart-btn', function(){
+        let data;
+
+        if (this.classList.contains('pr-product-fixed-cart-btn')) {
+            data = $(this).find('input[type=\'text\'], input[type=\'number\'], input[type=\'hidden\']').add('#product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea, #product input[type=\'date\'], #product input[type=\'datetime-local\'], #product input[type=\'time\']');
+        } else {
+            data = $('#product input[type=\'text\'], #product input[type=\'number\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea, #product input[type=\'date\'], #product input[type=\'datetime-local\'], #product input[type=\'time\']');
+        }
+
+        $.ajax({
+            url: 'index.php?route=checkout/cart/add',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() {
+                $('#button-cart, .pr-product-fixed-cart-btn').each(function() {
+                    $(this).data('original-content', $(this).html());
+                    $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+                });
+            },
+            complete: function() {
+                setTimeout(function () {
+                    $('#button-cart, .pr-product-fixed-cart-btn').html('<i class="fas fa-check fsz-18"></i>').prop('disabled', true);
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#button-cart, .pr-product-fixed-cart-btn').each(function() {
+                        $(this).html($(this).data('original-content')).prop('disabled', false);
+                    });
+                }, 1200);
+            },
+            success: function(json) {
+                $('.alert-dismissible, .text-danger').remove();
+                $('.form-group').removeClass('has-error');
+
+                if (json['error']) {
+                    if (json['error']['option']) {
+                        let errorOption = '';
+                        for (i in json['error']['option']) {
+                            var element = $('#input-option' + i.replace('_', '-'));
+
+                            if (element.parent().hasClass('input-group')) {
+                                element.parent().after('<div class="text-danger fsz-14 fw-500">' + json['error']['option'][i] + '</div>');
+                            } else {
+                                element.parent().after('<div class="text-danger fsz-14 fw-500">' + json['error']['option'][i] + '</div>');
+                            }
+                            errorOption += '<div class="alert-text-item">' + json['error']['option'][i] + '</div>';
+                        }
+                        prNotify('danger', errorOption);
+                        
+                        const headerHeight = document.querySelector('header').offsetHeight,
+                        tabsHeight = document.getElementById('oct-tabs').offsetHeight;
+
+                        scrollToElement('.pr-product-actions', null, -headerHeight - tabsHeight - 42);
+                        $('.pr-product-fixed-cart-btn').removeClass('added');
+                        return;
+                    }
+
+                    if (json['error']['error_warning']) {
+                        prNotify('danger', json['error']['error_warning']);
+                    }
+
+                    if (json['error']['recurring']) {
+                        $('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
+                    }
+
+                    // Highlight any found errors
+                    $('.text-danger').parent().addClass('has-error');
+                }
+
+                if (json['success']) {
+                    if (json['isPopup']) {
+                        octSidebarCart();
+                    } else {
+                        prNotify('success', json['success']);
+                    }
+
+                    let cartIdsHolder = document.querySelector("[data-cart-ids]");
+                    const productId = $('#oct-product-id').val();
+
+                    if (json.oct_cart_ids && json.oct_cart_ids.length > 0 && cartIdsHolder) {
+                        cartIdsHolder.dataset.cartIds = json.oct_cart_ids;
+                    } else if (cartIdsHolder && productId) {
+                        const currentIds = cartIdsHolder.dataset.cartIds ? cartIdsHolder.dataset.cartIds.split(',').filter(id => id) : [];
+                        if (!currentIds.includes(String(productId))) {
+                            currentIds.push(String(productId));
+                            cartIdsHolder.dataset.cartIds = currentIds.join(',');
+                        }
+                    }
+
+                    if (productId && window.interactiveButtonsManager && window.interactiveButtonsManager.initialized) {
+                        window.interactiveButtonsManager.add(productId, 'cart');
+                        
+                        setTimeout(() => {
+                            window.interactiveButtonsManager.updateAllButtonsForProduct(productId, 'cart', true);
+                            $('.pr-product-fixed-cart-btn').addClass('added');
+                        }, 1300);
+                    }
+
+                    setTimeout(function() {
+                        $('.pr-header-buttons-item-count-cart').addClass('active').html(json['total_products']);
+                    }, 100);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+</script>
+<script>
+    $('button[id^=\'button-upload\']').on('click', function() {
+        var node = this;
+
+        $('#form-upload').remove();
+
+        $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+        $('#form-upload input[name=\'file\']').trigger('click');
+
+        if (typeof timer != 'undefined') {
+            clearInterval(timer);
+        }
+
+        timer = setInterval(function() {
+            if ($('#form-upload input[name=\'file\']').val() != '') {
+                clearInterval(timer);
+
+                $.ajax({
+                    url: 'index.php?route=tool/upload',
+                    type: 'post',
+                    dataType: 'json',
+                    data: new FormData($('#form-upload')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $(node).button('loading');
+                    },
+                    complete: function() {
+                        $(node).button('reset');
+                    },
+                    success: function(json) {
+                        $('.text-danger').remove();
+
+                        if (json['error']) {
+                            $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+                        }
+
+                        if (json['success']) {
+                            alert(json['success']);
+
+                            $(node).parent().find('input').val(json['code']);
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+        }, 500);
+    });
+</script>
+<script>
+    $('#review').delegate('.pagination a', 'click', function(e) {
+        const headerHeight = document.querySelector('header').offsetHeight,
+        tabsHeight = document.getElementById('oct-tabs').offsetHeight;
+
+        e.preventDefault();
+        $('#review').load(this.href);
+        scrollToElement('.pr-product-reviews-content', null, -headerHeight - tabsHeight - 42);
+    });
+
+    $("#inputReviewName, #inputReviewComment").on("change paste keyup", function() {
+        $(this).removeClass('error_style');
+    });
+
+    $('#button-review').on('click', function() {
+        $.ajax({
+            url: 'index.php?route=product/product/write&product_id={{ product_id }}',
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            data: $('#popup_review_form').serialize(),
+            beforeSend: function() {
+                $('#button-review').button('loading');
+            },
+            complete: function() {
+                $('#button-review').button('reset');
+            },
+            success: function(json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    let errorOption = '';
+
+                    $.each(json['error'], function(i, val) {
+                        $('#reviewModal [name="' + i + '"]').addClass('error_style');
+                        errorOption += '<div class="alert-text-item">' + val + '</div>';
+                    });
+
+                    prNotify('danger', errorOption);
+                }
+
+                if (json['success']) {
+                    prNotify('success', json['success']);
+                    $('#reviewModal').modal('hide');
+                    $('#popup_review_form input[name=\'name\']').val('');
+                    $('#popup_review_form textarea[name=\'text\']').val('');
+                    $('#reviewModal .rm-module-rating-star-is').removeClass('rm-module-rating-star-is');
+                }
+            }
+        });
+    });
+
+    $('#input-quantity').on('blur change', function(e) {
+        updateValueProduct(false, false, true);
+    });
+
+    function updateValueProduct(minus, plus, manual) {
+        let min = parseInt($('#input-quantity').val());
+        let currentMinimum = parseInt($('#min-product-quantity').val());
+        let max = parseInt($('#max-product-quantity').val());
+        let use_minimum_step = {{ use_minimum_step ?? 0 }};
+        let step = use_minimum_step ? currentMinimum : 1;
+
+        if (isNaN(min)) {
+            $('#input-quantity').val(currentMinimum);
+            updateProductPrice();
+            return;
+        }
+
+        if (max === 0)
+            return;
+
+        if (minus && min > currentMinimum) {
+
+            if (min - step < currentMinimum) {
+                $("#input-quantity").val(currentMinimum);
+                updateProductPrice();
+                return;
+            } else if (min > max) {
+                $('#input-quantity').val(max);
+                updateProductPrice();
+                return;
+            }
+
+            $('#input-quantity').val(~~ $('#input-quantity').val() - step);
+        }
+
+        if (plus) {
+            if (max && min + step > max) {
+                $('#input-quantity').val(max);
+                updateProductPrice();
+                return;
+            } else if (currentMinimum > min) {
+                $('#input-quantity').val(currentMinimum);
+                updateProductPrice();
+                return;
+            }
+
+            $('#input-quantity').val(~~ $('#input-quantity').val() + step);
+        }
+
+        if (manual) {
+            if (currentMinimum >= min) {
+                $('#input-quantity').val(currentMinimum);
+                updateProductPrice();
+                return;
+            } else if (min > max) {
+                $('#input-quantity').val(max);
+                updateProductPrice();
+                return;
+            }
+
+            if (use_minimum_step && currentMinimum > 1) {
+                let remainder = min % currentMinimum;
+                if (remainder !== 0) {
+                    let roundedValue = min - remainder + currentMinimum;
+                    if (max && roundedValue > max) {
+                        roundedValue = max;
+                    }
+                    $('#input-quantity').val(roundedValue);
+                }
+            }
+
+        }
+
+        updateProductPrice();
+    }
+
+    $('#pr-product-options input, #pr-product-options select').on('change', function() {
+        updateProductPrice();
+    });
+
+    {% if oct_promo_data.product_zoom is defined and oct_promo_data.product_zoom %}
+    $(document).ready(function() {
+        $(".oct-gallery:not(.oct-gallery-video)").zoom();
+    });
+    {% endif %}
+
+    function updateProductPrice() {
+        let priceOld = document.querySelector('#product .pr-product-price-old');
+        let priceNew = document.querySelector('#product .pr-product-price-new');
+        let youSave = document.querySelector('#main-product-you-save');
+
+        $.ajax({
+            type: 'post',
+            url: 'index.php?route=octemplates/main/oct_functions/updatePrices',
+            data: $('#product input[type=\'text\'], #product input[type=\'number\'], #product input[type=\'hidden\']:not("#oct_purchase_byoneclick_form_product input"), #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select'),
+            dataType: 'json',
+            cache: false,
+            success: function(json) {
+                {% if special %}
+                    animatePrice(json['price'], priceOld);
+                    animatePrice(json['special'], priceNew);
+                {% else %}
+                    animatePrice(json['price'], priceNew);
+                {% endif %}
+
+                {% if oct_sticker_you_save and you_save %}
+                    animatePrice(json['you_save_price'], youSave);
+                {% endif %}
+
+                {% if tax %}
+                    $('.price-tax > span').html(json['tax']);
+                {% endif %}
+            }
+        });
+    }
+    {% if minimum > 1 %}
+        updateProductPrice();
+    {% endif %}
+</script>
+{% if can_buy %}
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const productElement = document.getElementById('product-product');
+
+            if (productElement) {
+                document.body.classList.add('body-product');
+            }
+
+            octProductFixedButtons();
+        });
+    </script>
+    <div class="pr-product-fixed-btns position-fixed d-lg-none py-2 px-3 is-hidden">
+        <div class="d-flex align-items-center justify-content-between">
+            {% if not special %}
+                <div class="pr-price-new fsz-20 fw-700 dark-text">{{ price }}</div>
+            {% else %}
+                <div class="d-flex flex-column">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="pr-product-price-old grey-text text-decoration-line-through fw-500 fsz-12">{{ price }}</div>
+                        {% if oct_sticker_you_save %}
+                            <div class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">{{ you_save }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="pr-product-price-new fw-600 red">{{ special }}</div>
+                </div>
+            {% endif %}
+            <button type="button" class="button button-primary button-small py-2 px-3 fsz-12 pr-product-fixed-cart-btn" data-product-id="{{ product_id }}">
+                <span class="pr-module-quantity" hidden>
+                    <input type="hidden" class="form-control" name="quantity" value="{{ minimum }}" id="fixed-input-quantity"/>
+                    <input type="hidden" name="product_id" value="{{ product_id }}"/>
+                    <input type="hidden" id="fixed-min-product-quantity" value="{{ minimum }}" name="min_quantity">
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 19 19" fill="none">
+                    <path d="M15.9031 14.1665H7.4931C6.33794 14.1665 5.34659 13.3437 5.1337 12.2084L3.34511 2.66919C3.20318 1.91227 2.54228 1.36377 1.77218 1.36377H1.5M6.70111 16.9671C6.70111 17.1881 6.52198 17.3672 6.30102 17.3672C6.08006 17.3672 5.90094 17.1881 5.90094 16.9671M6.70111 16.9671C6.70111 16.7461 6.52198 16.567 6.30102 16.567C6.08006 16.567 5.90094 16.7461 5.90094 16.9671M6.70111 16.9671H5.90094M15.503 16.9671C15.503 17.1881 15.3239 17.3672 15.1029 17.3672C14.8819 17.3672 14.7028 17.1881 14.7028 16.9671M15.503 16.9671C15.503 16.7461 15.3239 16.567 15.1029 16.567C14.8819 16.567 14.7028 16.7461 14.7028 16.9671M15.503 16.9671H14.7028M3.4004 2.96411H15.8993C16.8784 2.96411 17.6279 3.83534 17.4817 4.8034L16.7568 9.60442C16.6386 10.3871 15.9659 10.9658 15.1744 10.9658H4.90072L3.4004 2.96411Z" stroke="#FFFDFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span class="button-text">{{ button_cart }}</span>
+            </button>
+        </div>
+    </div>
+{% endif %}
+{{ footer }}

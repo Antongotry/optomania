@@ -1,0 +1,71 @@
+{% if oct_banner_pluss %}
+	{% if oct_banner_pluss|length <= 4 %}
+		{% if position == 'column_left' or position == 'column_right' %}
+			<div id="banner_plus_column" class="pr-column-banners swiper overflow-hidden position-relative">
+				{% set key = 1 %}
+				<div class="swiper-wrapper">
+					{% for banner in oct_banner_pluss %}
+						{% set key = key + 1 %}
+						<a id="banner_plus_column{{ module }}_{{ key }}" href="{{ banner.link }}" title="{{ banner.title }}" class="pr-banner-plus-item p-3 p-xl-4 d-flex flex-column align-items-start br-12 justify-content-between overflow-hidden position-relative swiper-slide">
+							<img class="position-absolute" src="{{ banner.image }}" alt="" width="{{ banner.width }}" height="{{ banner.height }}" loading="lazy"/>
+							<div class="pr-banner-plus-item-title fsz-20 fw-600 white-text flex-grow-1">{{ banner.title }}</div>
+							<span class="button br-6 fw-600 fsz-14">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+									<path d="M9.35355 5.44645C9.15829 5.25118 8.84171 5.25118 8.64645 5.44645C8.45118 5.64171 8.45118 5.95829 8.64645 6.15355L9.35355 5.44645ZM12.2 9L12.5536 9.35355C12.7488 9.15829 12.7488 8.84171 12.5536 8.64645L12.2 9ZM8.64645 11.8464C8.45118 12.0417 8.45118 12.3583 8.64645 12.5536C8.84171 12.7488 9.15829 12.7488 9.35355 12.5536L8.64645 11.8464ZM5.8 8.5C5.52386 8.5 5.3 8.72386 5.3 9C5.3 9.27614 5.52386 9.5 5.8 9.5V8.5ZM9 16.5C4.85786 16.5 1.5 13.1421 1.5 9H0.5C0.5 13.6944 4.30558 17.5 9 17.5V16.5ZM1.5 9C1.5 4.85786 4.85786 1.5 9 1.5V0.5C4.30558 0.5 0.5 4.30558 0.5 9H1.5ZM9 1.5C13.1421 1.5 16.5 4.85786 16.5 9H17.5C17.5 4.30558 13.6944 0.5 9 0.5V1.5ZM16.5 9C16.5 13.1421 13.1421 16.5 9 16.5V17.5C13.6944 17.5 17.5 13.6944 17.5 9H16.5ZM8.64645 6.15355L11.8464 9.35355L12.5536 8.64645L9.35355 5.44645L8.64645 6.15355ZM11.8464 8.64645L8.64645 11.8464L9.35355 12.5536L12.5536 9.35355L11.8464 8.64645ZM12.2 8.5H5.8V9.5H12.2V8.5Z" fill="#FFFDFF"></path>
+								</svg>
+								{{ banner.button_text }}
+							</span>
+						</a>
+						<style>
+							#banner_plus_column{{ module }}_{{ key }} {background: {{ banner.background_color }};}
+							#banner_plus_column{{ module }}_{{ key }} .pr-banner-plus-item-title  {color: {{ banner.title_color }};}
+							#banner_plus_column{{ module }}_{{ key }} .button {border: 1px solid {{ banner.button_background }}; color: {{ banner.button_background }};}
+							#banner_plus_column{{ module }}_{{ key }} .button:hover, #banner_plus_column{{ module }}_{{ key }} .button:active {background-color: {{ banner.button_background }}; color: {{ banner.button_text_hover }};}
+							#banner_plus_column{{ module }}_{{ key }} .button path {fill: {{ banner.button_background }};}
+							#banner_plus_column{{ module }}_{{ key }} .button:hover path, #banner_plus_column{{ module }}_{{ key }} .button:active path {fill: {{ banner.button_text_hover }};}
+						</style>
+					{% endfor %}
+				</div>
+			</div>
+			<script>
+				window.addEventListener('DOMContentLoaded', () => {
+					var bannerPlusColumnSwiper = new Swiper('#banner_plus_column', {
+						slidesPerView: 1,
+						autoplay: {
+							delay: 5000,
+							disableOnInteraction: false
+						},
+						loop: true
+					});
+				});
+			</script>
+		{% else %}
+			<div class="pr-banner-plus row g-3 mt-1">
+				{% set key = 0 %}
+				{% for banner in oct_banner_pluss %}
+					{% set key = key + 1 %}
+					<div id="banner_plus_{{ module }}_{{ key }}" class="col-12 col-md-6{% if oct_banner_pluss|length == 1 %} col-xxl-12{% elseif oct_banner_pluss|length == 2 %}  col-xxl-6{% elseif oct_banner_pluss|length == 3 %}{% if loop.index == 1 %} col-xxl-6{% else %} col-xxl-3{% endif %}{% elseif oct_banner_pluss|length == 4 %} col-xxl-3{% endif %}">
+						<a href="{{ banner.link }}" title="{{ banner.title }}" class="pr-banner-plus-item p-3 p-xl-4 d-flex flex-column align-items-start br-12 justify-content-between overflow-hidden position-relative">
+							<img class="position-absolute" src="{{ banner.image }}" alt="" width="{{ banner.width }}" height="{{ banner.height }}" loading="lazy"/>
+							<div class="pr-banner-plus-item-title fsz-20 fw-600 white-text flex-grow-1">{{ banner.title }}</div>
+							<span class="button br-6 fw-600 fsz-14">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+									<path d="M9.35355 5.44645C9.15829 5.25118 8.84171 5.25118 8.64645 5.44645C8.45118 5.64171 8.45118 5.95829 8.64645 6.15355L9.35355 5.44645ZM12.2 9L12.5536 9.35355C12.7488 9.15829 12.7488 8.84171 12.5536 8.64645L12.2 9ZM8.64645 11.8464C8.45118 12.0417 8.45118 12.3583 8.64645 12.5536C8.84171 12.7488 9.15829 12.7488 9.35355 12.5536L8.64645 11.8464ZM5.8 8.5C5.52386 8.5 5.3 8.72386 5.3 9C5.3 9.27614 5.52386 9.5 5.8 9.5V8.5ZM9 16.5C4.85786 16.5 1.5 13.1421 1.5 9H0.5C0.5 13.6944 4.30558 17.5 9 17.5V16.5ZM1.5 9C1.5 4.85786 4.85786 1.5 9 1.5V0.5C4.30558 0.5 0.5 4.30558 0.5 9H1.5ZM9 1.5C13.1421 1.5 16.5 4.85786 16.5 9H17.5C17.5 4.30558 13.6944 0.5 9 0.5V1.5ZM16.5 9C16.5 13.1421 13.1421 16.5 9 16.5V17.5C13.6944 17.5 17.5 13.6944 17.5 9H16.5ZM8.64645 6.15355L11.8464 9.35355L12.5536 8.64645L9.35355 5.44645L8.64645 6.15355ZM11.8464 8.64645L8.64645 11.8464L9.35355 12.5536L12.5536 9.35355L11.8464 8.64645ZM12.2 8.5H5.8V9.5H12.2V8.5Z" fill="#FFFDFF"></path>
+								</svg>
+								{{ banner.button_text }}
+							</span>
+						</a>
+					</div>
+					<style>
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item {background-color: {{ banner.background_color }};}
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item-title {color: {{ banner.title_color }};}
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button {border: 1px solid {{ banner.button_background }}; color: {{ banner.button_background }};}
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button:hover, #banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button:active {background-color: {{ banner.button_background }}; color: {{ banner.button_text_hover }};}
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button svg path {fill: {{ banner.button_background }};}
+						#banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button:hover svg path, #banner_plus_{{ module }}_{{ key }} .pr-banner-plus-item .button:active svg path {fill: {{ banner.button_text_hover }};}
+					</style>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endif %}
+{% endif %}

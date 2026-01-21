@@ -1,0 +1,1577 @@
+{{ header }}
+
+<div id="checkout-checkout" class="pr-smart-checkout container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+		<ul class="breadcrumb pr-breadcrumb fsz-12">
+			{% for breadcrumb in breadcrumbs %}
+				{% if loop.last %}
+					<li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+				{% else %}
+					<li class="breadcrumb-item pr-breadcrumb-item">
+						<a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</nav>
+	<main>
+		{{ content_top }}
+		{% if error_warning %}
+			<div class="alert alert-danger d-none">
+				<i class="fa fa-exclamation-circle"></i>
+				{{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+			<script>
+				$(function () {
+					$('#button-go').attr('disabled', 'disabled');
+					$('#button-go').addClass('disabled');
+					});
+			</script>
+		{% endif %}
+        <div class="pr-page-title mt-0 mb-4">
+            <h1>{{ heading_title }}</h1>
+        </div>
+		<div class="pr-checkout oct-checkout row g-3 g-xxl-4">
+			<div id="content" class="col-xl-8 d-flex flex-column gap-3">
+                {% if smart_csrf_token %}
+                    <input type="text" name="smart_csrf_token" class="d-none" value="{{ smart_csrf_token }}">
+                {% endif %}
+                {% if recommended_poducts %}
+                    <div id="recommended_block" class="content-block order-{{ recommended_block_sort }}">
+                        {{ recommended_poducts }}
+                    </div>
+                {% endif %}
+                <div id="cart-table" class="content-block pr-smart-checkout-cart order-{{ cart_block_sort }}{% if not cart_status %} d-none{% endif %} ">
+                    {% if weight %}<div class="mb-3 pb-3 border-bottom fsz-16">{{ text_order_weight }}: {{ weight}}</div>{% endif %}
+                    {% if attention %}
+                        <div class="alert alert-info d-flex align-items-start fsz-14"><i class="fa fa-info-circle me-2"></i> {{ attention }}
+                            <button type="button" class="close pr-btn pr-btn-transparent no-btn ms-auto" data-bs-dismiss="alert">&times;</button>
+                        </div>
+                    {% endif %}
+                    {% set productKey = 0 %}
+                    <div class="pr-sidebar-cart-products">
+                        {% for product in products %}
+                            {% set productKey = productKey + 1 %}
+                            <div class="pr-sidebar-cart-product d-flex align-items-center gap-3 gap-lg-4">
+                                {% if product.thumb %}
+                                    <a href="{{ product.href }}" class="pr-sidebar-cart-product-image">
+                                        <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="70" height="70"/>
+                                    </a>
+                                {% endif %}
+                                <div class="pr-sidebar-cart-product-info position-relative flex-grow-1">
+                                    <div class="pr-sidebar-cart-product-title dark-text fsz-14 fw-500 pe-5">
+                                        <a href="{{ product.href }}" class="dark-link">
+                                            {{ product.name }}
+                                            {% if not product.stock %}
+                                                <span class="required ms-2">***</span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="pr-sidebar-cart-product-code light-text fsz-12">{{ column_model }}: {{ product.model }}</div>
+                                    {% if product.option %}
+                                        {% for option in product['option'] %}
+                                            <div class="pr-sidebar-cart-product-option light-text fsz-12">{{ option.name }}: {{ option.value }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if product.reward %}
+                                        <div class="pr-sidebar-cart-product-option light-text fsz-12">{{ product.reward }}</div>
+                                    {% endif %}
+                                    {% if product.recurring %}
+                                        <div class="pr-sidebar-cart-product-option light-text fsz-12">{{ text_recurring_item }}{{ product.recurring }}</div>
+                                    {% endif %}
+                                    <div class="pr-sidebar-cart-product-buttons-wrapper position-absolute top-0 end-0 d-flex align-items-center gap-2">
+                                        <button type="button" class="pr-sidebar-cart-product-delete no-btn" aria-label="Delete" onclick="update(this, 'remove');">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 22" fill="none">
+                                                <path d="M2.5 4.5L3.60314 16.6346C3.74323 18.1756 3.81328 18.9461 4.15838 19.5288C4.4623 20.0419 4.91229 20.4529 5.45087 20.7091C6.06242 21 6.83609 21 8.38343 21H11.6166C13.1639 21 13.9376 21 14.5491 20.7091C15.0877 20.4529 15.5377 20.0419 15.8416 19.5288C16.1867 18.9461 16.2568 18.1756 16.3969 16.6346L17.5 4.5M7.5 10V15M12.5 10V15M5 4.5L6.07865 2.61236C6.41422 2.02512 6.582 1.7315 6.81776 1.51789C7.02635 1.32889 7.27249 1.18605 7.54007 1.09871C7.84251 1 8.18068 1 8.85703 1H11.143C11.8193 1 12.1575 1 12.4599 1.09871C12.7275 1.18605 12.9737 1.32889 13.1822 1.51789C13.418 1.7315 13.5858 2.02512 13.9213 2.61236L15 4.5M5 4.5H1M5 4.5H15M15 4.5H19" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="buttons-quantity pr-sidebar-cart-product-bottom d-flex flex-column flex-sm-row justify-content-between mt-3 align-items-sm-center">
+                                        <div class="pr-sidebar-cart-product-quantity d-flex align-items-center">
+                                            <input name="product_id_q" value="{{ product.product_id }}" style="display: none;" type="hidden"/>
+                                            <input name="product_id" value="{{ product.key }}" style="display: none;" type="hidden"/>
+                                            <div class="d-inline-flex align-items-stretch">
+                                                <button type="button" aria-label="Minus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="update_manual('#quantity-{{ product.quantity }}-{{ productKey }}', '{{ product.key }}', 'minus');">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="2" viewBox="0 0 16 2" fill="none">
+                                                        <path d="M1 1H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </button>
+                                                <input id="quantity-{{ product.quantity }}-{{ productKey }}" class="number fw-500 border-0 p-0 text-center fw-500" value="{{ product.quantity }}" type="text" name="quantity" onchange="update_manual(this, '{{ product.key }}');" aria-label="Quantity" inputmode="numeric">
+                                                <button type="button" aria-label="Plus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="update_manual('#quantity-{{ product.quantity }}-{{ productKey }}', '{{ product.key }}', 'plus');">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path d="M8 1V15M1 8H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                <path d="M1 1L9 9M9 1L1 9" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            {% if product.price %}
+                                                <span class="pr-sidebar-cart-product-price-one light-text fw-500">{{ product.price }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if product.total %}
+                                            <span class="dark-text fw-600 fsz-20 mt-3 mt-sm-0">{{ column_total }}: <span class="pr-sidebar-cart-product-total">{{ product.total }}</span></span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+				<div class="content-block pr-smart-checkout-user order-{{ customer_block_sort }}" id="customer-fields-block">
+					{{ customer_fields_block }}
+				</div>
+
+               	<div class="row g-3 pr-smart-checkout-checks order-{{ delivery_block_sort }}">
+					<div class="col-md-6" id="oct-shipping-block">
+						<div class="content-block pr-smart-checkout-delivery h-100 shipping-method">
+							<div class="pr-smart-checkout-title fsz-20 fw-700 dark-text d-flex align-items-center gap-3 pb-4 mb-4 border-bottom">
+								<svg xmlns="http://www.w3.org/2000/svg" width="22" height="20" viewBox="0 0 22 20" fill="none">
+                                    <path d="M14.5 4V3C14.5 1.89543 13.6046 1 12.5 1H4C2.34315 1 1 2.34315 1 4V13C1 14.3062 1.83481 15.4175 3 15.8293M14.5 4H16.4587C17.1113 4 17.7229 4.31842 18.0972 4.85308L20.4577 8.22528C20.6253 8.4647 20.756 8.72585 20.8471 9M14.5 4V8C14.5 8.55228 14.9477 9 15.5 9H20.8471M20.8471 9C20.9478 9.30325 21 9.6224 21 9.94567V13C21 14.336 20.1267 15.468 18.9199 15.8563M9 16H14.0508M9 16C9 17.6569 7.65685 19 6 19C4.34315 19 3 17.6569 3 16C3 14.3431 4.34315 13 6 13C7.65685 13 9 14.3431 9 16ZM19 16.5C19 17.8807 17.8807 19 16.5 19C15.1193 19 14 17.8807 14 16.5C14 15.1193 15.1193 14 16.5 14C17.8807 14 19 15.1193 19 16.5Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+								{{ heading_shipping_block }}
+							</div>
+							{% if error_warning %}
+								<div class="alert alert-warning fsz-14">
+									<i class="fa fa-exclamation-circle"></i>
+									{{ error_warning }}
+								</div>
+							{% endif %}
+							{% if shipping_methods %}
+								<p class="fsz-14 grey-text mb-3">{{ text_shipping_method }}</p>
+                                {% set first_checked = false %}
+                                <div class="pr-smart-checkout-check d-flex flex-column gap-2">
+                                    {% for shipping_method in shipping_methods %}
+                                        <div class="pr-smart-checkout-check-item p-3 br-8 shipping-check-item">
+                                            <p class="fw-600 dark-text mb-2">{{ shipping_method.title }}</p>
+                                            {% if not shipping_method.error %}
+                                                {% for quote in shipping_method['quote'] %}
+                                                    <div class="form-check d-flex align-items-center gap-2" {% if quote.min_total_disabled %} style="opacity: 0.5; cursor: not-allowed;" data-bs-toggle="tooltip" title="({{ quote.title }}) - {{ error_shipping_min_total|replace({'%s': quote.min_total_amount}) }}" {% endif %}>
+                                                        {% if not first_checked and autoselect_first_shipping and not quote.min_total_disabled %}
+                                                            {% set code = quote.code %}
+                                                            {% set first_checked = true %}
+                                                            <input id="shipping-method-{{ code }}" type="radio" class="form-check-input" name="shipping_method" value="{{ quote.code }}" title="{{ quote.title }}"  checked="checked"/>
+                                                        {% else %}
+                                                            <input id="shipping-method-{{ code }}" type="radio" class="form-check-input" name="shipping_method" value="{{ quote.code }}" title="{{ quote.title }}" {% if quote.min_total_disabled %} disabled {% endif %}/>
+                                                        {% endif %}
+                                                        {% if quote.image %}
+                                                            <img src="{{ quote.image }}" alt="{{ quote.title }}" width="20" height="20" />
+                                                        {% endif %}
+                                                        <label for="shipping-method-{{ code }}" class="form-check-label d-flex align-items-center fsz-12 dark-text">
+                                                            {{ quote.title }}{% if cost_in_shipping_block %} - {{ quote.text }}{% endif %}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="alert alert-danger fsz-14">{{ shipping_method.error }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-md-6" id="oct-payment-block">
+						<div class="content-block pr-smart-checkout-payment h-100 payment-method">
+							<div class="pr-smart-checkout-title fsz-20 fw-700 dark-text d-flex align-items-center gap-3 pb-4 mb-4 border-bottom">
+								<svg xmlns="http://www.w3.org/2000/svg" width="22" height="18" viewBox="0 0 22 18" fill="none">
+                                    <path d="M1 5H21M5 10H8M4 17H18C19.6569 17 21 15.6569 21 14V4C21 2.34315 19.6569 1 18 1H4C2.34315 1 1 2.34315 1 4V14C1 15.6569 2.34315 17 4 17Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+								{{ heading_payment_block }}
+							</div>
+							{% if error_warning %}
+								<div class="alert alert-warning fsz-14">
+									<i class="fa fa-exclamation-circle"></i>
+									{{ error_warning }}
+								</div>
+							{% endif %}
+							{% if payment_methods %}
+								<p class="fsz-14 grey-text mb-3">{{ text_payment_method }}</p>
+								<div class="pr-smart-checkout-check d-flex flex-column gap-2">
+								    {% for payment_method in payment_methods %}
+    									<div class="pr-smart-checkout-check-item p-3 br-8" {% if payment_method.hidden %} style="opacity: 0.5; cursor: not-allowed;" data-bs-toggle="tooltip" title="({{ payment_method.title }}) - {{ error_method_not_allowed }}" {% elseif payment_method.min_total_disabled %} style="opacity: 0.5; cursor: not-allowed;" data-bs-toggle="tooltip" title="({{ payment_method.title }}) - {{ error_payment_min_total|replace({'%s': payment_method.min_total_amount}) }}" {% endif %}>
+    									    <div class="form-check">
+        										<label class="form-check-label d-flex align-items-center gap-2 fsz-14">
+        											{% if loop.first %}
+        												{% set code = payment_method.code %}
+        												<input type="radio" class="form-check-input" name="payment_method" value="{{ payment_method.code }}" title="{{ payment_method.title }}" {% if payment_method.hidden or payment_method.min_total_disabled %} disabled {% endif %} checked="checked"/>
+        											{% else %}
+        												<input type="radio" class="form-check-input" name="payment_method" value="{{ payment_method.code }}" title="{{ payment_method.title }}" {% if payment_method.hidden or payment_method.min_total_disabled %} disabled {% endif %}/>
+        											{% endif %}
+                                                    {% if payment_method.image %}
+                                                        <img src="{{ payment_method.image }}" alt="{{ payment_method.title }}" width="20" height="20" />
+                                                    {% endif %}
+        											{{ payment_method.title }}
+        										</label>
+        									</div>
+                                            {% if payment_method.description %}
+                                                <p class="fsz-12 grey-text mt-2">{{ payment_method.description }}</p>
+                                            {% endif %}
+    									</div>
+    								{% endfor %}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div> 
+
+                {% if commentIsAviable %} 
+                    <div class="content-block order-{{ comment_block_sort }}">
+                        <div class="pr-smart-checkout-title fsz-20 fw-700 dark-text d-flex align-items-center gap-3 mb-3">{{ commentData['title'][language_id]|default(entry_comment) }}</div>
+                        <div class="form-group">
+                            <textarea name="comment" rows="4" class="form-control" placeholder="{{ commentData['placeholder'][language_id]|default(entry_comment) }}" aria-label="{{ commentData['title'][language_id]|default(entry_comment) }}"></textarea>
+                        </div>
+                    </div>
+                {% endif %}
+			</div>
+			<div class="col-xl-4">
+				<div class="content-block sticky-top pr-sticky-column z-1">
+                    {% if loyalty_check %}
+                        <div class="fsz-14 fw-700">{{ text_next }}</div>
+                        <p class="fsz-14 fw-500 grey-text my-3 pb-3 border-bottom">{{ text_next_choice }}</p>
+                        {% if coupon_status_check %}
+                            <div class="pr-cart-column-item pb-3 mb-3 border-bottom">
+                                <div class="pr-cart-column-item-title d-flex align-items-center justify-content-between gap-3 dark-text fsz-14 fw-500">
+                                    {{ entry_coupon_title }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+                                        <path d="M1 1L6 6L11 1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div id="collapse-coupon" class="form-group pr-cart-column-item-block-group">
+                                    <label for="input-coupon" class="control-label fsz-12 grey-text mb-2 mt-3">{{ entry_coupon }}</label>
+                                    <input type="text" name="coupon" value="{{ coupon }}" placeholder="{{ entry_coupon }}" id="input-coupon" class="form-control no-focused fsz-12"/>
+                                    <button type="button" value="{{ text_apply }}" id="button-coupon" data-loading-text="{{ text_loading }}" class="button button-primary input-with-btn w-100 mt-3 fsz-12">{{ text_apply }}</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if voucher_status_check %}
+                            <div class="pr-cart-column-item pb-3 mb-3 border-bottom">
+                                <div class="pr-cart-column-item-title d-flex align-items-center justify-content-between gap-3 dark-text fsz-14 fw-500">
+                                    {{ entry_voucher_title }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+                                        <path d="M1 1L6 6L11 1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div id="collapse-voucher" class="form-group pr-cart-column-item-block-group">
+                                    <label for="input-voucher" class="control-label fsz-12 grey-text mb-2 mt-3">{{ entry_voucher }}</label>
+                                    <input type="text" name="voucher" value="{{ voucher }}" placeholder="{{ entry_voucher }}" id="input-voucher" class="form-control no-focused"/>
+                                    <button type="button" value="{{ text_apply }}" id="button-voucher" data-loading-text="{{ text_loading }}" class="button button-primary input-with-btn w-100 mt-3 fsz-12">{{ text_apply }}</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if has_reward and user_logged %}
+                            <div class="pr-cart-column-item pb-3 mb-3 border-bottom">
+                                <div class="pr-cart-column-item-title d-flex align-items-center justify-content-between gap-3 dark-text fsz-14 fw-500">
+                                    {{ entry_reward_title }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+                                        <path d="M1 1L6 6L11 1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div id="collapse-reward" class="form-group pr-cart-column-item-block-group">
+                                    <label for="input-reward" class="control-label fsz-12 grey-text mb-2 mt-3">{{ entry_reward }}</label>
+                                    <input type="text" name="reward" value="{{ reward }}" placeholder="{{ entry_reward_title }}" id="input-reward" class="form-control no-focused"/>
+                                    <button type="button" value="{{ text_apply }}" id="button-reward" data-loading-text="{{ text_loading }}" class="button button-primary input-with-btn w-100 mt-3 fsz-12">{{ text_apply }}</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+					<div class="pr-cart-column-total text-end mb-2">
+                        {% if free_shipping_from_text %}
+                            <div class="pr-sidebar-cart-delivery text-start fsz-14 mb-4 border-bottom{% if total_percentage >= 100 %} green pb-3{% else %} dark-text{% endif %}">
+                                {{ free_shipping_from_text }}
+                                {% if total_percentage < 100 %}
+                                    <div class="pr-sidebar-cart-delivery-progress my-3 my-lg-4 br-4">
+                                        <div class="pr-sidebar-cart-delivery-progress-bar br-4 position-relative" role="progressbar" aria-valuenow="{{ total_value }}" aria-valuemin="0" aria-valuemax="{{ oct_smart_checkout_data.free_shipping_from }}" style="width: {{ total_percentage }}%">
+                                            <span class="pr-sidebar-cart-delivery-progress-bar-car-icon position-absolute">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <g clip-path="url(#clip0_371_576)">
+                                                    <path d="M18.8502 5.54993C18.7107 5.37943 18.5353 5.24175 18.3366 5.14669C18.1378 5.05163 17.9205 5.00152 17.7002 4.99993H17.1002L17.2502 4.14993C17.2783 3.94793 17.2663 3.74237 17.2148 3.54504C17.1634 3.3477 17.0734 3.16246 16.9502 2.99993C16.663 2.6959 16.2682 2.51642 15.8502 2.49993H3.95023C3.70317 2.49542 3.46244 2.57818 3.27038 2.73365C3.07833 2.88912 2.94725 3.10735 2.90023 3.34993C2.87848 3.49325 2.88814 3.63959 2.92856 3.77881C2.96898 3.91802 3.03918 4.04678 3.1343 4.15617C3.22942 4.26556 3.34719 4.35297 3.47944 4.41232C3.6117 4.47168 3.75528 4.50157 3.90023 4.49993H7.55023C7.76591 4.5041 7.97815 4.55474 8.17248 4.64839C8.36681 4.74205 8.53866 4.87651 8.67629 5.04262C8.81392 5.20873 8.91411 5.40258 8.97001 5.61093C9.02592 5.81928 9.03622 6.03723 9.00023 6.24993L7.80023 13.1499C7.74204 13.4946 7.56531 13.8081 7.30057 14.0363C7.03583 14.2646 6.6997 14.3932 6.35023 14.3999H2.40023C2.16628 14.3952 1.93809 14.4727 1.75537 14.6189C1.57265 14.765 1.44698 14.9707 1.40023 15.1999L1.00023 17.3499C0.969507 17.5556 0.984979 17.7655 1.04552 17.9644C1.10606 18.1633 1.21015 18.3463 1.35023 18.4999C1.47919 18.6536 1.63969 18.7778 1.82085 18.8641C2.00202 18.9504 2.1996 18.9967 2.40023 18.9999H3.65023C3.86782 19.719 4.31101 20.349 4.9143 20.7968C5.51759 21.2445 6.24894 21.4863 7.00023 21.4863C7.75152 21.4863 8.48287 21.2445 9.08616 20.7968C9.68944 20.349 10.1326 19.719 10.3502 18.9999H12.6502C12.8678 19.719 13.311 20.349 13.9143 20.7968C14.5176 21.2445 15.2489 21.4863 16.0002 21.4863C16.7515 21.4863 17.4829 21.2445 18.0862 20.7968C18.6894 20.349 19.1326 19.719 19.3502 18.9999H20.3502C20.726 18.9928 21.0873 18.8536 21.3707 18.6067C21.6541 18.3599 21.8416 18.0212 21.9002 17.6499L23.0002 11.2499L18.8502 5.54993ZM7.00023 19.4999C6.6024 19.4999 6.22087 19.3419 5.93957 19.0606C5.65826 18.7793 5.50023 18.3978 5.50023 17.9999C5.50023 17.6021 5.65826 17.2206 5.93957 16.9393C6.22087 16.658 6.6024 16.4999 7.00023 16.4999C7.39805 16.4999 7.77958 16.658 8.06089 16.9393C8.34219 17.2206 8.50023 17.6021 8.50023 17.9999C8.50023 18.3978 8.34219 18.7793 8.06089 19.0606C7.77958 19.3419 7.39805 19.4999 7.00023 19.4999ZM16.0002 19.4999C15.6024 19.4999 15.2209 19.3419 14.9396 19.0606C14.6583 18.7793 14.5002 18.3978 14.5002 17.9999C14.5002 17.6021 14.6583 17.2206 14.9396 16.9393C15.2209 16.658 15.6024 16.4999 16.0002 16.4999C16.3981 16.4999 16.7796 16.658 17.0609 16.9393C17.3422 17.2206 17.5002 17.6021 17.5002 17.9999C17.5002 18.3978 17.3422 18.7793 17.0609 19.0606C16.7796 19.3419 16.3981 19.4999 16.0002 19.4999ZM16.0502 10.9999L16.7502 6.99993H17.4002L20.3502 10.9999H16.0502Z" fill="#4AB246"></path>
+                                                    <path d="M2 7.5H7C7.26522 7.5 7.51957 7.39464 7.70711 7.20711C7.89464 7.01957 8 6.76522 8 6.5C8 6.23478 7.89464 5.98043 7.70711 5.79289C7.51957 5.60536 7.26522 5.5 7 5.5H2C1.73478 5.5 1.48043 5.60536 1.29289 5.79289C1.10536 5.98043 1 6.23478 1 6.5C1 6.76522 1.10536 7.01957 1.29289 7.20711C1.48043 7.39464 1.73478 7.5 2 7.5Z" fill="#4AB246"></path>
+                                                    <path d="M7.5 9.5C7.5 9.23478 7.39464 8.98043 7.20711 8.79289C7.01957 8.60536 6.76522 8.5 6.5 8.5H2.5C2.23478 8.5 1.98043 8.60536 1.79289 8.79289C1.60536 8.98043 1.5 9.23478 1.5 9.5C1.5 9.76522 1.60536 10.0196 1.79289 10.2071C1.98043 10.3946 2.23478 10.5 2.5 10.5H6.5C6.76522 10.5 7.01957 10.3946 7.20711 10.2071C7.39464 10.0196 7.5 9.76522 7.5 9.5Z" fill="#4AB246"></path>
+                                                    <path d="M3 11.5C2.73478 11.5 2.48043 11.6054 2.29289 11.7929C2.10536 11.9804 2 12.2348 2 12.5C2 12.7652 2.10536 13.0196 2.29289 13.2071C2.48043 13.3946 2.73478 13.5 3 13.5H6C6.26522 13.5 6.51957 13.3946 6.70711 13.2071C6.89464 13.0196 7 12.7652 7 12.5C7 12.2348 6.89464 11.9804 6.70711 11.7929C6.51957 11.6054 6.26522 11.5 6 11.5H3Z" fill="#4AB246"></path>
+                                                    </g>
+                                                    <defs>
+                                                    <clipPath id="clip0_371_576">
+                                                        <rect width="24" height="24" fill="white"></rect>
+                                                    </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+						{% for total in totals %}
+							<div class="pr-cart-column-total-item mb-3 d-flex align-items-center justify-content-between fsz-14 fw-500 dark-text">
+								{{ total.title }} <span class="fw-700 fsz-16{% if total.code == 'oct_product_set' %} red{% endif %}">{{ total.text }}</span>
+							</div>
+						{% endfor %}
+						{% if weight %}
+							<div class="pr-cart-column-total-item mb-3 d-flex align-items-center justify-content-between fsz-14 fw-500 dark-text">
+								{{ text_weight }} <span class="fw-700 fsz-16">{{ weight }}</span>
+							</div>
+						{% endif %}
+					</div>
+					{% if no_call %}
+						<div id="no_call-block" class="form-check d-flex align-items-center gap-2 mt-3 mb-2">
+							<input id="no_call" class="form-check-input" type="checkbox" name="no_call" value="1"/>
+							<label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="no_call">{{ text_no_call }}</label>
+						</div>
+					{% endif %}
+                    {% if telegram_viber_contact %}
+                        <div id="telegram_viber_contact-block" class="form-check d-flex align-items-center gap-2 mb-2">
+                            <input id="telegram_viber_contact" class="form-check-input" type="checkbox" name="telegram_viber_contact" value="1"/>
+                            <label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="telegram_viber_contact">{{ text_telegram_viber_contact }}</label>
+                        </div>
+                    {% endif %}
+					{% if text_agree %}
+						<div id="agree-block" class="form-check d-flex align-items-center gap-2 mb-3">
+							{% if agree %}
+								<input id="checkoutCheckbox" class="form-check-input" type="checkbox" name="agree" value="1" checked="checked"/>
+							{% else %}
+								<input id="checkoutCheckbox" class="form-check-input" type="checkbox" name="agree" value="1"/>
+							{% endif %}
+							<label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="checkoutCheckbox">{{ text_agree }}</label>
+						</div>
+					{% endif %}
+					<div class="oct-fastorder-payment">
+						{% if payment and payment %}
+							<p>{{ payment }}</p>
+						{% else %}
+                             {{ captcha }}
+							<button type="button" class="button button-primary w-100 mt-2 py-3" id="button-go">
+								<span class="button-text">{{ button_checkout }}</span>
+							</button>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</div>
+{{ content_bottom }}
+<script>
+    let iti = null;
+    let savedTelephoneValue = '';
+    let savedCountryCode = '';
+    const textWaitSeconds = '{{ error_sms_max_attempts|escape('js') }}';
+    
+    let phoneMasksFromSettings = {};
+    try {
+        const phoneMasksJson = {{ phone_masks|raw }};
+        if (phoneMasksJson && typeof phoneMasksJson === 'object') {
+            phoneMasksFromSettings = phoneMasksJson;
+        }
+    } catch (e) {
+        console.warn('Failed to parse phone masks from settings:', e);
+    }
+    
+    let allowedCountries = [];
+    try {
+        const allowedCountriesJson = {{ allowed_countries|raw }};
+        if (allowedCountriesJson && Array.isArray(allowedCountriesJson)) {
+            allowedCountries = allowedCountriesJson;
+        }
+    } catch (e) {
+        console.warn('Failed to parse allowed countries:', e);
+    }
+
+    function getFullPhoneNumber() {
+        if (!iti) return '';
+        
+        const telInput = document.querySelector('#telephone');
+        if (!telInput) return '';
+        
+        const selectedCountryData = iti.getSelectedCountryData();
+        const dialCode = selectedCountryData.dialCode || '';
+        let rawValue = telInput.value.replace(/\D/g, '');
+        
+        if (rawValue.length > 15) {
+            rawValue = rawValue.substring(0, 15);
+        }
+        
+        return rawValue ? '+' + dialCode + rawValue : '';
+    }
+
+    function updateHiddenPhoneField() {
+        const fullNumber = getFullPhoneNumber();
+        const hiddenField = document.querySelector('#oct_full_telephone');
+        if (hiddenField) {
+            hiddenField.value = fullNumber;
+        }
+        return fullNumber;
+    }
+
+    function initIntlTelInput() {
+        const telInput = document.querySelector('#telephone');
+        if (telInput && !telInput.classList.contains('iti__tel-input')) {
+            if (iti) {
+                iti.destroy();
+            }
+
+            const existingValue = telInput.value;
+            if (existingValue && !savedTelephoneValue) {
+                savedTelephoneValue = existingValue;
+            }
+
+            const defaultCountry = '{{ default_phone_country|default("ua") }}';
+            let initialCountry = savedCountryCode || defaultCountry;
+
+            const itiOptions = {
+                initialCountry: initialCountry,
+                geoIpLookup: function(callback) {
+                    callback(savedCountryCode || defaultCountry);
+                },
+                separateDialCode: true,
+                nationalMode: true,
+                formatOnDisplay: false,
+                strictMode: false,
+                allowDropdown: true,
+				useFullscreenPopup: false,
+				containerClass: "input-group"
+            };
+
+            if (allowedCountries.length > 0) {
+                itiOptions.onlyCountries = allowedCountries;
+                
+                if (allowedCountries.length === 1) {
+                    itiOptions.allowDropdown = false;
+                }
+            }
+
+            iti = window.intlTelInput(telInput, itiOptions);
+
+            if (savedTelephoneValue) {
+                iti.setNumber(savedTelephoneValue);
+            }
+            
+            if (savedCountryCode) {
+                iti.setCountry(savedCountryCode);
+            }
+
+            const applyInputMask = function() {
+                if (typeof $.fn.inputmask === 'undefined') {
+                    console.warn('Inputmask not loaded yet');
+                    return;
+                }
+                
+                const countryData = iti.getSelectedCountryData();
+                
+                let maskData = phoneMasksFromSettings[countryData.iso2];
+                let mask = null;
+                
+                if (maskData && typeof maskData === 'object' && maskData.mask) {
+                    mask = maskData.mask;
+                } else if (typeof maskData === 'string') {
+                    mask = maskData;
+                }
+                
+                if (!mask) {
+                    const defaultMasks = {
+                        'ua': '99 999 99 99',      // Ukraine: XX XXX XX XX (9 digits)
+                        'pl': '999 999 999',       // Poland: XXX XXX XXX (9 digits)
+                        'us': '(999) 999-9999',    // USA: (XXX) XXX-XXXX (10 digits)
+                        'ca': '(999) 999-9999',    // Canada: (XXX) XXX-XXXX (10 digits)
+                        'gb': '99999 999999',      // UK: XXXXX XXXXXX (10-11 digits)
+                        'de': '9999 99999999',     // Germany: XXXX XXXXXXXX (10-11 digits)
+                        'fr': '9 99 99 99 99',     // France: X XX XX XX XX (9 digits)
+                        'it': '999 999 9999',      // Italy: XXX XXX XXXX (10 digits)
+                        'es': '999 99 99 99',      // Spain: XXX XX XX XX (9 digits)
+                        'ru': '(999) 999-99-99',   // Russia: (XXX) XXX-XX-XX (10 digits)
+                        'by': '(99) 999-99-99',    // Belarus: (XX) XXX-XX-XX (9 digits)
+                    };
+                    
+                    mask = defaultMasks[countryData.iso2];
+                }
+                
+                if (!mask) {
+                    const dialCodeLength = countryData.dialCode.length;
+                    if (dialCodeLength === 1) {
+                        mask = '(999) 999-9999'; 
+                    } else if (dialCodeLength === 2) {
+                        mask = '99 999 99 99'; 
+                    } else {
+                        mask = '999 999 9999'; 
+                    }
+                }
+                
+               
+                if ($(telInput).inputmask) {
+                    $(telInput).inputmask('remove');
+                }
+                
+                $(telInput).inputmask({
+                    mask: mask,
+                    clearMaskOnLostFocus: false,
+                    showMaskOnHover: false,
+                    placeholder: '_',
+                    onincomplete: function() {
+                        updateHiddenPhoneField();
+                    },
+                    oncomplete: function() {
+                        updateHiddenPhoneField();
+                    },
+                    oncleared: function() {
+                        updateHiddenPhoneField();
+                    }
+                });
+                
+                const placeholderText = mask.replace(/9/g, '_');
+                telInput.setAttribute('placeholder', placeholderText);
+            };
+            
+            setTimeout(function() {
+                applyInputMask();
+            }, 300);
+
+            telInput.addEventListener('input', function(e) {
+                savedTelephoneValue = updateHiddenPhoneField();
+            });
+
+            telInput.addEventListener('paste', function(e) {
+                setTimeout(function() {
+                    savedTelephoneValue = updateHiddenPhoneField();
+                }, 10);
+            });
+
+            telInput.addEventListener('countrychange', function() {
+                const countryData = iti.getSelectedCountryData();
+                savedCountryCode = countryData.iso2;
+                
+                applyInputMask();
+                
+                savedTelephoneValue = updateHiddenPhoneField();
+            });
+
+            telInput.addEventListener('blur', function() {
+                savedTelephoneValue = updateHiddenPhoneField();
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        initIntlTelInput();
+    });
+
+    $(function () {
+        const $block = $('.oct-fastorder-payment');
+        if ($block.length && !$block.data('default-html')) {
+            $block.data('default-html', $block.html());
+        }
+    });
+
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            const $buttonGo = $('#button-go');
+            const $paymentBlock = $('.oct-fastorder-payment');
+
+            if (!$buttonGo.length && $paymentBlock.length && $paymentBlock.data('default-html')) {
+                $paymentBlock.siblings('button[disabled]').remove();
+                $paymentBlock.next('button[disabled]').remove();
+                $('.oct-fastorder-alert').remove();
+
+                $('.ds-sticky-column button[disabled]').each(function() {
+                    if ($(this).find('.spinner-border').length) {
+                        $(this).remove();
+                    }
+                });
+
+                $paymentBlock.html($paymentBlock.data('default-html'));
+                $paymentBlock.removeClass('d-none');
+                masked('body', false);
+            } else if ($buttonGo.length && $buttonGo.prop('disabled')) {
+                $buttonGo.prop('disabled', false);
+                $buttonGo.html('<span class="button-text">{{ button_checkout }}</span>');
+                try {
+                    $buttonGo.button('reset');
+                } catch(e) {}
+                masked('body', false);
+            }
+        }
+    });
+
+    function scrollToItem(elementId, shipping = false) {
+        const element = document.querySelector(elementId);
+
+        if (element) {
+            if (shipping) {
+                element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+                return;
+            }
+            const rect = element.getBoundingClientRect();
+
+            window.scrollTo({
+                top: rect.top + window.scrollY - (window.innerHeight / 2),
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    function scrollToFreeShipping() {
+        scrollToItem('#oct-shipping-block', true);
+    }
+
+    function addToCartFromCheckout(product_id, quantity = 1) {
+        update(product_id, 'add');
+    }
+
+    let formChangeTimeout;
+    function formChangeData() {
+        clearTimeout(formChangeTimeout);
+        formChangeTimeout = setTimeout(function() {
+            if (iti && !savedTelephoneValue) {
+                savedTelephoneValue = getFullPhoneNumber();
+            }
+
+            let formData = $('.oct-checkout input[type=\'text\'], .oct-checkout input[type=\'tel\'], .oct-checkout input[type=\'date\'], .oct-checkout input[type=\'datetime-local\'], .oct-checkout input[type=\'time\'], .oct-checkout input[type=\'password\'], .oct-checkout input[type=\'hidden\'], .oct-checkout input[type=\'checkbox\']:checked, .oct-checkout input[type=\'radio\']:checked, .oct-checkout textarea, .oct-checkout select').serialize();
+
+            $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/formDataChange',
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function() {
+                $('#button-go').button('loading');
+                masked('body', true);
+            },
+            complete: function() {
+                $('#button-go').button('reset');
+                masked('body', false);
+            },
+            success: function(json) {
+                if (!json.html.error) {
+
+                    if (json.html.recommended_poducts) {
+                        $('#recommended_block').html(json.html.recommended_poducts);
+                    }
+
+                    $('#oct-shipping-block').html(json.html.shipping_block);
+                    $('#oct-payment-block').html(json.html.payment_block);
+                    $('#customer-fields-block').html(json.html.customer_fields);
+                    $('#country-zone-fields-block').html(json.html.countryzone_fields);
+                    $('#customer_address_fields').html(json.html.customer_address_fields);
+                    $('#cart-table').html(json.html.cart);
+
+                    setTimeout(function() {
+                        initIntlTelInput();
+                        if (savedTelephoneValue) {
+                            const telInput = document.querySelector('#telephone');
+                            if (telInput) {
+                                telInput.value = savedTelephoneValue;
+                                if (iti) {
+                                    iti.setNumber(savedTelephoneValue);
+                                }
+                            }
+                        }
+                    }, 100);
+
+                    let payment_fields = json.html.payment_fields;
+                    let payment_code = json.html.payment_code;
+
+                    if (payment_fields && payment_code) {
+                        $('.payment-fields-container').html('');
+                        $('#payment-fields-' + payment_code).html(payment_fields);
+                    } else {
+                        $('.payment-fields-container').html('');
+                    }
+
+                    if (!json.html.countryzone_fields) {
+                        $('#country-zone-fields-block').hide();
+                    } else {
+                        $('#country-zone-fields-block').show();
+                    }
+
+                    if (!json.html.customer_address_fields) {
+                        $('#customer_address_fields').hide();
+                    } else {
+                        $('#customer_address_fields').show();
+                    }
+
+                    if (!json.html.recommended_poducts) {
+                        $('#recommended_block').hide();
+                    } else {
+                        $('#recommended_block').show();
+                    }
+
+                    const $base = $('.oct-fastorder-payment');
+                    if ($base.length && $base.data('default-html')) {
+                        $base.html($base.data('default-html')).removeClass('d-none');
+                    }
+                } else {
+                    location = json.html.redirect;
+                }
+                
+                masked('body', false);
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.error('error');
+            }
+            });
+        }, 300);
+    }
+
+    function update(target, status) {
+        let input_val  = $(target).parent().parent().children('input[name=quantity]').val(),
+            quantity   = parseInt(input_val),
+            product_id  = $(target).parent().parent().parent().children('input[name=product_id]').val(),
+            product_id_q = $(target).parent().parent().parent().children('input[name=product_id_q]').val(),
+            product_key = $(target).parent().parent().find('input[name=product_id]').val(),
+            urls     = null;
+
+        if (quantity <= 0) {
+            quantity = $(target).parent().parent().children('input[name=quantity]').val(1);
+            return;
+        }
+
+        if (status == 'update') {
+            urls = 'index.php?route=checkout/oct_smartcheckout/shoppingCart&update=' + product_id + '&quantity=' + quantity;
+        } else if (status == 'add') {
+            urls = 'index.php?route=checkout/oct_smartcheckout/shoppingCart&add=' + target + '&quantity=1';
+        } else {
+            urls = 'index.php?route=checkout/oct_smartcheckout/shoppingCart&remove=' + product_key;
+        }
+
+        $.ajax({
+            url: urls,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+            $.ajax({
+                url: 'index.php?route=checkout/oct_smartcheckout/statusCart',
+                type: 'get',
+                dataType: 'json',
+                success: function(json) {
+                    if (json['total']) {
+                        setTimeout(function () {
+                            $('#cart .pr-cart-qty').html(json['total']);
+
+                        }, 100);
+                    }
+                    if (!json['redirect']) {
+                        formChangeData();
+                    } else {
+                        location = json['redirect'];
+                    }
+                }
+            });
+            }
+        });
+    }
+
+    function update_manual(target, product_id, operation = false) {
+        let use_minimum_step = {{ use_minimum_step ?? 0 }};
+        let input_val = $(target).val(),
+            quantity = parseInt(input_val);
+
+        let product_id_q = $(target).closest('.pr-sidebar-cart-product').find('input[name="product_id_q"]').val();
+        let minimum = parseInt($('input[name="product_minimum_' + product_id_q + '"]').val()) || 1;
+        
+        let step = use_minimum_step ? minimum : 1;
+
+        if (isNaN(quantity)) {
+            $(target).val(minimum);
+            return;
+        }
+
+        if (operation === 'plus') {
+            quantity += step;
+        } else if (operation === 'minus') {
+            quantity -= step;
+            if (quantity < (use_minimum_step ? minimum : 1)) {
+                quantity = use_minimum_step ? minimum : 1;
+            }
+        } else {
+            if (use_minimum_step) {
+                if (quantity < minimum) {
+                    quantity = minimum;
+                } else {
+                    let remainder = quantity % minimum;
+                    if (remainder !== 0) {
+                        quantity = quantity - remainder + minimum;
+                    }
+                }
+            } else {
+                if (quantity < 1) {
+                    quantity = 1;
+                }
+            }
+        }
+
+        $(target).val(quantity);
+
+        if (quantity <= 0) {
+            quantity = $(target).val(use_minimum_step ? minimum : 1);
+            const deleteButton = $(target).closest('.pr-sidebar-cart-product').find('.pr-sidebar-cart-product-delete');
+            if (deleteButton.length) {
+                update(deleteButton[0], 'remove');
+            } else {
+                update(product_id, 'remove');
+            }
+            return;
+        }
+
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/shoppingCart&update=' + product_id + '&quantity=' + quantity,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                $.ajax({
+                    url: 'index.php?route=checkout/oct_smartcheckout/statusCart',
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(json) {
+                    if (json['total']) {
+                        setTimeout(function () {
+                            $('#cart .pr-cart-qty').html(json['total']);
+                        }, 100);
+                    }
+                    if (!json['redirect']) {
+                        formChangeData();
+                    } else {
+                        location = json['redirect'];
+                    }
+                    }
+                });
+            }
+        });
+    }
+    
+    {% if not user_logged %}
+    function generatePassword() {
+        const length = document.getElementById('length').value;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+        let password = "";
+
+        const lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        const uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numbers = "0123456789";
+        const specialChars = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+        password += lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length));
+        password += uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length));
+        password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+        password += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+
+        for (var i = password.length; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+
+        password = shuffle(password);
+
+        document.getElementById('password').value = password;
+        updateStrengthIndicator(password);
+    }
+
+    function shuffle(string) {
+        const array = string.split('');
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array.join('');
+    }
+
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    }
+
+    function copyToClipboard() {
+        const passwordInput = document.getElementById('password');
+        const currentType = passwordInput.getAttribute('type');
+
+        passwordInput.setAttribute('type', 'text');
+        passwordInput.select();
+        document.execCommand('copy');
+
+        passwordInput.setAttribute('type', currentType);
+        prNotify('success', '{{ text_copy_success }}');
+    }
+
+    function evaluatePasswordStrength(password) {
+        let strengthPoints = 0;
+        const diversityFactors = [
+            { regex: /[a-z]/, points: 1 }, 
+            { regex: /[A-Z]/, points: 1 },
+            { regex: /[0-9]/, points: 1 }, 
+            { regex: /[^a-zA-Z0-9]/, points: 1 } 
+        ];
+
+        diversityFactors.forEach(factor => {
+            if(factor.regex.test(password)) {
+                strengthPoints += factor.points;
+            }
+        });
+
+        const lengthPoints = Math.min(Math.floor(password.length / 4), 5); 
+        strengthPoints += lengthPoints;
+
+        return strengthPoints; 
+    }
+
+    function updateStrengthIndicator(password) {
+        const strengthPoints = evaluatePasswordStrength(password);
+        const strengthIndicator = document.getElementById('strengthIndicator');
+        let backgroundColor;
+        let width;
+        switch (true) {
+            case (strengthPoints >= 7):
+                backgroundColor = 'green';
+                width = '100%';
+                break;
+            case (strengthPoints >= 4):
+                backgroundColor = 'orange';
+                width = `${(strengthPoints / 7) * 100}%`;
+                break;
+            default:
+                backgroundColor = 'red';
+                width = `${(strengthPoints / 7) * 100}%`;
+        }
+        strengthIndicator.style.width = width;
+        strengthIndicator.style.backgroundColor = backgroundColor;
+    }
+    {% endif %}
+
+    function octAbandonedSave() {
+        if (iti) {
+            updateHiddenPhoneField();
+        }
+        
+        let formData = $('.oct-checkout input[type=\'text\'], .oct-checkout input[type=\'tel\'], .oct-checkout input[type=\'hidden\']').serialize();
+
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/abandonedSave',
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+        });
+    }
+
+    $('#customer-fields-block').on('blur', 'input[type="text"], input[type="tel"]', function() {
+        if ($(this).val().trim() !== '') {
+            octAbandonedSave();
+        }
+    });
+
+    $('#button-voucher').on('click', function() {
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/voucher',
+            type: 'post',
+            data: 'voucher=' + encodeURIComponent($('input[name=\'voucher\']').val()),
+            dataType: 'json',
+            beforeSend: function() {
+                    masked('body', true);
+            },
+            complete: function() {
+                    masked('body', false);
+            },
+            success: function(json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    prNotify('danger', json['error']);
+                }
+
+                if (json['success']) {
+                    formChangeData();
+                    prNotify('success', json['success']);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.error('error voucher');
+            }
+        });
+    });
+
+    $('#button-coupon').on('click', function() {
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/coupon',
+            type: 'post',
+            data: 'coupon=' + encodeURIComponent($('input[name=\'coupon\']').val()),
+            dataType: 'json',
+            beforeSend: function() {
+                    masked('body', true);
+            },
+            complete: function() {
+                    masked('body', false);
+            },
+            success: function(json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    prNotify('danger', json['error']);
+                }
+
+                if (json['success']) {
+                    formChangeData();
+                    prNotify('success', json['success']);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.error('error coupon');
+            }
+        });
+    });
+
+    $('#button-reward').on('click', function() {
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/reward',
+            type: 'post',
+            data: 'reward=' + encodeURIComponent($('input[name=\'reward\']').val()),
+            dataType: 'json',
+            beforeSend: function() {
+                $('#button-reward').button('loading');
+            },
+            complete: function() {
+                $('#button-reward').button('reset');
+            },
+            success: function(json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    prNotify('danger', json['error']);
+                }
+
+                if (json['success']) {
+                    formChangeData();
+                    prNotify('success', json['success']);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.error('error reward');
+            }
+        });
+    });
+
+    $(document).on('change', '#new-address-toggle', function() {
+        if ($(this).is(':checked')) {
+            $('#new-address-fields').removeClass('d-none').hide().slideDown(300);
+        } else {
+            $('#new-address-fields').slideUp(300, function() {
+                $(this).addClass('d-none');
+            });
+        }
+        setTimeout(function() {
+            formChangeData();
+        }, 350);
+    });
+
+    $(document).on('change', '#address-select', function() {
+        if (!$('#new-address-toggle').is(':checked')) {
+            formChangeData();
+        }
+    });
+
+    function moveAddressBlock() {
+        const $addressBlock = $('#shipping-address-block');
+        
+        if (!$addressBlock.length) {
+            return;
+        }
+        
+        const $checkedMethod = $('input[name="shipping_method"]:checked');
+        
+        if ($checkedMethod.length) {
+            const $selectedMethodBlock = $checkedMethod.closest('.pr-smart-checkout-check-item');
+            $addressBlock.detach().appendTo($selectedMethodBlock).show();
+        }
+    }
+
+    {% if autoselect_first_shipping %}
+    $(document).ready(function() {
+       $('input[name="shipping_method"]:first').trigger('change');
+    });
+    {% endif %}
+    
+    $(document).on('change', 'input[name="payment_method"], input[name="shipping_method"], select[name="zone_id"]', function () {
+        setTimeout(function() {
+            formChangeData();
+        }, 400);
+    });
+
+    $(document).on('change', 'select[name=\'country_id\']', function () {
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/country&country_id=' + this.value,
+            dataType: 'json',
+            beforeSend: function () {
+                $('select[name=\'country_id\']').after(' <i class="fa fa-spinner fa-spin"></i>');
+            },
+            complete: function () {
+                $('.fa-spinner').remove();
+            },
+            success: function (json) {
+
+                html = '<option value="">{{ text_select }}</option>';
+
+                if (json['zone'] && json['zone'] != '') {
+                    for (i = 0; i < json['zone'].length; i++) {
+                        html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+
+                        if (json['zone'][i]['zone_id'] ==
+                            '{{ oct_smartcheckout_data.country_and_region == 1 ? zone_id : oct_smartcheckout_data.default_region }}'
+                            ) {
+                            html += ' selected="selected"';
+                        }
+
+                        html += '>' + json['zone'][i]['name'] + '</option>';
+                    }
+                } else {
+                    html += '<option value="0" selected="selected">{{ text_none }}</option>';
+                }
+
+                {% if oct_smartcheckout_data.country_and_region == 1 or oct_smartcheckout_data.country_and_region == 2 %}
+                $('select[name=\'zone_id\']').html(html).val(''); 
+                {% else %}
+                $('select[name=\'zone_id\']').html(html);
+                $('select[name=\'zone_id\']').trigger('change'); 
+                {% endif %}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.error('error');
+            }
+        });
+    });
+
+    let error = true;
+    $(document).on("change paste keyup", ".oct-checkout .form-control, .oct-checkout .form-check-input", function () {
+        $(this).removeClass('error_style');
+    });
+
+    $(document).on('click', '#button-go', function () {
+        if (iti) {
+            updateHiddenPhoneField();
+        }
+
+        let data = $(
+            '.oct-checkout input[type=\'text\'], .oct-checkout input[type=\'tel\'], .oct-checkout input[type=\'date\'], .oct-checkout input[type=\'datetime-local\'], .oct-checkout input[type=\'time\'], .oct-checkout input[type=\'password\'], .oct-checkout input[type=\'hidden\'], .oct-checkout input[type=\'checkbox\']:checked, .oct-checkout input[type=\'radio\']:checked, .oct-checkout textarea, .oct-checkout select'
+        ).serialize();
+        
+        data += '&_shipping_method=' + $('.oct-checkout input[name=\'shipping_method\']:checked').prop('title') +
+            '&_payment_method=' + $('.oct-checkout input[name=\'payment_method\']:checked').prop('title');
+
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/validateForm',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            beforeSend: function () {
+                $('#button-go').button('loading');
+                masked('body', true);
+
+                $('#button-go').data('original-content', $('#button-go').html());
+                $('#button-go').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+            },
+            complete: function () {
+                $('#button-go').button('reset');
+                masked('body', false);
+
+                setTimeout(function () {
+                    $('#button-go').html($('#button-go').data('original-content')).prop('disabled', false);
+                }, 600);
+            },
+            success: function (json) {
+                $('.register_block input, .register_block select').parent().removeClass('error_style');
+                masked('body', false);
+
+                const baseSelector        = '.oct-fastorder-payment';
+                const spinnerBtn          = $(baseSelector).next('button[disabled]');
+                const clickSelectors      = `${baseSelector} input[type=submit], ${baseSelector} input[type=button], ${baseSelector} button, ${baseSelector} a, ${baseSelector} .btn-primary, ${baseSelector} #button-confirm`;
+                const timeoutDuration     = 200;
+                const autosubmitPayment   = "{{ autosubmit_payment }}";
+
+                if (!json || typeof json !== 'object') {
+                    prNotify('danger', 'Server error. Please try again.');
+                    return;
+                }
+
+                if (json.show_sms_modal || json.sms_required) {
+                    const timerValue = json.timer || 60;
+                    
+                    $('#timer-seconds').text(timerValue);
+                    $('#sms-timer').show();
+                    $('#sms-code-input').val('').prop('disabled', false);
+                    $('#btn-verify-sms').prop('disabled', false);
+                    $('#btn-resend-sms').prop('disabled', true);
+                    $('#sms-error').addClass('d-none');
+                    
+                    startSmsTimer(timerValue, false);
+                    
+                    if (json.message) {
+                        prNotify('success', json.message);
+                    }
+                    
+                    $('#smsVerificationModal').modal('show');
+                    
+                    setTimeout(function() {
+                        const input = document.getElementById('sms-code-input');
+                        if (input) {
+                            input.focus();
+                            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                                input.setSelectionRange(0, 0);
+                            }
+                        }
+                    }, 400);
+                    
+                    return;
+                }
+
+                if ((json.output && $('<div>').html(json.output).find('div.alert-warning').length) || json.warning) {
+                    const $base = $(baseSelector);
+                    const warningText = json.warning || $('<div>').html(json.output).find('div.alert-warning').text().trim() || 'error';
+
+                    spinnerBtn.remove();
+                    $base.removeClass('d-none');
+
+                    $base.prev('.oct-fastorder-alert').remove();
+
+                    $(
+                        '<div class="alert alert-warning oct-fastorder-alert mb-3 d-flex align-items-start justify-content-between">' +
+                            '<div><i class="fa fa-exclamation-circle me-2 mt-1"></i>' + warningText + '</div>' +
+                            '<button type="button" class="btn-close ms-3 mt-1" aria-label="Close" style="background:none;border:0;font-size:1.2rem;">&times;</button>' +
+                        '</div>'
+                    ).insertBefore($base);
+
+                    $(document).off('click', '.oct-fastorder-alert .btn-close').on('click', '.oct-fastorder-alert .btn-close', function () {
+                        $(this).closest('.oct-fastorder-alert').fadeOut(200, function () {
+                            $(this).remove();
+                        });
+                    });
+
+                    if ($base.data('default-html')) {
+                        $base.html($base.data('default-html'));
+                    } else {
+                        $base.html('<button type="button" class="button button-primary w-100" id="button-go">{{ button_checkout }}</button>');
+                    }
+
+                    return;
+                }
+
+                if (json.redirect) {
+                    location = json.redirect;
+                    return;
+                }
+
+                if (json.error) {
+                    error = true;
+
+                    if (json.error.warning_agree) $('#checkoutCheckbox').addClass('error_style');
+                    if (json.error.shipping_warning) scrollToFreeShipping();
+
+                    let html = '';
+                    
+                    if (typeof json.error === 'object') {
+                        for (let i in json.error) {
+                            html += `<p class="mb-2">${json.error[i]}</p>\n`;
+                            
+                            if (i === 'telephone') {
+                                const telInput = document.querySelector('#telephone');
+                                if (telInput) telInput.classList.add('error_style');
+                            } else {
+                                const el = document.querySelector(`.oct-checkout .form-control[name="${i}"]`);
+                                if (el) el.classList.add('error_style');
+                            }
+                        }
+                    } else {
+                        html = json.error;
+                    }
+
+                    prNotify('danger', html);
+                    scrollToItem('.error_style');
+                    
+                    setTimeout(function() {
+                        if (savedTelephoneValue) {
+                            const telInput = document.querySelector('#telephone');
+                            if (telInput && iti) {
+                                iti.setNumber(savedTelephoneValue);
+                            }
+                        }
+                    }, 100);
+                    
+                    return;
+                }
+
+                error = false;
+                $(baseSelector).html(json.output);
+
+                const performClick = () => {
+                    const $link = $(`${baseSelector} a[href]`).first();
+                    $link.length ? window.location = $link.attr('href')
+                                : $(clickSelectors).each(function () { this.click(); });
+                };
+
+                if (autosubmitPayment === "on" && $(clickSelectors).length) {
+                    $(baseSelector).after(
+                        '<button type="button" class="button button-primary br-7 fsz-14 fw-400 w-100" disabled>' +
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' +
+                        '</button>'
+                    );
+                    $(baseSelector).addClass('d-none');
+                    setTimeout(performClick, timeoutDuration);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.error('AJAX error:', thrownError);
+                prNotify('danger', 'Connection error. Please try again.');
+            }
+        });
+    });
+
+    let smsTimerInterval;
+
+    function startSmsTimer(seconds, isBlocking = false) {
+        clearInterval(smsTimerInterval);
+        let remaining = seconds;
+
+        if (isBlocking) {
+            $('#sms-timer').hide();
+            $('#btn-verify-sms').prop('disabled', true);
+            $('#btn-resend-sms').prop('disabled', true);
+            $('#sms-code-input').prop('disabled', true).val('');
+            $('#sms-error').removeClass('d-none alert-danger').addClass('alert-warning');
+        }
+
+        smsTimerInterval = setInterval(function() {
+            if (isBlocking) {
+                $('#sms-error').html(textWaitSeconds.replace('%s', '<strong>' + remaining + '</strong>'));
+            } else {
+                $('#timer-seconds').text(remaining);
+            }
+            
+            remaining--;
+
+            if (remaining <= 0) {
+                clearInterval(smsTimerInterval);
+                smsTimerInterval = null;
+                
+                if (isBlocking) {
+                    $('#sms-error').addClass('d-none');
+                } else {
+                    $('#sms-timer').hide();
+                    $('#sms-error').addClass('d-none');
+                }
+                
+                $('#btn-resend-sms').prop('disabled', false);
+                $('#btn-verify-sms').prop('disabled', false);
+                $('#sms-code-input').prop('disabled', false).val('').focus();
+            }
+        }, 1000);
+    }
+
+    $('#smsVerificationModal').on('shown.bs.modal', function () {
+        $('#sms-code-input').val('').prop('disabled', false);
+        $('#btn-verify-sms').prop('disabled', false);
+        $('#sms-error').addClass('d-none');
+        
+        setTimeout(function() {
+            const input = document.getElementById('sms-code-input');
+            if (input) {
+                input.focus();
+                if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    input.setSelectionRange(0, 0);
+                }
+            }
+        }, 400);
+        
+        const timerValue = parseInt($('#timer-seconds').text()) || 60;
+        if (timerValue > 0 && !smsTimerInterval) {
+            startSmsTimer(timerValue, false);
+        }
+    });
+
+    $('#smsVerificationModal').on('hidden.bs.modal', function () {
+        clearInterval(smsTimerInterval);
+        smsTimerInterval = null;
+    });
+
+    $(document).on('click', '#btn-verify-sms', function() {
+        const code = $('#sms-code-input').val().trim();
+        const baseSelector        = '.oct-fastorder-payment';
+        const spinnerBtn          = $(baseSelector).next('button[disabled]');
+        const clickSelectors      = `${baseSelector} input[type=submit], ${baseSelector} input[type=button], ${baseSelector} button, ${baseSelector} a, ${baseSelector} .btn-primary, ${baseSelector} #button-confirm`;
+        const timeoutDuration     = 200;
+        const autosubmitPayment   = "{{ autosubmit_payment }}";
+        
+        if (code.length !== 4) {
+            $('#sms-error').removeClass('d-none alert-warning').addClass('alert-danger').text('{{ error_sms_code_length }}');
+            return;
+        }
+        
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/verifySmsCode',
+            type: 'post',
+            data: {
+                sms_code: code,
+                smart_csrf_token: $('input[name="smart_csrf_token"]').val()
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $('#btn-verify-sms').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+            },
+            success: function(json) {
+                $('#btn-verify-sms').html('{{ button_verify }}');
+                
+                if (json.error) {
+                    if (json.attempts_exceeded && json.retry_after) {
+                        startSmsTimer(json.retry_after, true);
+                    } else {
+                        $('#btn-verify-sms').prop('disabled', false);
+                        $('#sms-error').removeClass('d-none alert-warning').addClass('alert-danger').text(json.error);
+                    }
+                    return;
+                }
+
+                if ((json.output && $('<div>').html(json.output).find('div.alert-warning').length) || json.warning) {
+                    const $base = $(baseSelector);
+                    const warningText = json.warning || $('<div>').html(json.output).find('div.alert-warning').text().trim() || 'error';
+
+                    spinnerBtn.remove();
+                    $base.removeClass('d-none');
+
+                    $base.prev('.oct-fastorder-alert').remove();
+
+                    $(
+                        '<div class="alert alert-warning oct-fastorder-alert mb-3 d-flex align-items-start justify-content-between">' +
+                            '<div><i class="fa fa-exclamation-circle me-2 mt-1"></i>' + warningText + '</div>' +
+                            '<button type="button" class="btn-close ms-3 mt-1" aria-label="Close" style="background:none;border:0;font-size:1.2rem;">&times;</button>' +
+                        '</div>'
+                    ).insertBefore($base);
+
+                    $(document).off('click', '.oct-fastorder-alert .btn-close').on('click', '.oct-fastorder-alert .btn-close', function () {
+                        $(this).closest('.oct-fastorder-alert').fadeOut(200, function () {
+                            $(this).remove();
+                        });
+                    });
+
+                    if ($base.data('default-html')) {
+                        $base.html($base.data('default-html'));
+                    } else {
+                        $base.html('<button type="button" class="button button-primary w-100" id="button-go">{{ button_checkout }}</button>');
+                    }
+
+                    return;
+                }
+                
+                if (json.redirect) {
+                    location = json.redirect;
+                    return;
+                }
+                
+                if (json.output) {
+                    $('#btn-verify-sms').prop('disabled', false);
+                    
+                    $('#smsVerificationModal').modal('hide');
+                    
+                    $('.oct-fastorder-payment').html(
+                        '<button type="button" class="button button-primary br-7 fsz-14 fw-400 w-100" disabled>' +
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' +
+                        '</button>'
+                    );
+                    
+                    masked('body', true);
+                    
+                    const $tempContainer = $('<div>').html(json.output).hide().appendTo('body');
+                    
+                    setTimeout(function() {
+                        const $link = $tempContainer.find('a[href]').first();
+                        if ($link.length) {
+                            window.location = $link.attr('href');
+                        } else {
+                            const clickSelector = 'input[type=submit], input[type=button], button, #button-confirm, .btn-primary';
+                            const $btn = $tempContainer.find(clickSelector).first();
+                            if ($btn.length) {
+                                $btn[0].click();
+                            }
+                        }
+                        $tempContainer.remove();
+                    }, 400);
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '#btn-resend-sms', function() {
+        $.ajax({
+            url: 'index.php?route=checkout/oct_smartcheckout/resendSmsCode',
+            type: 'post',
+            data: {
+                smart_csrf_token: $('input[name="smart_csrf_token"]').val()
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $('#btn-resend-sms').prop('disabled', true);
+            },
+            success: function(json) {
+                if (json.error) {
+                    $('#sms-error').removeClass('d-none').addClass('alert-danger').text(json.error);
+                    $('#btn-resend-sms').prop('disabled', false);
+                    return;
+                }
+                
+                if (json.success) {
+                    $('#sms-error').addClass('d-none');
+                    $('#sms-code-input').val('').focus();
+                    prNotify('success', json.success);
+                    startSmsTimer(60, false);
+                }
+            }
+        });
+    });
+
+    $(document).on('input', '#sms-code-input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        
+        if (this.value.length === 4) {
+            setTimeout(function() {
+                $('#btn-verify-sms').trigger('click');
+            }, 300);
+        }
+    });
+
+    $(document).on('change', 'select[name="address_id"]', function () {
+        formChangeData();
+    });
+
+    $(document).on('click', '.payment-method-check-item', function (e) {
+        if (e.target.tagName !== 'INPUT') {
+            $(this).find('input').click();
+        }
+    });
+</script>
+<div class="modal fade" id="smsVerificationModal" tabindex="-1" aria-labelledby="smsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+     <div class="modal-header p-4 bg-grey">
+        <h5 class="modal-title" id="smsModalLabel">{{ text_sms_verify_title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">{{ text_sms_verify_desc }}</p>
+        <div class="mb-3">
+          <input type="text" 
+            id="sms-code-input" 
+            class="form-control text-center fs-4" 
+            maxlength="4" 
+            placeholder="0000" 
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            autocomplete="one-time-code"
+            aria-label="{{ text_sms_code }}">
+        </div>
+        <div id="sms-error" class="alert alert-danger d-none"></div>
+        <div id="sms-timer" class="text-center text-muted fsz-14 mb-3">
+          {{ text_resend_in }} <span id="timer-seconds" class="fw-600 text-danger mx-1">60</span> {{ text_seconds }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="button button-primary button-large w-100 py-3 fsz-14" id="btn-verify-sms">{{ button_verify }}</button>
+        <button type="button" class="button button-outline button-outline-primary w-100 mt-2" id="btn-resend-sms" disabled>{{ button_resend }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

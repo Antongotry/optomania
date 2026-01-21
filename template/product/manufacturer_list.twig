@@ -1,0 +1,99 @@
+{{ header }}
+<div id="product-manufacturer" class="container-xl flex-grow-1">
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    {% if oct_promo_data.micro is defined and oct_promo_data.micro %}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement":
+            [
+                {% for breadcrumb in breadcrumbs %}
+                    {% if loop.first %}
+                    {% else %}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ loop.index -1 }},
+                        "item":
+                        {
+                            "@id": "{{ breadcrumb.href }}",
+                            "name": "{{ breadcrumb.text }}"
+                        }
+                    }{% if not loop.last %},{% endif %}
+                    {% endif %}
+                {% endfor %}
+            ]
+        }
+        </script>
+    {% endif %}
+    <main>
+        <div class="content-top-box">{{ content_top }}</div>
+        <div class="row g-3 g-xxl-4 pr-category">
+            {{ column_left }}
+            {% if column_left and column_right %}
+                {% set class = 'col-xl-6 is-cols' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-xl-9' %}
+            {% else %}
+                {% set class = 'col-xl-12 no-col' %}
+            {% endif %}
+            <div id="content" class="{{ class }}">
+                <div class="pr-page-title pb-3">
+                    <h1>{{ heading_title }}</h1>
+                </div>
+                {% if categories %}
+                    <div class="pr-manufacturer-links content-block mb-3 sticky-top pr-sticky-column fw-600 d-flex flex-column flex-md-row align-items-md-center gap-2 z-1">
+                        <span class="fw-700 dark-text">{{ text_index }}</span>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for category in categories %}
+                                <span data-scroll="pr-to-go-{{ category.name|replace({' ': ''}) }}" class="blue-link">{{ category.name }}</span>
+                            {% endfor %}
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                scrollToBrand();
+                            });
+                        </script>
+                    </div>
+                    {% for category in categories %}
+                        <div class="pr-manufacturer-item mb-3 py-2 py-md-3">
+                            <div id="pr-to-go-{{ category.name|replace({' ': ''}) }}" class="pr-manufacturer-title fsz-20 fw-700 dark-text pb-2 pb-md-3">{{ category.name }}</div>
+                            {% if category.manufacturer %}
+                                <div class="d-flex flex-wrap gap-2 gap-md-3">
+                                    {% for manufacturer in category.manufacturer %}
+                                        <a href="{{ manufacturer.href }}" class="pr-manufacturer-item-block">
+                                            <span class="content-block d-flex flex-column align-items-center text-center h-100 p-3">
+                                                {% if manufacturer.image is defined and manufacturer.image %}
+                                                    <img src="{{ manufacturer.image }}" class="img-fluid" alt="{{ manufacturer.name }}" width="{{ manufacturer.width }}" height="{{ manufacturer.height }}" loading="lazy"/>
+                                                {% endif %}
+                                                <span class="fw-600 fsz-12 dark-link pr-manufacturer-item-title lh-sm">{{ manufacturer.name }}</span>
+                                            </span>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="content-block">
+                        <p class="fw-500 dark-text">{{ text_empty }}</p>
+                        <a href="{{ continue }}" class="button button-primary mt-3 br-7 d-inline-flex">{{ button_continue }}</a>
+                    </div>
+                {% endif %}
+            </div>
+            {{ column_right }}
+        </div>
+        {{ content_bottom }}
+    </main>
+</div>
+{{ footer }}

@@ -1,0 +1,191 @@
+{{ header }}
+<div id="account-order" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    <main>
+        <div class="content-top-box">{{ content_top }}</div>
+        {% if success %}
+            <script>
+                prNotify('success', '{{ success }}');
+            </script>
+        {% endif %}
+        {% if error_warning %}
+            <script>
+                prNotify('warning', '{{ error_warning }}');
+            </script>
+        {% endif %}
+        <div class="row g-3 g-xxl-4 pr-account">
+            {{ column_left }}
+            {% if column_left and column_right %}
+                {% set class = 'col-xl-6' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-xl-9' %}
+            {% else %}
+                {% set class = 'col-xl-12' %}
+            {% endif %}
+            <div id="content" class="{{ class }}">
+                <div class="content-block">
+                    <div class="pr-page-title mb-3 mb-xl-4 d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+                    <div class="pr-account-order mt-3 p-3 br-8 border">
+                        <div class="h2 mt-0 mb-3">{{ text_order_detail }}</div>
+                        {% if invoice_no %}
+                        	<div class="pr-account-text-order">{{ text_invoice_no }}<span class="dark-text fw-500"> {{ invoice_no }}</span></div>
+                        {% endif %}
+                        <div class="pr-account-text-order">{{ text_order_id }}<span class="dark-text fw-500"> #{{ order_id }}</span></div>
+                        <div class="pr-account-text-order">{{ text_date_added }}<span class="dark-text fw-500"> {{ date_added }}</span>
+                        </div>
+                        <div class="pr-account-text-order">{{ text_payment_method }}<span class="dark-text fw-500"> {{ payment_method }}</span></div>
+                        {% if shipping_method %}
+                            <div class="pr-account-text-order">{{ text_shipping_method }}<span class="dark-text fw-500"> {{ shipping_method }}</span></div>
+                        {% endif %}
+                    </div>
+                    {% if module_account_payment_address_view %}
+                        <div class="mt-3 p-3 br-8 border">
+                            <div class="h2 mb-3">{{ text_payment_address }}</div>
+                            <div class="pr-account-text">
+                                <div class="pr-account-text-order">
+                                    {{ payment_address }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if shipping_address %}
+                        <div class="my-3 p-3 br-8 border">
+                            <div class="h2 mb-3">{{ text_shipping_address }}</div>
+                            <div class="pr-account-text">
+                                <div class="pr-account-text-order">
+                                    {{ shipping_address }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="table-responsive fsz-14 fw-300 br-8">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{{ column_name }}</th>
+                                    <th>{{ column_model }}</th>
+                                    <th>{{ column_price }}</th> 
+                                    <th style="text-align: right;">{{ column_quantity }}</th>
+                                    <th style="text-align: right;">{{ column_total }}</th>
+                                    {% if products %}
+                                        <th style="width: 20px;"></th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex gap-3">
+                                                {% if product.image %}
+                                                    <a href="{{ product.href }}" class="d-block flex-shrink-0">
+                                                        <img src="{{ product.image }}" alt="{{ product.name }}" width="{{ product.image_width }}" height="{{ product.image_height }}" class="img-thumbnail"/>
+                                                    </a>
+                                                {% endif %}
+                                                <div>
+                                                    <a href="{{ product.href }}"><strong>{{ product.name }}</strong></a>
+                                                    {% for option in product.option %}
+                                                        <br/><small>- {{ option.name }}: {{ option.value }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">{{ product.model }}</td>
+                                        <td style="text-align: right;">{{ product.price }}</td>
+                                        <td style="text-align: right;">{{ product.quantity }}</td>
+                                        <td style="text-align: right;">{{ product.total }}</td>
+                                        <td style="white-space: nowrap;">
+                                            {% if product.reorder %}
+                                                <a href="{{ product.reorder }}" data-bs-toggle="tooltip" title="{{ button_reorder }}" class="button button-primary button-order-info">
+                                                    <span class="button-icon button-icon-cart"></span>
+                                                </a>
+                                            {% endif %}
+                                           <a href="{{ product.return }}" data-bs-toggle="tooltip" title="{{ button_return }}" class="button button-secondary button-order-info ms-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20" fill="none">
+                                                    <path d="M1 5L17 5M17 5L13 9M17 5L13 1M17 15L1 15M1 15L5 11M1 15L5 19" stroke="var(--pr-white-color)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% for voucher in vouchers %}
+                                    <tr>
+                                        <td>{{ voucher.description }}</td>
+                                        <td></td>
+                                        <td>1</td>
+                                        <td>{{ voucher.amount }}</td>
+                                        <td>{{ voucher.amount }}</td>
+                                        {% if products %}
+                                            <td></td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                {% for total in totals %}
+                                    <tr>
+                                        {% if products %}
+                                            <td></td>
+                                        {% endif %}
+                                        <td colspan="3"></td>
+                                        <td class="text-end">{{ total.title }}</td>
+                                        <td class="dark-text fw-500 text-end">{{ total.text }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if comment %}
+                        <div class="mt-3 p-3 br-8 border">
+                            <div class="h2 mb-3">{{ text_comment }}</div>
+                            <div class="pr-account-text">{{ comment }}</div>
+                        </div>
+                    {% endif %}
+                    {% if histories %}
+                        <div class="h2 mb-3">{{ text_history }}</div>
+                        <div class="table-responsive fsz-14 fw-300 br-8 mb-4">
+                            <table class="table table-hover table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>{{ column_date_added }}</th>
+                                        <th>{{ column_status }}</th>
+                                        <th>{{ column_comment }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if histories %}
+                                        {% for history in histories %}
+                                            <tr>
+                                                <td>{{ history.date_added }}</td>
+                                                <td>{{ history.status }}</td>
+                                                <td>{{ history.comment }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">{{ text_no_results }}</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                    <a href="{{ continue }}" class="button button-secondary button-large">{{ button_continue }}</a>
+                </div>
+            </div>
+            {{ column_right }}
+        </div>
+        {{ content_bottom }}
+    </main>
+</div>
+{{ footer }}

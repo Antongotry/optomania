@@ -1,0 +1,46 @@
+<div class="pr-cart-column-item pb-3 mb-3 border-bottom">
+    <div class="pr-cart-column-item-title d-flex align-items-center justify-content-between gap-3 dark-text fsz-14 fw-500">
+		{{ heading_title }}
+		<svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+			<path d="M1 1L6 6L11 1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</div>
+    <div id="collapse-reward" class="form-group pr-cart-column-item-block-group">
+		<label for="input-reward" class="control-label fsz-12 grey-text mb-2 mt-3">{{ entry_reward }}</label>
+		<input type="text" name="reward" value="{{ reward }}" placeholder="{{ entry_reward }}" id="input-reward" class="form-control fsz-12" />
+		<button type="button" id="button-reward" data-loading-text="{{ text_loading }}" class="button button-primary input-with-btn w-100 mt-3 fsz-12">{{ button_reward }}</button>
+		<script>
+		$('#button-reward').on('click', function() {
+			$.ajax({
+				url: 'index.php?route=extension/total/reward/reward',
+				type: 'post',
+				data: 'reward=' + encodeURIComponent($('input[name=\'reward\']').val()),
+				dataType: 'json',
+				cache: false,
+				beforeSend: function() {
+					$('#button-reward').button('loading');
+				},
+				complete: function() {
+					$('#button-reward').button('reset');
+				},
+				success: function(json) {
+					$('.alert-dismissible').remove();
+
+					if (json['error']) {
+						$('.breadcrumb').after('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+						$('html, body').animate({ scrollTop: 0 }, 'slow');
+					}
+
+					if (json['redirect']) {
+						location = json['redirect'];
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		});
+		</script>
+	</div>
+</div>

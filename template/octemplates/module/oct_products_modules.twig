@@ -1,0 +1,379 @@
+{% if products %}
+    {% if position == 'column_left' or position == 'column_right' %}
+        <div class="pr-column-products">
+            <div class="pr-column-title pb-3 dark-text fw-700 fsz-20">
+                {% if link is defined and link %}
+                    <a href="{{ link }}">
+                        {{ heading_title }}
+                    </a>
+                {% else %}
+                    {{ heading_title }}
+                {% endif %}
+            </div>
+            <div id="pr-column-{{ module_name }}_{{ module }}" class="swiper pr-column-products-items swiper-column-products br-12 overflow-hidden">
+                <div class="swiper-wrapper">
+                    {% for product in products %}
+                        <div class="swiper-slide pr-module-item content-block p-3 d-flex flex-column{% if product.oct_grayscale %} pr-no-stock{% endif %}" data-product-id="{{ product.product_id }}">
+                            <div class="pr-module-item-top position-relative">
+                                <div class="pr-module-item-stickers-box d-flex justify-content-between align-items-start fsz-12 fw-500 position-absolute top-0 start-0 w-100 z-2">
+                                    {% if product.oct_stickers is not empty %}
+                                        <div class="pr-module-item-stickers-images d-flex gap-1">
+                                            {% for key, oct_sticker in product.oct_stickers %}
+                                                {% if oct_sticker is not empty and oct_sticker is iterable and oct_sticker.image is defined %}
+                                                        <img src="{{ oct_sticker.image }}" alt="{{ oct_sticker.title }}" data-bs-html="true" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover" title="{{ oct_sticker.title }}" data-bs-content="{{ oct_sticker.description }}" width="{{ oct_sticker.image_width|default(20) }}" height="{{ oct_sticker.image_height|default(20) }}" loading="lazy"/>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="pr-module-item-stickers d-flex flex-wrap justify-content-end gap-1 white-text">
+                                            {% for key, oct_sticker in product.oct_stickers %}
+                                                {% if oct_sticker is not empty and oct_sticker is not iterable %}
+                                                    <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                        {{ oct_sticker }}
+                                                    </div>
+                                                {% elseif oct_sticker is iterable and oct_sticker.image is not defined %}
+                                                    <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                        {{ oct_sticker.title }}
+                                                    </div>
+                                                {% elseif oct_sticker is iterable and oct_sticker.image is defined and not oct_sticker.image_only %}
+                                                    <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                        {{ oct_sticker.title }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="pr-module-item-image d-flex justify-content-center position-relative my-3">
+                                    <div class="pr-module-item-buttons d-flex flex-column gap-2 position-absolute end-0">
+                                        {% if oct_popup_view_status %}
+                                            <button type="button" aria-label="Quick view" class="pr-module-item-button pr-module-item-button-viewed button button-light p-2" title="{{ oct_popup_view }}" onclick="octPopUpView('{{ product.product_id }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                    <path d="M12.7267 5.64745C12.8255 5.88193 12.8255 6.13879 12.7267 6.37327C12.2555 7.49168 10.5419 10.8105 6.79897 10.8105C3.05534 10.8105 1.34383 7.49053 0.87366 6.37269C0.775186 6.13856 0.775186 5.88216 0.87366 5.64803C1.34383 4.53019 3.05534 1.21021 6.79897 1.21021C10.5419 1.21021 12.2555 4.52904 12.7267 5.64745Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M9.20054 6.01036C9.20054 7.33589 8.12598 8.41044 6.80046 8.41044C5.47493 8.41044 4.40038 7.33589 4.40038 6.01036C4.40038 4.68483 5.47493 3.61028 6.80046 3.61028C8.12598 3.61028 9.20054 4.68483 9.20054 6.01036Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        {% endif %}
+                                        <button type="button" aria-label="Wishlist" class="pr-module-item-button pr-module-item-button-wishlist button button-light p-2" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                <path d="M6.80165 3.0415L6.80078 3.03971M6.80078 3.03971C6.50027 2.41728 5.76091 0.9104 3.86208 0.9104C2.23678 0.9104 0.742537 2.59985 0.802528 4.43946C0.843052 5.80634 1.7624 6.92471 2.84224 7.98094C3.91774 9.03293 4.92721 9.98253 5.65768 10.66C6.30491 11.2603 7.29817 11.2601 7.94521 10.6596C8.67584 9.98149 9.68533 9.03145 10.7593 7.98094C11.8392 6.92471 12.7585 5.80634 12.799 4.43946C12.859 2.59985 11.3648 0.9104 9.73948 0.9104C7.84066 0.9104 7.10129 2.41728 6.80078 3.03971ZM6.80078 3.03971L6.79991 3.0415" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                        <button type="button" aria-label="Compare" class="pr-module-item-button pr-module-item-button-compare button button-light p-2" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                                <path d="M1.40039 11.2103H10.4004C11.3945 11.2103 12.2004 10.4044 12.2004 9.41025V7.61025M1.40039 11.2103L3.20039 9.41025M1.40039 11.2103L3.20039 13.0103M12.2004 2.81025H3.20039C2.20628 2.81025 1.40039 3.61614 1.40039 4.61025L1.40039 6.41025M12.2004 2.81025L10.4004 4.61025M12.2004 2.81025L10.4004 1.01025" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <a href="{{ product.href }}">
+                                        <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}" loading="lazy" />
+                                    </a>
+                                </div>
+                                {% if product.quantity or product.oct_model %}
+                                    <div class="pr-module-item-info fsz-12 d-flex gap-3 justify-content-between align-items-center">
+                                        {% if product.quantity %}
+                                            <span class="pr-stock-sticker green">{{ oct_product_stock }}</span>
+                                        {% endif %}
+                                        {% if product.oct_model is defined and product.oct_model %}
+                                            <span class="pr-module-item-info-code grey-text">{{ oct_view_model_cat }} {{ product.oct_model }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="pr-module-item-bottom d-flex flex-column gap-3 mt-3 flex-grow-1 justify-content-between">
+                                <a href="{{ product.href }}" class="pr-module-item-title dark-link fw-600 fsz-14 lh-sm">{{ product.name }}</a>
+                                {% if product.rating is not same as(false) %}
+                                    <div class="pr-module-item-rating d-flex align-items-center">
+                                        <div class="pr-module-item-rating-stars d-flex align-items-center me-2" data-rating="{{ product.rating }}">
+                                            {% for i in 1..5 %}
+                                                <span class="pr-module-item-rating-star"><span class="pr-module-item-rating-star-inner"></span></span>
+                                            {% endfor %}
+                                        </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M4.20107 7C4.20107 7.16569 4.06676 7.3 3.90107 7.3C3.73539 7.3 3.60107 7.16569 3.60107 7M4.20107 7C4.20107 6.83431 4.06676 6.7 3.90107 6.7C3.73539 6.7 3.60107 6.83431 3.60107 7M4.20107 7H3.60107M6.90107 7C6.90107 7.16569 6.76676 7.3 6.60107 7.3C6.43539 7.3 6.30107 7.16569 6.30107 7M6.90107 7C6.90107 6.83431 6.76676 6.7 6.60107 6.7C6.43539 6.7 6.30107 6.83431 6.30107 7M6.90107 7H6.30107M9.60107 7C9.60107 7.16569 9.46676 7.3 9.30107 7.3C9.13539 7.3 9.00107 7.16569 9.00107 7M9.60107 7C9.60107 6.83431 9.46676 6.7 9.30107 6.7C9.13539 6.7 9.00107 6.83431 9.00107 7M9.60107 7H9.00107M2.35843 2.75736C4.70158 0.414214 8.50057 0.414214 10.8437 2.75736C13.1869 5.1005 13.1869 8.8995 10.8437 11.2426C8.9095 13.1769 5.98325 13.5144 3.70277 12.2553L1.55314 12.7714C1.1175 12.876 0.725061 12.4836 0.829653 12.0479L1.34575 9.8983C0.0866548 7.61783 0.424217 4.69158 2.35843 2.75736Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="pr-module-item-rating-count ms-1 fsz-12 fw-500 dark-text">{{ product.reviews }}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="pr-module-item-price-box d-flex gap-3 justify-content-between mt-auto position-relative">
+                                    {% if product.price %}
+                                        <div class="pr-module-item-price d-flex flex-column">
+                                            {% if product.tax %}
+                                                <div class="price-tax fw-300 fsz-12 light-text mb-1">
+                                                    {{ text_tax }} {{ product.tax }}
+                                                </div>
+                                            {% endif %}
+                                            {% if not product.special %}
+                                                <div class="pr-module-item-price d-flex flex-column gap-1">
+                                                    <span class="pr-price-new pr-module-item-price-new fw-600 fsz-22">{{ product.price }}</span>
+                                                </div>
+                                            {% else %}
+                                                <div class="pr-module-item-price d-flex flex-column">
+                                                    <div class="pr-module-item-price-old d-flex gap-2 align-items-center">
+                                                        <span class="grey-text text-decoration-line-through fsz-14 fw-500">{{ product.price }}</span>
+                                                        {% if oct_sticker_you_save and product.you_save %}
+                                                            <span class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">-15%</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <span class="pr-price-new pr-module-item-price-new fw-600 fsz-22">{{ product.special }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if product.can_buy is not empty and product.can_buy %}
+                                        <div class="button button-primary button-cart">
+                                            {% if product.can_buy or not product.quantity %}
+                                                <div class="buttons-quantity button-quantity d-none d-lg-flex">
+                                                    <input type="text" class="number fw-500 border-0 p-0 text-center fsz-12 fw-500" name="quantity" value="{% if product.minimum %}{{ product.minimum }}{% else %}1{% endif %}" />
+                                                    <div class="controls d-flex flex-column">
+                                                        <button type="button" aria-label="Plus" class="plus p-0" onclick="changeQuantity(this, 'increase')">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                                                <path d="M3.40002 0.997314V4.99731M1.40002 2.99731H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                        </button>
+                                                        <button type="button" aria-label="Minus" class="minus p-0" onclick="changeQuantity(this, 'decrease')">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="2" viewBox="0 0 6 2" fill="none">
+                                                                <path d="M1.40002 0.999023H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                            <span class="button-icon button-icon-cart"></span>
+                                            <span class="button-text">{{ button_cart }}</span>
+                                            <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+				<div class="swiper-button-next-{{ module }} swiper-button swiper-button-next swiper-button-next-column-products">
+					<svg xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34" fill="none">
+                        <path d="M1 33L9 17L1 0.999999" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+				</div>
+                <div class="swiper-button-prev-{{ module }} swiper-button swiper-button-prev swiper-button-prev-column-products">
+					<svg xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34" fill="none">
+                        <path d="M9 1L1 17L9 33" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+				</div>
+            </div>
+            <script>
+                window.addEventListener('DOMContentLoaded', () => {
+                    var columnModulesSwiper = new Swiper('#pr-column-{{ module_name }}_{{ module }}', {
+                        slidesPerView: 1,
+                        spaceBetween: 16,
+                        loop: true,
+                        navigation: {
+                            nextEl: '.swiper-button-next-{{ module }}',
+                            prevEl: '.swiper-button-prev-{{ module }}',
+                        },
+                    });
+                });
+            </script>
+        </div>
+    {% else %}
+        <div id="pr-{{ module_name }}_{{ module }}" class="pr-module mt-4"{% if show_type == '' %} data-type="split"{% endif %}{% if show_type == 'width-100' %} data-type="width100"{% endif %}{% if show_type == 'width-50' %} data-type="width50"{% endif %}{% if show_type == 'width-infinity' %} data-type="carousel"{% endif %}{% if show_type == 'width-minimal' %} data-type="minimal"{% endif %}>
+            <div class="pr-page-title fw-700 dark-text mb-3">
+                {% if link is defined and link %}<a href="{{ link }}">{% endif %}
+                    {{ heading_title }}
+                {% if link is defined and link %}</a>{% endif %}
+            </div>
+            <div class="pr-module-items d-flex align-items-lg-stretch gap-3">
+                {% for product in products %}
+                    <div class="pr-module-item content-block p-3 d-flex flex-column pr-module-col product-grid{% if product.oct_grayscale %} pr-no-stock{% endif %}" data-product-id="{{ product.product_id }}">
+                        <div class="pr-module-item-top position-relative">
+                            <div class="pr-module-item-stickers-box d-flex justify-content-between align-items-start fsz-12 fw-500 position-absolute top-0 start-0 w-100 z-2">
+                                {% if product.oct_stickers is not empty %}
+                                    <div class="pr-module-item-stickers-images d-flex gap-1">
+                                        {% for key, oct_sticker in product.oct_stickers %}
+                                            {% if oct_sticker is not empty and oct_sticker is iterable and oct_sticker.image is defined %}
+                                                    <img src="{{ oct_sticker.image }}" alt="{{ oct_sticker.title }}" data-bs-html="true" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover" title="{{ oct_sticker.title }}" data-bs-content="{{ oct_sticker.description }}" width="{{ oct_sticker.image_width|default(20) }}" height="{{ oct_sticker.image_height|default(20) }}" loading="lazy"/>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="pr-module-item-stickers d-flex flex-wrap justify-content-end gap-1 white-text">
+                                        {% for key, oct_sticker in product.oct_stickers %}
+                                            {% if oct_sticker is not empty and oct_sticker is not iterable %}
+                                                <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                    {{ oct_sticker }}
+                                                </div>
+                                            {% elseif oct_sticker is iterable and oct_sticker.image is not defined %}
+                                                <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                    {{ oct_sticker.title }}
+                                                </div>
+                                            {% elseif oct_sticker is iterable and oct_sticker.image is defined and not oct_sticker.image_only %}
+                                                <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">
+                                                    {{ oct_sticker.title }}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="pr-module-item-image d-flex justify-content-center position-relative my-3">
+                                <div class="pr-module-item-buttons d-flex flex-column gap-2 position-absolute end-0">
+                                    {% if oct_popup_view_status %}
+                                        <button type="button" aria-label="Quick view" class="pr-module-item-button pr-module-item-button-viewed button button-light p-2" title="{{ oct_popup_view }}" onclick="octPopUpView('{{ product.product_id }}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                <path d="M12.7267 5.64745C12.8255 5.88193 12.8255 6.13879 12.7267 6.37327C12.2555 7.49168 10.5419 10.8105 6.79897 10.8105C3.05534 10.8105 1.34383 7.49053 0.87366 6.37269C0.775186 6.13856 0.775186 5.88216 0.87366 5.64803C1.34383 4.53019 3.05534 1.21021 6.79897 1.21021C10.5419 1.21021 12.2555 4.52904 12.7267 5.64745Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M9.20054 6.01036C9.20054 7.33589 8.12598 8.41044 6.80046 8.41044C5.47493 8.41044 4.40038 7.33589 4.40038 6.01036C4.40038 4.68483 5.47493 3.61028 6.80046 3.61028C8.12598 3.61028 9.20054 4.68483 9.20054 6.01036Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                    {% endif %}
+                                    <button type="button" aria-label="Wishlist" class="pr-module-item-button pr-module-item-button-wishlist button button-light p-2" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                            <path d="M6.80165 3.0415L6.80078 3.03971M6.80078 3.03971C6.50027 2.41728 5.76091 0.9104 3.86208 0.9104C2.23678 0.9104 0.742537 2.59985 0.802528 4.43946C0.843052 5.80634 1.7624 6.92471 2.84224 7.98094C3.91774 9.03293 4.92721 9.98253 5.65768 10.66C6.30491 11.2603 7.29817 11.2601 7.94521 10.6596C8.67584 9.98149 9.68533 9.03145 10.7593 7.98094C11.8392 6.92471 12.7585 5.80634 12.799 4.43946C12.859 2.59985 11.3648 0.9104 9.73948 0.9104C7.84066 0.9104 7.10129 2.41728 6.80078 3.03971ZM6.80078 3.03971L6.79991 3.0415" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                    <button type="button" aria-label="Compare" class="pr-module-item-button pr-module-item-button-compare button button-light p-2" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                            <path d="M1.40039 11.2103H10.4004C11.3945 11.2103 12.2004 10.4044 12.2004 9.41025V7.61025M1.40039 11.2103L3.20039 9.41025M1.40039 11.2103L3.20039 13.0103M12.2004 2.81025H3.20039C2.20628 2.81025 1.40039 3.61614 1.40039 4.61025L1.40039 6.41025M12.2004 2.81025L10.4004 4.61025M12.2004 2.81025L10.4004 1.01025" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <a href="{{ product.href }}" class="d-block mx-auto">
+                                    <img src="{{ product.thumb }}" class="img-fluid" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}" loading="lazy" />
+                                </a>
+                            </div>
+                            <div class="pr-module-item-info fsz-12 d-flex gap-3 justify-content-between align-items-center">
+                                {% if product.quantity %}
+                                    <span class="pr-stock-sticker green">{{ oct_product_stock }}</span>
+                                {% else %}
+                                    <span class="pr-stock-sticker red">{{ product.stock }}</span>
+                                {% endif %}
+                                {% if product.oct_model is defined and product.oct_model %}
+                                    <span class="pr-module-item-info-code grey-text">{{ oct_view_model_cat }} {{ product.oct_model }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="pr-module-item-bottom d-flex flex-column gap-3 mt-3 flex-grow-1 justify-content-between">
+                            <a href="{{ product.href }}" class="pr-module-item-title dark-link fw-600 fsz-14 lh-sm">{{ product.name }}</a>
+                            {% if product.rating is not same as(false) %}
+                                <div class="pr-module-item-rating d-flex align-items-center">
+                                    <div class="pr-module-item-rating-stars d-flex align-items-center me-2" data-rating="{{ product.rating }}">
+                                        {% for i in 1..5 %}
+                                            <span class="pr-module-item-rating-star">
+                                                <span class="pr-module-item-rating-star-inner"></span>
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                        <path d="M4.20107 7C4.20107 7.16569 4.06676 7.3 3.90107 7.3C3.73539 7.3 3.60107 7.16569 3.60107 7M4.20107 7C4.20107 6.83431 4.06676 6.7 3.90107 6.7C3.73539 6.7 3.60107 6.83431 3.60107 7M4.20107 7H3.60107M6.90107 7C6.90107 7.16569 6.76676 7.3 6.60107 7.3C6.43539 7.3 6.30107 7.16569 6.30107 7M6.90107 7C6.90107 6.83431 6.76676 6.7 6.60107 6.7C6.43539 6.7 6.30107 6.83431 6.30107 7M6.90107 7H6.30107M9.60107 7C9.60107 7.16569 9.46676 7.3 9.30107 7.3C9.13539 7.3 9.00107 7.16569 9.00107 7M9.60107 7C9.60107 6.83431 9.46676 6.7 9.30107 6.7C9.13539 6.7 9.00107 6.83431 9.00107 7M9.60107 7H9.00107M2.35843 2.75736C4.70158 0.414214 8.50057 0.414214 10.8437 2.75736C13.1869 5.1005 13.1869 8.8995 10.8437 11.2426C8.9095 13.1769 5.98325 13.5144 3.70277 12.2553L1.55314 12.7714C1.1175 12.876 0.725061 12.4836 0.829653 12.0479L1.34575 9.8983C0.0866548 7.61783 0.424217 4.69158 2.35843 2.75736Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="pr-module-item-rating-count ms-1 fsz-12 fw-500 dark-text">{{ product.reviews }}</span>
+                                </div>
+                            {% endif %}
+                            <div class="pr-module-item-price-box d-flex gap-3 justify-content-between mt-auto position-relative">
+                                {% if product.price %}
+                                    <div class="pr-module-item-price d-flex flex-column gap-1">
+                                        {% if product.tax %}
+                                        <div class="price-tax fw-300 fsz-12 light-text mb-1">
+                                            {{ text_tax }} {{ product.tax }}
+                                        </div>
+                                        {% endif %}
+                                        {% if not product.special %}
+                                            <div class="pr-price-new fsz-20 fw-700 dark-text">{{ product.price }}</div>
+                                        {% else %}
+                                            <div class="pr-module-item-price-old d-flex gap-2 align-items-center">
+                                                <span class="grey-text text-decoration-line-through fsz-14 fw-500">{{ product.price }}</span>
+                                                {% if oct_sticker_you_save and product.you_save %}
+                                                    <div class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">{{ product.you_save }}</div>
+                                                {% endif %}
+                                            </div>
+                                            <span class="pr-price-new pr-module-item-price-new fw-600 fsz-22">{{ product.special }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                {% if product.can_buy is not empty and product.can_buy %}
+                                    <div class="button button-primary button-cart">
+                                        {% if product.can_buy and quantity_show %}
+                                            <div class="buttons-quantity button-quantity d-none d-lg-flex">
+                                                <input type="text" class="number fw-500 border-0 p-0 text-center fsz-12 fw-500" name="quantity" value="{% if product.minimum %}{{ product.minimum }}{% else %}1{% endif %}" aria-label="Quantity" />
+                                                <div class="controls d-flex flex-column">
+                                                    <button type="button" aria-label="Plus" class="plus p-0" onclick="changeQuantity(this, 'increase')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                                            <path d="M3.40002 0.997314V4.99731M1.40002 2.99731H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <button type="button" aria-label="Minus" class="minus p-0" onclick="changeQuantity(this, 'decrease')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="2" viewBox="0 0 6 2" fill="none">
+                                                            <path d="M1.40002 0.999023H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <span class="button-icon button-icon-cart"></span>
+                                        <span class="button-text">{{ button_cart }}</span>
+                                        <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if product.oct_atributes is defined and product.oct_atributes %}
+                            <div class="pr-module-attributes fsz-12 dark-text d-none d-md-flex flex-column gap-2">
+                                {% for attribute in product.oct_atributes %}
+                                <div class="pr-module-attributes-item d-flex justify-content-between gap-2">
+                                    <span class="grey-text">{{ attribute.name }}:</span>
+                                    <span>{{ attribute.text }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if show_more is defined and show_more and show_type != 'width-infinity' %}
+                <div class="pr-module-show-more d-flex justify-content-center py-3 py-xl-4">
+                    <div class="oct-load-more-button-wrapper w-100 d-flex align-items-center justify-content-center">
+                        <input type="hidden" id="more_{{ module_name }}_{{ module }}" name="more_{{ module_name }}_{{ module }}" value="{{ page }}">
+                        <button id="btn_{{ module_name }}_{{ module }}" class="button button-success button-large fsz-14 br-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 18 17" fill="none">
+                            <path d="M16.5448 11.1667C15.4466 14.2738 12.4833 16.5 9 16.5C4.58172 16.5 1 12.9183 1 8.5C1 4.08172 4.58172 0.5 9 0.5C13 0.5 14.7778 3.16667 17 5.38889M12.5556 5.38889L16.9991 5.38982V0.944444" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        {{ oct_show_more }}
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.getElementById('more_{{ module_name }}_{{ module }}').value = 1;
+
+                        const btn = document.getElementById('btn_{{ module_name }}_{{ module }}');
+
+                        btn.addEventListener('click', () => {
+                            octShowMoreModule(
+                            '{{ module_id }}',
+                            true,
+                            'btn_{{ module_name }}_{{ module }}',
+                            'pr-{{ module_name }}_{{ module }}',
+                            'more_{{ module_name }}_{{ module }}',
+                            '{{ oct_path }}'
+                            );
+                        });
+                        
+                        {% if infinite_scroll is defined and infinite_scroll %}
+                        
+                            const observer = new IntersectionObserver((entries) => {
+                                entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    btn.click();
+                                }
+                                });
+                            }, {
+                                root: null,
+                                rootMargin: '0px',
+                                threshold: 0.5
+                            });
+
+                            observer.observe(btn);
+                        
+                        {% endif %}
+                    });
+                </script>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endif %}

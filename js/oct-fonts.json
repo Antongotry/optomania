@@ -1,0 +1,42 @@
+{
+    "ubuntu": {
+        "name": "Ubuntu",
+        "data-attr": "ubuntu"
+    },
+    "roboto": {
+        "name": "Roboto",
+        "data-attr": "roboto"
+    },
+    "openSans": {
+        "name": "Open Sans",
+        "data-attr": "opensans"
+    },
+    "Montserrat": {
+        "name": "Montserrat",
+        "data-attr": "montserrat"
+    },
+    "Inter": {
+        "name": "Inter",
+        "data-attr": "inter"
+    },
+    "Fira Sans": {
+        "name": "Fira Sans",
+        "data-attr": "firasans"
+    },
+    "Rubik": {
+        "name": "Rubik",
+        "data-attr": "rubik"
+    },
+    "Noto Sans": {
+        "name": "Noto Sans",
+        "data-attr": "notosans"
+    },
+    "Raleway": {
+        "name": "Raleway",
+        "data-attr": "raleway"
+    },
+    "Nunito": {
+        "name": "Nunito",
+        "data-attr": "nunito"
+    },
+}

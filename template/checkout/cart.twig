@@ -1,0 +1,137 @@
+{{ header }}
+<div id="checkout-cart" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if attention %}
+			<script>
+				prNotify('warning', '{{ attention }}');
+			</script>
+		{% endif %}
+		{% if success %}
+			<script>
+				prNotify('success', '{{ success }}');
+			</script>
+		{% endif %}
+			<div class="row g-3 g-xxl-4">
+				<div id="content" class="col-lg-8">
+					<div class="content-block pr-cart-page">
+						<div class="pr-page-title mb-4">
+							<h1>{{ heading_title }}{% if weight %} ({{ weight }}){% endif %}</h1>
+						</div>
+						<form action="{{ action }}" method="post" enctype="multipart/form-data" class="pr-sidebar-cart-products pt-4">
+							{% for product in products %}
+								<div class="pr-sidebar-cart-product d-flex align-items-center gap-3 gap-lg-4">
+									{% if product.thumb %}
+										<div class="pr-sidebar-cart-product-image">
+											<a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" class="d-block img-fluid" width="70" height="70"></a>
+										</div>
+									{% endif %}
+									<div class="pr-sidebar-cart-product-info position-relative flex-grow-1">
+										<a href="{{ product.href }}" class="pr-sidebar-cart-product-title dark-text fsz-14 fw-500 pe-5 d-inline-block">{{ product.name }}</a>{% if not product.stock %}<span class="required"> ***</span>{% endif %}
+										<div class="pr-sidebar-cart-product-code light-text fsz-12">{{ column_model }}: {{ product.model }}</div>
+										{% if product.option %}
+											{% for option in product.option %}
+												<div class="pr-sidebar-cart-product-option light-text fsz-12">{{ option.name }}: {{ option.value }}</div>
+											{% endfor %}
+										{% endif %}
+										{% if product.reward %}
+											<div class="pr-sidebar-cart-product-option light-text fsz-12">{{ product.reward }}</div>
+										{% endif %}
+										{% if product.recurring %}
+											<div class="pr-sidebar-cart-product-option light-text fsz-12">{{ text_recurring_item }} {{ product.recurring }}</div>
+										{% endif %}
+										<div class="pr-sidebar-cart-product-buttons-wrapper position-absolute top-0 end-0 d-flex align-items-center gap-2">
+                                            <button type="submit" class="pr-sidebar-cart-product-refresh no-btn" title="{{ button_update }}" aria-label="Update">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none">
+                                                    <path d="M19 6.5C16.5 4 14.5 1 10 1C6.08134 1 2.74763 3.50442 1.51212 7M19 6.5H15M19 6.5V2.5M1.00212 13.5C3.50212 16 5.50212 19 10.0021 19C13.9208 19 17.2545 16.4956 18.49 13M5 13.5H1V17.5" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="pr-sidebar-cart-product-delete no-btn" aria-label="Delete" data-product-id="{{ product.product_id }}" onclick="cart.remove('{{ product.cart_id }}', this);">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 22" fill="none">
+                                                    <path d="M2.5 4.5L3.60314 16.6346C3.74323 18.1756 3.81328 18.9461 4.15838 19.5288C4.4623 20.0419 4.91229 20.4529 5.45087 20.7091C6.06242 21 6.83609 21 8.38343 21H11.6166C13.1639 21 13.9376 21 14.5491 20.7091C15.0877 20.4529 15.5377 20.0419 15.8416 19.5288C16.1867 18.9461 16.2568 18.1756 16.3969 16.6346L17.5 4.5M7.5 10V15M12.5 10V15M5 4.5L6.07865 2.61236C6.41422 2.02512 6.582 1.7315 6.81776 1.51789C7.02635 1.32889 7.27249 1.18605 7.54007 1.09871C7.84251 1 8.18068 1 8.85703 1H11.143C11.8193 1 12.1575 1 12.4599 1.09871C12.7275 1.18605 12.9737 1.32889 13.1822 1.51789C13.418 1.7315 13.5858 2.02512 13.9213 2.61236L15 4.5M5 4.5H1M5 4.5H15M15 4.5H19" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+										<div class="buttons-quantity pr-sidebar-cart-product-bottom d-flex flex-column flex-sm-row justify-content-between mt-3 align-items-sm-center">
+											<div class="pr-sidebar-cart-product-quantity d-flex align-items-center">
+												<div class="d-inline-flex align-items-stretch">
+													<button type="button" aria-label="Minus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="$('#input-quantity-{{ product.cart_id }}').val(~~$('#input-quantity-{{ product.cart_id }}').val()-1);">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="2" viewBox="0 0 16 2" fill="none">
+															<path d="M1 1H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+													</button>
+													<input type="text" id="input-quantity-{{ product.cart_id }}" class="number fw-500 border-0 p-0 text-center fw-500" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" aria-label="Quantity" inputmode="numeric">
+													<button type="button" aria-label="Plus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="$('#input-quantity-{{ product.cart_id }}').val(~~$('#input-quantity-{{ product.cart_id }}').val()+1);">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+															<path d="M8 1V15M1 8H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+														</svg>
+													</button>
+												</div>
+												<svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+													<path d="M1 1L9 9M9 1L1 9" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+												</svg>
+												<span class="pr-sidebar-cart-product-price-one light-text fw-500">{{ product.price }}</span>
+											</div>
+											<span class="dark-text fw-600 fsz-20 mt-3 mt-sm-0">{{ column_total }}: <span class="pr-sidebar-cart-product-total">{{ product.total }}</span></span>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+							{% for voucher in vouchers %}
+								<div class="pr-cart-item content-block p-2 p-md-3">
+									<div class="d-flex align-items-center justify-content-between">
+										<div class="dark-text fw-300 me-2">{{ voucher.description }}</div>
+										<button type="button" class="no-btn" onclick="voucher.remove('{{ voucher.key }}');">
+											<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+												<path d="M13.7783 12.2207C14.0713 12.5137 14.0713 12.9888 13.7783 13.2818C13.6323 13.4278 13.4403 13.5017 13.2483 13.5017C13.0563 13.5017 12.8643 13.4288 12.7183 13.2818L7.24828 7.81173L1.77828 13.2818C1.63228 13.4278 1.44028 13.5017 1.24828 13.5017C1.05628 13.5017 0.864285 13.4288 0.718285 13.2818C0.425285 12.9888 0.425285 12.5137 0.718285 12.2207L6.18829 6.75076L0.718285 1.28079C0.425285 0.987785 0.425285 0.51275 0.718285 0.21975C1.01129 -0.07325 1.48629 -0.07325 1.77929 0.21975L7.24929 5.68978L12.7193 0.21975C13.0123 -0.07325 13.4873 -0.07325 13.7803 0.21975C14.0733 0.51275 14.0733 0.987785 13.7803 1.28079L8.31028 6.75076L13.7783 12.2207Z" fill="#D84040"></path>
+											</svg>
+										</button>	
+									</div>
+								</div>
+							{% endfor %}
+						</form>
+						{% if oct_byoneclick is defined and oct_byoneclick %}
+							<div class="pr-sidebar-cart-buyoneclick mt-4 pt-4 border-top">{{ oct_byoneclick }}</div>
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-xl-4">
+					<div class="pr-sticky-column content-block sticky-md-top z-1">
+						{% if modules %}
+							<div class="fsz-14 fw-700">{{ text_next }}</div>
+							<div class="fsz-14 fw-500 grey-text my-3 pb-3 border-bottom">{{ text_next_choice }}</div>
+							{% for module in modules %}
+								{{ module }}
+							{% endfor %}
+						{% endif %}
+						<div class="pr-cart-column-total text-end mb-2">
+							{% for total in totals %}
+								<div class="pr-cart-column-total-item mb-3 d-flex align-items-center justify-content-between fsz-14 fw-500 dark-text">
+									{{ total.title }}: <span class="fw-700 fsz-16">{{ total.text }}</span>
+								</div>
+							{% endfor %}
+						</div>
+						<a href="{{ checkout }}" class="button button-primary w-100 mt-2 py-3">
+							<span class="button-text">{{ button_checkout }}</span>
+						</a>
+						{% if error_warning %}
+							<div class="required">{{ error_warning }}</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

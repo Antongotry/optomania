@@ -1,0 +1,39 @@
+/* Interactive Buttons - Added State Styles */
+
+/* Cart buttons */
+.button-cart.added,
+#button-cart.added,
+#oct-popup-button-cart.added {
+    background-color: #51cf66 !important;
+    border-color: #51cf66 !important;
+    color: white !important;
+}
+
+.button-cart.added svg path,
+#button-cart.added svg path,
+#oct-popup-button-cart.added svg path {
+    fill: white !important;
+    stroke: white !important;
+}
+
+/* Wishlist buttons */
+.pr-module-item-button-wishlist.added {
+    background-color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+}
+
+.pr-module-item-button-wishlist.added svg path {
+    fill: white !important;
+    stroke: white !important;
+}
+
+/* Compare buttons */
+.pr-module-item-button-compare.added {
+    background-color: #4ecdc4 !important;
+    border-color: #4ecdc4 !important;
+}
+
+.pr-module-item-button-compare.added svg path {
+    fill: white !important;
+    stroke: white !important;
+}

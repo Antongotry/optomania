@@ -1,0 +1,183 @@
+{{ header }}
+<div id="account-return" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if error_warning %}
+			<script>
+				prNotify('warning', '{{ error_warning }}');
+			</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+				<div class="content-block pr-account-page">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+			      	<div class="mb-3">{{ text_description }}</div>
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+						<fieldset class="p-0">
+							<legend class="h3 my-3 my-xl-4">{{ text_order }}</legend>
+							<div class="form-floating mb-4">
+								{% if error_firstname %}
+									<script>
+										prNotify('warning', '{{ error_firstname }}');
+									</script>
+								{% endif %}
+								<input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-firstname"><span class="required">*</span> {{ entry_firstname }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_lastname %}
+									<script>
+										prNotify('warning', '{{ error_lastname }}');
+									</script>
+								{% endif %}
+								<input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-lastname"><span class="required">*</span> {{ entry_lastname }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_email %}
+									<script>
+										prNotify('warning', '{{ error_email }}');
+									</script>
+								{% endif %}
+								<input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" inputmode="email">
+								<label class="px-3 secondary-text fsz-14" for="input-email"><span class="required">*</span> {{ entry_email }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_telephone %}
+									<script>
+										prNotify('warning', '{{ error_telephone }}');
+									</script>
+								{% endif %}
+								<input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" inputmode="tel">
+								<label class="px-3 secondary-text fsz-14" for="input-telephone"><span class="required">*</span> {{ entry_telephone }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_order_id %}
+									<script>
+										prNotify('warning', '{{ error_order_id }}');
+									</script>
+								{% endif %}
+								<input type="text" name="order_id" value="{{ order_id }}" placeholder="{{ entry_order_id }}" id="input-order-id" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-order-id"><span class="required">*</span> {{ entry_order_id }}</label>
+							</div>
+							<div class="form-group mb-4">
+								<label class="dark-text fsz-14 fw-500 mb-1" for="input-date-ordered">{{ entry_date_ordered }}</label>
+								<input type="datetime-local" name="date_ordered" value="{{ date_ordered }}" placeholder="{{ entry_date_ordered }}" id="input-date-ordered" class="form-control datetime" />
+							</div>
+						</fieldset>
+						<fieldset class="pr-account-form p-0">
+							<legend class="h3 mb-2">{{ text_product }}</legend>
+							<div class="form-floating mb-4">
+								{% if error_product %}
+									<script>
+										prNotify('warning', '{{ error_product }}');
+									</script>
+								{% endif %}
+								<input type="text" name="product" value="{{ product }}" placeholder="{{ entry_product }}" id="input-product" class="form-control" />
+								{% if product_id is defined and product_id %}
+									<input type="hidden" name="product_id" value="{{ product_id }}" />
+								{% endif %}
+								<label class="px-3 secondary-text fsz-14" for="input-product"><span class="required">*</span> {{ entry_product }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_model %}
+									<script>
+										prNotify('warning', '{{ error_model }}');
+									</script>
+								{% endif %}
+								<input type="text" name="model" value="{{ model }}" placeholder="{{ entry_model }}" id="input-model" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-model"><span class="required">*</span> {{ entry_model }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								<input type="text" name="quantity" value="{{ quantity }}" placeholder="{{ entry_quantity }}" id="input-quantity" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-quantity">{{ entry_quantity }}</label>
+							</div>
+							<div class="form-group mb-4">
+								<label class="dark-text fsz-14 fw-500 mb-1"><span class="required">*</span> {{ entry_reason }}</label>
+								{% if error_reason %}
+									<script>
+										prNotify('warning', '{{ error_reason }}');
+									</script>
+								{% endif %}
+								{% for return_reason in return_reasons %}
+									{% if return_reason.return_reason_id == return_reason_id %}
+										<div class="form-check d-flex align-items-center gap-2">
+											<input type="radio" id="return-reason-{{ return_reason.return_reason_id }}" name="return_reason_id" class="form-check-input" value="{{ return_reason.return_reason_id }}" checked="checked" />
+											<label class="form-check-label fsz-12 dark-text" for="return-reason-{{ return_reason.return_reason_id }}">{{ return_reason.name }}</label>
+										</div>
+									{% else %}
+										<div class="form-check d-flex align-items-center gap-2">
+											<input type="radio" id="return-reason-{{ return_reason.return_reason_id }}" name="return_reason_id" class="form-check-input" value="{{ return_reason.return_reason_id }}" />
+											<label class="form-check-label fsz-12 dark-text" for="return-reason-{{ return_reason.return_reason_id }}">{{ return_reason.name }}</label>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+							<div class="form-group mb-4">
+								<label class="dark-text fsz-14 fw-500 mb-1"><span class="required">*</span> {{ entry_opened }}</label>
+								<div class="d-flex gap-3">
+									<div class="form-check d-flex align-items-center gap-2">
+										{% if opened %}
+											<input type="radio" id="CheckYes" class="form-check-input" name="opened" value="1" checked="checked" />
+										{% else %}
+											<input type="radio" id="CheckYes" class="form-check-input" name="opened" value="1" />
+										{% endif %}
+										<label class="form-check-label fsz-12 dark-text" for="CheckYes">{{ text_yes }}</label>
+									</div>
+									<div class="form-check d-flex align-items-center gap-2">
+										{% if not opened %}
+											<input type="radio" id="CheckNo" class="form-check-input" name="opened" value="0" checked="checked" />
+										{% else %}
+											<input type="radio" id="CheckNo" class="form-check-input" name="opened" value="0" />
+										{% endif %}
+										<label class="form-check-label fsz-12 dark-text" for="CheckNo">{{ text_no }}</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<label class="dark-text fsz-14 fw-500 mb-2" for="input-comment">{{ entry_fault_detail }}</label>
+								<textarea name="comment" rows="10" placeholder="{{ entry_fault_detail }}" id="input-comment" class="form-control">{{ comment }}</textarea>
+							</div>
+							{{ captcha }}
+						</fieldset>
+						{% if text_agree %}
+							<div class="form-check d-flex align-items-center gap-2 mb-4">
+								{% if agree %}
+									<input type="checkbox" id="scales" class="form-check-input" name="agree" value="1" checked="checked" />
+								{% else %}
+									<input type="checkbox" id="scales" class="form-check-input" name="agree" value="1" />
+								{% endif %}
+								<label class="form-check-label fsz-12 dark-text" for="scales">{{ text_agree }}</label>
+							</div>
+						{% endif %}
+						<button type="submit" class="button button-secondary button-large">{{ button_continue }}</button>
+					</form>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

@@ -1,0 +1,101 @@
+/* Стилі для кнопок з класом product-added */
+
+/* Основний стиль для доданих товарів */
+.product-added {
+    background-color: #28a745 !important; /* Зелений фон */
+    border-color: #28a745 !important;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+/* Ефект при наведенні для доданих товарів */
+.product-added:hover {
+    background-color: #218838 !important; /* Темніший зелений при hover */
+    border-color: #218838 !important;
+}
+
+/* Стилі для кнопок кошика */
+.button[onclick*="cart.add"].product-added,
+.pr-product-button[onclick*="cart.add"].product-added {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+/* Стилі для кнопок закладок */
+.button[onclick*="wishlist.add"].product-added,
+.pr-wishlist-button.product-added {
+    background-color: #dc3545 !important; /* Червоний для закладок */
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+.button[onclick*="wishlist.add"].product-added:hover,
+.pr-wishlist-button.product-added:hover {
+    background-color: #c82333 !important;
+    border-color: #c82333 !important;
+}
+
+/* Стилі для кнопок порівняння */
+.button[onclick*="compare.add"].product-added,
+.pr-compare-button.product-added {
+    background-color: #007bff !important; /* Синій для порівняння */
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.button[onclick*="compare.add"].product-added:hover,
+.pr-compare-button.product-added:hover {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+/* Анімація появи */
+.product-added {
+    animation: productAdded 0.5s ease-in-out;
+}
+
+@keyframes productAdded {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Альтернативні стилі з іконкою галочки */
+.product-added::after {
+    content: " ✓";
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Стилі для великих кнопок на сторінці продукту */
+#button-cart.product-added,
+.pr-product-fixed-cart-btn.product-added {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+}
+
+/* Стилі для маленьких кнопок в каталозі */
+.pr-product-card .button.product-added {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    transform: scale(1.02);
+}
+
+/* Responsive стилі */
+@media (max-width: 768px) {
+    .product-added {
+        font-size: 0.9em;
+    }
+    
+    .product-added::after {
+        content: " ✓";
+        margin-left: 3px;
+    }
+}

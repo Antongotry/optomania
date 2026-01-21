@@ -1,0 +1,49 @@
+{{ header }}
+<div id="common-success" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+			    <div class="content-block">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+					<div class="fw-500">
+						{{ text_message }}
+					</div>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{% if ((oct_analytics_google_ecommerce is defined and oct_analytics_google_ecommerce == "on") and (oct_analytics_order_id is defined and oct_analytics_order_id)) %}
+	<script>
+		window.dataGoogleLayer = window.dataGoogleLayer || [];
+		dataGoogleLayer = {{ toGoogle }};
+		if(typeof dataGoogleLayer != 'undefined') {
+			gtag('event', 'purchase', dataGoogleLayer);
+		}
+	</script>
+{% endif %}
+{{ footer }}

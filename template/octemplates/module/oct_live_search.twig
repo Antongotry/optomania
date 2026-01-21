@@ -1,0 +1,92 @@
+{% if query_corrected %}
+	<p class="mb-3 dark-text fw-400 fsz-14 px-3 px-lg-4">{{ text_corrected_search }}</p>
+{% endif %}
+
+{% if direct_categories is not empty %}
+	<div class="pr-livesearch-item pr-livesearch-item-category">
+		<div class="fw-600 dark-text px-3 px-md-4">{{ founded_categories }}</div>
+		<div class="d-flex gap-2 gap-md-3 w-100 overflow-x-auto pt-3 pb-3 pb-md-4 px-3 px-md-4">
+			{% for category in direct_categories %}
+				<a class="pr-livesearch-item-link br-12 px-1 px-lg-3 py-2 py-lg-3 d-flex flex-column gap-2 align-items-center" href="{{ category.href }}">
+					{% if category_image %}
+						<img src="{{ category.image }}" alt="{{ category.name }}" width="80" height="80" />
+					{% endif %}
+					<span class="fsz-12 fw-600 dark-text text-center">{{ category.name }}</span>
+				</a>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+{% if manufacturers is not empty %}
+	<div class="pr-livesearch-item pr-livesearch-item-brands">
+		<div class="fw-600 dark-text px-3 px-md-4">{{ founded_manufacturers }}</div>
+		<div class="d-flex gap-2 gap-md-3 w-100 overflow-x-auto pt-3 pb-3 pb-md-4 px-3 px-md-4">
+			{% for category in manufacturers %}
+				<a class="pr-livesearch-item-link br-12 px-1 px-lg-3 py-2 py-lg-3 d-flex flex-column gap-2 align-items-center" href="{{ category.href }}">
+					{% if manufacturer_image %}
+						<img src="{{ category.image }}" alt="{{ category.name }}" width="80" height="80" />
+					{% endif %}
+					<span class="fsz-12 fw-600 dark-text text-center">{{ category.name }}</span>
+				</a>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+{% if product_categories is not empty %}
+	<div class="pr-livesearch-item pr-livesearch-item-products">
+		<div class="fw-600 dark-text px-3 px-md-4">{{ founded_in_categories }}</div>
+		<div class="d-flex gap-2 gap-md-3 w-100 overflow-x-auto pt-3 pb-3 pb-md-4 px-3 px-md-4">
+			{% for category in product_categories %}
+				<a class="pr-livesearch-item-link br-12 px-1 px-lg-3 py-2 py-lg-3 d-flex flex-column gap-2 align-items-center" href="{{ category.href }}">
+					{% if category_image %}
+						<img src="{{ category.image }}" alt="{{ category.name }}" width="80" height="80" />
+					{% endif %}
+					<span class="fsz-12 fw-600 dark-text text-center">{{ category.name }}</span>
+				</a>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+{% if products is not empty %}
+	<div class="pr-livesearch-item pr-livesearch-item-products">
+		<div class="fw-600 dark-text px-3 px-md-4">{{ founded_products }}</div>
+		<div class="d-flex flex-column flex-xxl-row flex-xxl-wrap gap-2 gap-md-3 pt-3 px-3 px-md-4">
+			{% for product in products %}
+				<div class="pr-livesearch-item-product d-flex gap-3 br-12 p-2 p-md-3">
+					<div class="d-flex flex-column gap-2">
+						<a href="{{ product.href }}"><img src="{{ product.image }}" alt="{{ product.name }}" width="80" height="80" /></a>
+						<span class="pr-stock-sticker {% if product.quantity <= 0 %}red{% else %}green{% endif %}">{{ product.stock }}</span>
+					</div>
+					<div class="d-flex flex-column gap-2">
+						<a href="{{ product.href }}" class="pr-livesearch-item-title fsz-14 dark-text fw-500 d-inline-block mb-2">{{ product.name }}</a>
+						{% if model_setting and product.model %}
+							<div class="pr-livesearch-item-code grey-text fsz-12"><span>{{ oct_live_search_model }}</span>{{ product.model }}</div>
+						{% endif %}
+						{% if sku_setting and product.sku %}
+							<div class="pr-livesearch-item-code grey-text fsz-12"><span>{{ oct_live_search_sku }}</span>{{ product.sku }}</div>
+						{% endif %}
+						{% if price_setting %}
+							{% if product.special %}
+								<span class="mt-auto d-flex flex-column">
+									<span class="pr-livesearch-item-product-price-old fsz-12 fw-500 light-text text-decoration-line-through">{{ product.price }}</span>
+									<span class="pr-livesearch-item-product-price fsz-20 fw-600 red">{{ product.special }}</span>
+								</span>
+							{% else %}
+								<span class="pr-livesearch-item-product-price fsz-20 fw-600 dark-text mt-auto">{{ product.price }}</span>
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+{% if direct_categories is empty and product_categories is empty and manufacturers is empty and products is empty %}
+	<div class="dark-text fw-500 fsz-14 px-3 px-lg-4">
+		{{ oct_live_search_result_empty }}
+	</div>
+{% endif %}

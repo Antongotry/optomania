@@ -1,0 +1,70 @@
+{{ header }}
+<div id="account-transaction" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+                {% set class = 'col-xl-6' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-xl-9' %}
+            {% else %}
+                {% set class = 'col-xl-12' %}
+            {% endif %}
+		    <div id="content" class="{{ class }}">
+				<div class="content-block">
+                    <div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+			      	<div class="h3 mt-0 mb-3 mb-xl-4">{{ text_total }} <b>{{ total }}</b>.</div>
+					<div class="table-responsive fsz-14 fw-300 br-8">
+						<table class="table table-hover table-bordered">
+							<thead class="thead-dark">
+								<tr>
+								<th>{{ column_date_added }}</th>
+								<th>{{ column_description }}</th>
+								<th>{{ column_amount }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% if transactions %}
+									{% for transaction in transactions %}
+										<tr>
+											<td>{{ transaction.date_added }}</td>
+											<td>{{ transaction.description }}</td>
+											<td>{{ transaction.amount }}</td>
+										</tr>
+									{% endfor %}
+								{% else %}
+									<tr>
+										<td colspan="5">{{ text_empty }}</td>
+									</tr>
+								{% endif %}
+							</tbody>
+		
+						</table>
+					</div>
+					<div class="row my-3 dark-text fsz-14">
+						<div class="offset-sm-6 col-sm-6 text-end">{{ results }}</div>
+						<div class="col-sm-12 text-start mt-3">{{ pagination }}</div>
+					</div>
+					<a href="{{ continue }}" class="button button-secondary button-large">{{ button_continue }}</a>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

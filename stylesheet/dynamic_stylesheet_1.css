@@ -1,0 +1,17 @@
+.ocf-theme-light-block .ocf-search-btn-static, .ocf-theme-light-block .ocf-search-btn-popover, .ocf-theme-light-block .ocf-search-btn-static.ocf-disabled, .ocf-theme-light-block .ocf-search-btn-popover.ocf-disabled, .ocf-noUi-connect:before, .ocf-noUi-handle {background-color:rgb(0, 168, 232) !important;}
+:root {--pr-primary-color:rgb(0, 168, 232);}
+:root {--pr-body-bg-light-color:rgb(248, 251, 253);}
+:root {--pr-links-color:rgb(0, 168, 232);}
+.light-theme .pr-header {background:rgb(255, 255, 255);}
+.pr-dropdown-links .blue-link, .pr-switcher button {color:rgb(0, 168, 232);}
+.pr-dropdown-links .blue-link:hover {color:rgb(0, 168, 232);}
+:root {--pr-footer-bg-light-color:rgb(255, 255, 255);}
+.light-theme .pr-footer-subscribe-text, .light-theme .pr-footer-item .secondary-text, .light-theme .pr-footer-socials .secondary-text {color:rgb(0, 52, 89);}
+.pr-footer .blue-link {color:rgb(0, 168, 232);}
+.pr-footer .blue-link:hover {color:rgb(0, 168, 232);}
+.light-theme .pr-footer-links li a, .light-theme ul.pr-footer-item li a {color:rgb(0, 52, 89);}
+.pr-footer-links li a:hover, ul.pr-footer-item li a:hover {color:rgb(0, 168, 232);}
+.light-theme .pr-footer-item-title {color:rgb(0, 23, 31);}
+.light-theme .pr-footer-item-title svg path {fill:rgb(0, 23, 31);}
+:root {--pr-interactive-color:rgb(82, 187, 56);}
+.pr-price-new.red-text {color:rgb(213, 56, 61);}

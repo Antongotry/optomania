@@ -1,0 +1,30 @@
+{% if currencies|length > 1 %}
+<div id="currency" class="pr-dropdown-box position-relative order-1 order-lg-0">
+    <div class="pr-dropdown-toggle currency lanuage-currency br-8 bg-white primary-light-text d-flex gap-2 align-items-center py-1 px-2">
+        {% for currency in currencies %}
+            {% if currency.symbol_left and currency.code == code %}{{ currency.symbol_left }}{% elseif currency.symbol_right and currency.code == code %}{{ currency.symbol_right }} {% endif %}
+        {% endfor %}
+        <svg class="pr-arrow-down" xmlns="http://www.w3.org/2000/svg" width="6" height="5" viewBox="0 0 6 5" fill="none">
+            <path d="M1 1.5L3 3.5L5 1.5" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+    </div>
+    <div class="pr-dropdown p-3 p-lg-0">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-currency" class="content-block br-8 d-flex flex-column gap-2 fsz-14 p-3">
+        {% for currency in currencies %}
+            <button class="pr-dropdown-menu-item pr-dropdown-button no-btn br-8 w-100 primary-light-text d-flex align-items-center gap-2 currency-select{% if currency.code == code %} pr-dropdown-button-active{% endif %}" type="button" name="{{ currency.code }}">
+                <span class="pr-dropdown-button-check"></span>
+                {% if currency.symbol_left %}
+                    {{ currency.symbol_left }}
+                {% endif %}
+                <span>{{ currency.title }}</span>
+                {% if currency.symbol_right %}
+                    {{ currency.symbol_right }}
+                {% endif %}
+            </button>
+        {% endfor %}
+        <input type="hidden" name="code" value="" />
+        <input type="hidden" name="redirect" value="{{ redirect }}" />
+        </form>
+    </div>
+</div>
+{% endif %}

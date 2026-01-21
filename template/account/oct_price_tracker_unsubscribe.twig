@@ -1,0 +1,42 @@
+{{ header }}
+<div id="oct_price_tracker_unsubscribe" class="container-fluid container-xl flex-grow-1">
+  <main>
+    <div class="row">
+      <div class="col-12 ds-page-title pb-3">
+        <h1>{{ heading_unsubscribe }}</h1>
+      </div>
+    </div>
+    <div class="content-top-box">{{ content_top }}</div>
+    <div class="ds-account row g-3">
+      {% if column_left and column_right %}
+        {% set class = 'col-xl-6' %}
+      {% elseif column_left or column_right %}
+        {% set class = 'col-xl-9' %}
+      {% else %}
+        {% set class = 'col-xl-12' %}
+      {% endif %}
+      <div id="content" class="{{ class }}">
+        <div class="content-block h-100 text-center">
+          {% if success %}
+            <div class="alert alert-success">
+              <i class="fa fa-check-circle"></i>
+              {{ success }}
+            </div>
+          {% endif %}
+          {% if error %}
+            <div class="alert alert-danger">
+              <i class="fa fa-exclamation-circle"></i>
+              {{ error }}
+            </div>
+          {% endif %}
+          
+          <div class="mt-4">
+            <a href="{{ continue }}" class="button button-primary br-7">{{ button_continue }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ content_bottom }}
+  </main>
+</div>
+{{ footer }}

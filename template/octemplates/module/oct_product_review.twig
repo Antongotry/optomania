@@ -1,0 +1,98 @@
+{% if reviews %}
+	{% if position == 'column_left' or position == 'column_right' %}
+		<div class="pr-column-reviews pr-module-reviews">
+			<div class="pr-column-title pb-3 dark-text fw-700 fsz-20">{{ heading_title }}</div>
+			<div id="pr-column-last-reviews-{{ module }}" class="swiper pr-column-reviews-items swiper-column-reviews br-12 overflow-hidden">
+				<div class="swiper-wrapper">
+					{% for review in reviews %}
+						<div class="swiper-slide pr-module-reviews-item content-block p-3 p-xl-4 d-flex flex-column gap-3">
+							<div class="pr-module-reviews-item-info d-flex gap-3 align-items-stretch pb-3 border-bottom">
+								<img class="img-fluid" src="{{ review.thumb }}" alt="{{ review.name }}" width="{{ review.width }}" height="{{ review.height }}" loading="lazy"/>
+								<div class="pr-module-reviews-item-info-title d-flex flex-column gap-2 align-self-stretch justify-content-between">
+									<a href="{{ review.href }}" class="fw-500 lh-sm dark-link">{{ review.name }}</a>
+									<div class="pr-module-reviews-item-info-date d-flex align-items-center gap-1 fsz-12 light-text">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+											<path d="M1 4.67102H13M3.66667 0.671021V2.00435M10.3333 0.671021V2.00435M4 7.33769C4 7.52178 3.85076 7.67102 3.66667 7.67102C3.48257 7.67102 3.33333 7.52178 3.33333 7.33769M4 7.33769C4 7.15359 3.85076 7.00435 3.66667 7.00435C3.48257 7.00435 3.33333 7.15359 3.33333 7.33769M4 7.33769H3.33333M7.33333 7.33769C7.33333 7.52178 7.1841 7.67102 7 7.67102C6.81591 7.67102 6.66667 7.52178 6.66667 7.33769M7.33333 7.33769C7.33333 7.15359 7.1841 7.00435 7 7.00435C6.81591 7.00435 6.66667 7.15359 6.66667 7.33769M7.33333 7.33769H6.66667M10.6667 7.33769C10.6667 7.52178 10.5174 7.67102 10.3333 7.67102C10.1492 7.67102 10 7.52178 10 7.33769M10.6667 7.33769C10.6667 7.15359 10.5174 7.00435 10.3333 7.00435C10.1492 7.00435 10 7.15359 10 7.33769M10.6667 7.33769H10M4 10.671C4 10.8551 3.85076 11.0044 3.66667 11.0044C3.48257 11.0044 3.33333 10.8551 3.33333 10.671M4 10.671C4 10.4869 3.85076 10.3377 3.66667 10.3377C3.48257 10.3377 3.33333 10.4869 3.33333 10.671M4 10.671H3.33333M7.33333 10.671C7.33333 10.8551 7.1841 11.0044 7 11.0044C6.81591 11.0044 6.66667 10.8551 6.66667 10.671M7.33333 10.671C7.33333 10.4869 7.1841 10.3377 7 10.3377C6.81591 10.3377 6.66667 10.4869 6.66667 10.671M7.33333 10.671H6.66667M10.6667 10.671C10.6667 10.8551 10.5174 11.0044 10.3333 11.0044C10.1492 11.0044 10 10.8551 10 10.671M10.6667 10.671C10.6667 10.4869 10.5174 10.3377 10.3333 10.3377C10.1492 10.3377 10 10.4869 10 10.671M10.6667 10.671H10M3 13.3377H11C12.1046 13.3377 13 12.4423 13 11.3377V3.33769C13 2.23312 12.1046 1.33769 11 1.33769H3C1.89543 1.33769 1 2.23312 1 3.33769V11.3377C1 12.4423 1.89543 13.3377 3 13.3377Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+										{{ review.date }}
+									</div>
+								</div>
+							</div>
+							<div class="d-flex align-items-center gap-2">
+								<div class="pr-store-reviews-rating-value position-relative d-flex align-items-center justify-content-center">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 44 44" fill="none">
+										<path d="M30.1498 12.2144L25.3978 2.20951C23.9985 -0.7365 20.0015 -0.736504 18.6022 2.2095L13.8502 12.2144L3.26261 13.813C0.132974 14.2855 -1.1097 18.338 1.16772 20.6447L8.7994 28.3743L6.9938 39.3131C6.45621 42.57 9.69752 45.0652 12.4866 43.5416L22 38.3447L31.5134 43.5416C34.3025 45.0652 37.5438 42.57 37.0062 39.3131L35.2006 28.3743L42.8323 20.6447C45.1097 18.338 43.867 14.2855 40.7374 13.813L30.1498 12.2144Z" fill="#FFC445"></path>
+									</svg>
+									<span class="position-relative z-1 white-text fsz-12 fw-700 lh-sm">{{ review.rating }}</span>
+								</div>
+								<span class="pr-module-reviews-item-author fw-700 fsz-14 lh-sm">{{ review.author }}</span>
+							</div>
+							<div class="pr-module-reviews-item-text fsz-14">
+								{{ review.text }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="swiper-button swiper-button-next swiper-button-next-{{ module }} swiper-button-next-column-reviews">
+					<svg xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34" fill="none">
+						<path d="M1 33L9 17L1 0.999999" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+				<div class="swiper-button swiper-button-prev swiper-button-prev-{{ module }} swiper-button-prev-column-reviews">
+					<svg xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34" fill="none">
+						<path d="M9 1L1 17L9 33" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+			</div>
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					var columnReviewsSwiper = new Swiper('#pr-column-last-reviews-{{ module }}', {
+						slidesPerView: 1,
+						spaceBetween: 16,
+						loop: true,
+						navigation: {
+							nextEl: '.swiper-button-next-{{ module }}',
+							prevEl: '.swiper-button-prev-{{ module }}',
+						},
+					});
+				});
+			</script>
+		</div>
+	{% else %}
+		<div class="pr-module-reviews mt-4">
+			<div class="pr-page-title fw-700 dark-text mb-3">
+				{{ heading_title }}
+			</div>
+			<div id="rm-product-reviews_{{ module }}" class="r-module-reviews-items d-flex align-items-lg-stretch gap-3 flex-wrap">
+				{% for review in reviews %}
+					<div class="pr-module-reviews-item content-block p-3 p-xl-4 d-flex flex-column gap-3">
+            			<div class="pr-module-reviews-item-info d-flex gap-3 align-items-stretch pb-3 border-bottom">
+							<img class="img-fluid" src="{{ review.thumb }}" alt="{{ review.name }}" width="{{ review.width }}" height="{{ review.height }}" loading="lazy"/>
+							<div class="pr-module-reviews-item-info-title d-flex flex-column gap-2 align-self-stretch justify-content-between">
+								<a href="{{ review.href }}" class="fw-500 lh-sm dark-link">{{ review.name }}</a>
+								<div class="pr-module-reviews-item-info-date d-flex align-items-center gap-1 fsz-12 light-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+										<path d="M1 4.67102H13M3.66667 0.671021V2.00435M10.3333 0.671021V2.00435M4 7.33769C4 7.52178 3.85076 7.67102 3.66667 7.67102C3.48257 7.67102 3.33333 7.52178 3.33333 7.33769M4 7.33769C4 7.15359 3.85076 7.00435 3.66667 7.00435C3.48257 7.00435 3.33333 7.15359 3.33333 7.33769M4 7.33769H3.33333M7.33333 7.33769C7.33333 7.52178 7.1841 7.67102 7 7.67102C6.81591 7.67102 6.66667 7.52178 6.66667 7.33769M7.33333 7.33769C7.33333 7.15359 7.1841 7.00435 7 7.00435C6.81591 7.00435 6.66667 7.15359 6.66667 7.33769M7.33333 7.33769H6.66667M10.6667 7.33769C10.6667 7.52178 10.5174 7.67102 10.3333 7.67102C10.1492 7.67102 10 7.52178 10 7.33769M10.6667 7.33769C10.6667 7.15359 10.5174 7.00435 10.3333 7.00435C10.1492 7.00435 10 7.15359 10 7.33769M10.6667 7.33769H10M4 10.671C4 10.8551 3.85076 11.0044 3.66667 11.0044C3.48257 11.0044 3.33333 10.8551 3.33333 10.671M4 10.671C4 10.4869 3.85076 10.3377 3.66667 10.3377C3.48257 10.3377 3.33333 10.4869 3.33333 10.671M4 10.671H3.33333M7.33333 10.671C7.33333 10.8551 7.1841 11.0044 7 11.0044C6.81591 11.0044 6.66667 10.8551 6.66667 10.671M7.33333 10.671C7.33333 10.4869 7.1841 10.3377 7 10.3377C6.81591 10.3377 6.66667 10.4869 6.66667 10.671M7.33333 10.671H6.66667M10.6667 10.671C10.6667 10.8551 10.5174 11.0044 10.3333 11.0044C10.1492 11.0044 10 10.8551 10 10.671M10.6667 10.671C10.6667 10.4869 10.5174 10.3377 10.3333 10.3377C10.1492 10.3377 10 10.4869 10 10.671M10.6667 10.671H10M3 13.3377H11C12.1046 13.3377 13 12.4423 13 11.3377V3.33769C13 2.23312 12.1046 1.33769 11 1.33769H3C1.89543 1.33769 1 2.23312 1 3.33769V11.3377C1 12.4423 1.89543 13.3377 3 13.3377Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+									{{ review.date }}
+								</div>
+							</div>
+						</div>
+						<div class="d-flex align-items-center gap-2">
+							<div class="pr-store-reviews-rating-value position-relative d-flex align-items-center justify-content-center">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 44 44" fill="none">
+									<path d="M30.1498 12.2144L25.3978 2.20951C23.9985 -0.7365 20.0015 -0.736504 18.6022 2.2095L13.8502 12.2144L3.26261 13.813C0.132974 14.2855 -1.1097 18.338 1.16772 20.6447L8.7994 28.3743L6.9938 39.3131C6.45621 42.57 9.69752 45.0652 12.4866 43.5416L22 38.3447L31.5134 43.5416C34.3025 45.0652 37.5438 42.57 37.0062 39.3131L35.2006 28.3743L42.8323 20.6447C45.1097 18.338 43.867 14.2855 40.7374 13.813L30.1498 12.2144Z" fill="#FFC445"></path>
+								</svg>
+								<span class="position-relative z-1 white-text fsz-12 fw-700 lh-sm">{{ review.rating }}</span>
+							</div>
+							<span class="pr-module-reviews-item-author fw-700 fsz-14 lh-sm">{{ review.author }}</span>
+						</div>
+						<div class="pr-module-reviews-item-text fsz-14">
+							{{ review.text }}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+{% endif %}

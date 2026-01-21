@@ -1,0 +1,61 @@
+{{ header }}
+<div id="account-reset" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+				<div class="content-block pr-account-page">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+						<fieldset class="p-0">
+							<legend class="h3 mt-0 mb-3 mb-xl-4">{{ text_password }}</legend>
+							<div class="form-floating mb-4">
+								{% if error_password %}
+									<script>
+										prNotify('warning', '{{ error_password }}');
+									</script>
+								{% endif %}
+								<input type="password" name="password" value="{{ password }}" id="input-password" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-password"><span class="required">*</span> {{ entry_password }}</label>
+							</div>
+							<div class="form-floating mb-4">
+								{% if error_confirm %}
+									<script>
+										prNotify('warning', '{{ error_confirm }}');
+									</script>
+								{% endif %}
+								<input type="password" name="confirm" value="{{ confirm }}" id="input-confirm" class="form-control" />
+								<label class="px-3 secondary-text fsz-14" for="input-confirm"><span class="required">*</span> {{ entry_confirm }}</label>
+							</div>
+						</fieldset>
+						<button type="submit" class="button button-secondary button-large">{{ button_continue }}</button>
+					</form>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

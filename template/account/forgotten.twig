@@ -1,0 +1,52 @@
+{{ header }}
+<div id="account-forgotten" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if error_warning %}
+			<script>
+				prNotify('warning', '{{ error_warning }}');
+			</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+			    <div class="content-block pr-account-page">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+					<div class="fsz-14 grey-text mb-3">{{ text_email }}</div>
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+						<fieldset class="p-0">
+							<div class="form-floating mb-4">
+								<input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" inputmode="email">
+								<label class="px-3 secondary-text fsz-14" for="input-email"><span class="required">*</span> {{ entry_email }}</label>
+							</div>
+						</fieldset>
+						<button type="submit" class="button button-secondary button-large">{{ button_continue }}</button>
+					</form>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

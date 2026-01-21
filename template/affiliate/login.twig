@@ -1,0 +1,70 @@
+{{ header }}
+<div id="affiliate-login" class="container-xl flex-grow-1">
+ 	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    <main>
+        <div class="content-top-box">{{ content_top }}</div>
+        {% if success %}
+            <script>
+                prNotify('success', '{{ success }}');
+            </script>
+        {% endif %}
+        {% if error_warning %}
+            <script>
+                prNotify('warning', '{{ error_warning }}');
+            </script>
+        {% endif %}
+        <div id="content" class="row g-3 g-xxl-4 pr-account">
+            <div class="col-lg-12">
+                <div class="d-flex flex-column flex-lg-row gap-3 gap-xxl-4 pr-account-login">
+                    <div class="content-block d-flex flex-column">
+                        <div class="pr-account-title pb-3 pb-md-4 mb-3 mb-md-4 border-bottom d-flex align-items-center gap-3 fw-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" fill="none">
+                                <path d="M15.4452 16.5962C15.9764 16.7471 16.5295 16.4388 16.6804 15.9075C16.8313 15.3762 16.523 14.8232 15.9917 14.6723L15.4452 16.5962ZM13.0385 23.6C13.5908 23.6 14.0385 23.1523 14.0385 22.6C14.0385 22.0477 13.5908 21.6 13.0385 21.6V23.6ZM17.9071 19.4929C17.5166 19.1024 16.8834 19.1024 16.4929 19.4929C16.1024 19.8834 16.1024 20.5166 16.4929 20.9071L17.9071 19.4929ZM19.6 22.6L18.8929 23.3071C19.2834 23.6976 19.9166 23.6976 20.3071 23.3071L19.6 22.6ZM25.7071 17.9071C26.0976 17.5166 26.0976 16.8834 25.7071 16.4929C25.3166 16.1024 24.6834 16.1024 24.2929 16.4929L25.7071 17.9071ZM7.17143 16.4H14.0286V14.4H7.17143V16.4ZM2.02857 21.6C2.02278 21.6 2.01979 21.599 2.01776 21.5982C2.01506 21.597 2.01168 21.5949 2.00837 21.5916C2.00506 21.5883 2.00297 21.5849 2.00183 21.5822C2.00098 21.5802 2 21.5772 2 21.5714H0C0 22.6918 0.90822 23.6 2.02857 23.6V21.6ZM7.17143 14.4C3.21076 14.4 0 17.6108 0 21.5714H2C2 18.7153 4.31533 16.4 7.17143 16.4V14.4ZM14.7 6.1C14.7 8.36437 12.8644 10.2 10.6 10.2V12.2C13.9689 12.2 16.7 9.46894 16.7 6.1H14.7ZM10.6 10.2C8.33563 10.2 6.5 8.36437 6.5 6.1H4.5C4.5 9.46894 7.23106 12.2 10.6 12.2V10.2ZM6.5 6.1C6.5 3.83563 8.33563 2 10.6 2V0C7.23106 0 4.5 2.73106 4.5 6.1H6.5ZM10.6 2C12.8644 2 14.7 3.83563 14.7 6.1H16.7C16.7 2.73106 13.9689 0 10.6 0V2ZM14.0286 16.4C14.5212 16.4 14.9962 16.4686 15.4452 16.5962L15.9917 14.6723C15.3667 14.4947 14.7078 14.4 14.0286 14.4V16.4ZM13.0385 21.6H2.02857V23.6H13.0385V21.6ZM16.4929 20.9071L18.8929 23.3071L20.3071 21.8929L17.9071 19.4929L16.4929 20.9071ZM20.3071 23.3071L25.7071 17.9071L24.2929 16.4929L18.8929 21.8929L20.3071 23.3071Z" fill="var(--pr-black-color)"></path>
+                            </svg>
+                            {{ text_returning_affiliate }}
+                        </div>
+                        <form action="{{ action }}" method="post" enctype="multipart/form-data">
+                            <div class="form-floating mb-4">
+                                <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control"/>
+                                <label class="px-3 secondary-text fsz-14" for="input-email">{{ entry_email }}</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control"/>
+                                <label class="px-3 secondary-text fsz-14" for="input-password">{{ entry_password }}</label>
+                            </div>
+                            <div class="pr-account-login-forgotten mb-3">
+                                <a href="{{ forgotten }}" class="blue-link fsz-14">{{ text_forgotten }}</a>
+                            </div>
+                            <button type="submit" class="button button-primary w-100">{{ button_login }}</button>
+                            {% if redirect %}
+                                <input type="hidden" name="redirect" value="{{ redirect }}"/>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div class="content-block d-flex flex-column">
+                        <div class="pr-account-title pb-3 pb-md-4 mb-3 mb-md-4 border-bottom d-flex align-items-center gap-3 fw-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" fill="none">
+                                <path d="M14.6004 15.4261C14.4121 15.4088 14.2214 15.4 14.0286 15.4H7.17143C3.76304 15.4 1 18.163 1 21.5714C1 22.1395 1.46051 22.6 2.02857 22.6H14.6305M21.4 15.4V19M21.4 19V22.6M21.4 19H17.8M21.4 19H25M15.7 6.1C15.7 8.91665 13.4167 11.2 10.6 11.2C7.78335 11.2 5.5 8.91665 5.5 6.1C5.5 3.28335 7.78335 1 10.6 1C13.4167 1 15.7 3.28335 15.7 6.1Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            {{ text_register }}
+                        </div>
+                        <div class="pr-account-text fsz-14 dark-grey-text pb-4">{{ text_register_account }}</div>
+                        <a href="{{ register }}" class="button button-light w-100 mt-auto">{{ button_continue }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ content_bottom }}
+    </main>
+</div>
+{{ footer }}

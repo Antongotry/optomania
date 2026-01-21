@@ -1,0 +1,50 @@
+{% if categories and not oct_detect %}
+<div class="pr-column-categories d-flex flex-column content-block p-0 overflow-hidden">
+	<div class="pr-column-categories-title py-3 px-4 dark-text fw-700 bg-light-grey">{{ text_module_category }}</div>
+	<ul class="list-unstyled pr-column-categories-list p-0 d-flex flex-column">
+		{% for category in categories %}
+			<li class="pr-column-categories-list-item py-3 ps-4 pe-3{% if category.category_id == category_id %} clicked{% endif %}">
+				<span class="d-flex align-items-center justify-content-between">
+					<a href="{{ category.href }}" class="{% if category.category_id == category_id %}blue-link{% else %}dark-link{% endif %} fw-500 fsz-14 lh-sm">{{ category.name }}</a>
+					{% if category.children %}
+						<button class="no-btn p-2{% if category.category_id != category_id %} collapsed{% endif %}" aria-label="Expand" data-bs-toggle="collapse" data-bs-target="#collapse{{ category.category_id }}" aria-expanded="{% if category.category_id == category_id %}true{% else %}false{% endif %}" aria-controls="collapse{{ category.category_id }}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" viewBox="0 0 5 9" fill="none">
+								<path d="M1 7.5L4 4.5L1 1.5" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</button>
+					{% endif %}
+				</span>
+				{% if category.children %}
+					<div class="collapse pr-column-categories-collapse{% if category.category_id == category_id %} show{% endif %}" id="collapse{{ category.category_id }}">
+						<ul class="list-unstyled p-0 mt-3{% if category.category_id == category_id %} active{% endif %}">
+							{% for child in category.children %}
+								<li>
+									<a href="{{ child.href }}" class="{% if child.category_id == child_id %}blue-link{% else %}light-link{% endif %} fw-500 fsz-14">{{ child.name }}</a>
+									{% if child.children %}
+										<ul class="list-unstyled p-3">
+											{% for child_3 in child.children %}
+												<li>
+													<a href="{{ child_3.href }}" class="{% if child_3.category_id == ch_id %}blue-link{% else %}dark-link{% endif %} fw-500 fsz-14 lh-sm">{{ child_3.name }}</a>
+													{% if child_3.children %}
+														<ul class="list-unstyled p-3">
+														{% for child_4 in child_3.children %}
+															<li>
+																<a href="{{ child_4.href }}" class="{% if child_4.category_id == child3_id %}blue-link{% else %}dark-link{% endif %} fw-500 fsz-14 lh-sm">{{ child_4.name }}</a>
+															</li>
+														{% endfor %}	
+														</ul>
+													{% endif %}
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endif %}

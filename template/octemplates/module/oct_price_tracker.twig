@@ -1,0 +1,360 @@
+<div class="modal fade" id="priceTrackerModal" tabindex="-1" aria-labelledby="priceTrackerModalLabel" aria-hidden="true">
+  <form method="post" enctype="multipart/form-data" id="price-tracker-form" class="modal-dialog modal-dialog-centered wide">
+    <div class="modal-content">
+      <div class="modal-header p-4 bg-grey">
+        <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="priceTrackerModalLabel">{{ heading_title }}</h5>
+        <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="tracker-main-block" class="modal-body p-4">
+        <div class="modal-body-form d-flex flex-column flex-md-row">
+          <div class="modal-body-product pe-md-4 me-md-4 flex-grow-1 mb-4">
+            <div class="d-flex">
+              {% if thumb is defined %}
+                <div class="modal-body-product-img br-8 overflow-hidden">
+                  <img src="{{ thumb }}" alt="{{ heading_title_product }}" width="120" height="120">
+                </div>
+              {% endif %}
+              <div class="modal-body-product-info dark-text flex-grow-1 d-flex flex-column{% if thumb is defined %} ps-3{% endif %}">
+                <div class="modal-body-product-title fw-600 fsz-14 mb-3">{{ heading_title_product }}</div>
+                {% if price %}
+                  {% if not special %}
+										<div class="pr-price-new fsz-20 fw-600 dark-text pb-3">{{ price }}</div>
+									{% else %}
+										<div class="pr-price-old light-text text-decoration-line-through fsz-14">{{ price }}</div>
+                    <div class="pr-price-new fsz-20 fw-600 dark-text pb-3">{{ special }}</div>
+									{% endif %}
+                {% endif %}
+              </div>
+            </div>
+            <div class="pr-modal-text text-center fsz-14 fw-500 mt-4 pt-4 border-top dark-text">{{ text_enter_info }}</div>
+          </div>
+          <div class="modal-body-inputs flex-grow-1">
+            {% if oct_price_tracker_data.customer_name %}
+              <div class="input-group">
+                <span class="input-group-text" id="usernameTrackerIcon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+										<path d="M8.73803 10.9984H5.11457C2.84216 10.9984 1 12.8405 1 15.1129C1 15.4917 1.30703 15.7987 1.68576 15.7987H6.647M13.4308 10.8284L15.571 12.9685M10.8007 4.79794C10.8007 6.67584 9.27834 8.19817 7.40044 8.19817C5.52254 8.19817 4.00021 6.67584 4.00021 4.79794C4.00021 2.92004 5.52254 1.39771 7.40044 1.39771C9.27834 1.39771 10.8007 2.92004 10.8007 4.79794ZM11.546 16.3612L10.1232 16.5983C9.93373 16.6299 9.76942 16.4656 9.80101 16.2761L10.0381 14.8533C10.1204 14.3599 10.3547 13.9044 10.7085 13.5507L14.5084 9.75083C14.977 9.28216 15.7369 9.28216 16.2055 9.75083L16.6485 10.1938C17.1172 10.6625 17.1172 11.4223 16.6485 11.891L12.8486 15.6909C12.4949 16.0446 12.0395 16.279 11.546 16.3612Z" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+									</svg>
+                </span>
+                <div class="form-floating">
+                  <input type="text" name="customer_name" value="{{ customer_name }}" class="form-control" id="inputTrackerName" placeholder="{{ enter_customer_name }}" inputmode="text" aria-label="Customer Name" aria-describedby="usernameTrackerIcon">
+                  <label for="inputTrackerName" class="px-3 secondary-text fsz-14">{{ enter_customer_name }}</label>
+                </div>
+              </div>
+            {% endif %}
+            {% if oct_price_tracker_data.phone %}
+              <div class="input-group mt-4">
+                <span class="input-group-text" id="telTrackerIcon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="18" viewBox="0 0 12 18" fill="none">
+										<path d="M5.20005 2.9C4.92391 2.9 4.70005 3.12386 4.70005 3.4C4.70005 3.67614 4.92391 3.9 5.20005 3.9L5.20005 2.9ZM6.80005 3.9C7.07619 3.9 7.30005 3.67614 7.30005 3.4C7.30005 3.12386 7.07619 2.9 6.80005 2.9L6.80005 3.9ZM8.40005 16.5L3.60005 16.5L3.60005 17.5L8.40005 17.5L8.40005 16.5ZM1.70005 14.6L1.70005 3.4L0.70005 3.4L0.700049 14.6L1.70005 14.6ZM3.60005 1.5L8.40005 1.5L8.40005 0.5L3.60005 0.499999L3.60005 1.5ZM10.3001 3.4L10.3 14.6L11.3 14.6L11.3001 3.4L10.3001 3.4ZM8.40005 1.5C9.44939 1.5 10.3001 2.35066 10.3001 3.4L11.3001 3.4C11.3001 1.79837 10.0017 0.5 8.40005 0.5L8.40005 1.5ZM1.70005 3.4C1.70005 2.35066 2.55071 1.5 3.60005 1.5L3.60005 0.499999C1.99842 0.499999 0.70005 1.79837 0.70005 3.4L1.70005 3.4ZM3.60005 16.5C2.55071 16.5 1.70005 15.6493 1.70005 14.6L0.700049 14.6C0.700049 16.2016 1.99842 17.5 3.60005 17.5L3.60005 16.5ZM8.40005 17.5C10.0017 17.5 11.3 16.2016 11.3 14.6L10.3 14.6C10.3 15.6493 9.44939 16.5 8.40005 16.5L8.40005 17.5ZM5.20005 3.9L6.80005 3.9L6.80005 2.9L5.20005 2.9L5.20005 3.9Z" fill="#5C6168"></path>
+									</svg>
+                </span>
+                <div class="form-floating">
+                  <input type="tel" inputmode="numeric" class="form-control" id="inputTrackerPhone" name="mask_phone_display" value="{{ phone }}" aria-label="telephone" aria-describedby="telTrackerIcon">
+                  <input type="hidden" id="inputTrackerPhoneFull" name="phone" value="{{ phone }}">
+                </div>
+              </div>
+            {% endif %}
+            <div class="input-group mt-4">
+              <span class="input-group-text" id="emailTrackerIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+                  <path d="M17 3.0001V11.0001C17 12.3256 15.9255 13.4001 14.6 13.4001H3.4C2.07452 13.4001 1 12.3256 1 11.0001V3.0001M17 3.0001C17 1.67461 15.9255 0.600098 14.6 0.600098H3.4C2.07452 0.600098 1 1.67461 1 3.0001M17 3.0001V3.25406C17 3.83757 16.6823 4.37481 16.1711 4.65601L10.1566 7.96396C9.43641 8.36007 8.56359 8.36007 7.8434 7.96396L1.82893 4.65601C1.31765 4.37481 1 3.83757 1 3.25406V3.0001" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
+              <div class="form-floating">
+                <input type="email" name="email" value="{{ email }}" class="form-control" id="inputTrackerEmail" placeholder="{{ enter_email }}" inputmode="email" aria-label="email" aria-describedby="emailTrackerIcon">
+                <label for="inputTrackerEmail" class="px-3 secondary-text fsz-14">{{ enter_email }}</label>
+              </div>
+            </div>
+            {% if text_terms %}
+              <div class="form-check d-flex align-items-center gap-2 py-3">
+                <input id="agreeTrackerCheck" type="checkbox" class="form-check-input" name="agree">
+                <label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="agreeTrackerCheck">
+                  {{ text_terms }}
+                </label>
+              </div>
+            {% endif %}
+            <button id="price-tracker-submit" type="submit" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_subscribe }}</button>
+            <input type="hidden" name="pid" value="{{ product_id }}">
+            <input type="hidden" name="current_price" value="{{ current_price_value }}">
+          </div>
+        </div>
+        <div class="pr-popup-success d-none flex-column align-items-center text-center w-100 mx-auto">
+          <div id="pr-popup-success-tracker-text" class="dark-text fw-500 text-center"></div>
+          <div class="d-flex align-items-center justify-content-center my-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="164" height="164" viewBox="0 0 164 164" fill="none" class="oct-success-svg">
+							<rect class="oct-outer-circle" width="164" height="164" rx="82" fill="#E0FFE5"/>
+							<rect class="oct-inner-circle" x="32" y="32" width="100" height="100" rx="50" fill="#4CD964"/>
+							<path class="oct-checkmark" d="M100.04 68.6039L97.6421 66.6739C96.4601 65.7239 95.7731 65.7349 94.7611 66.9849L77.3321 88.4939L69.2211 81.7549C68.1021 80.8149 67.4021 80.8649 66.4821 82.0149L64.6311 84.4249C63.6921 85.6069 63.8121 86.2779 64.9221 87.2049L76.4821 96.7669C77.6721 97.7669 78.3421 97.6639 79.2621 96.5449L100.341 71.4839C101.331 70.2939 101.271 69.5829 100.04 68.6039Z" fill="white"/>
+						</svg>
+          </div>
+          <button type="button" class="button button-primary button-large w-100 py-3 fsz-14" data-bs-dismiss="modal" aria-label="Close">{{ button_close }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <link rel="stylesheet" href="catalog/view/theme/oct_promo/stylesheet/intlTelInput.css" />
+  <script src="catalog/view/theme/oct_promo/js/intlTelInput.min.js"></script>
+
+  <script>
+    if (typeof priceTrackerUrl === 'undefined') {
+      var priceTrackerUrl = '{{ ajax_add_url|raw }}';
+    }
+
+    $("#inputTrackerName, #inputTrackerPhone, #inputTrackerEmail, #agreeTrackerCheck").on("change paste keyup", function() {
+      $(this).removeClass('error_style');
+    });
+
+    $('#price-tracker-form').on('submit', function(event) {
+      event.preventDefault();
+      
+      if (trackerIti) {
+        updateTrackerHiddenPhoneField();
+      }
+      
+      $.ajax({
+        type: 'post',
+        url: priceTrackerUrl,
+        dataType: 'json',
+        data: $('#price-tracker-form').serialize(),
+        cache: false,
+        beforeSend: function() {
+          masked('body', true);
+
+          $('#price-tracker-submit').data('original-content', $('#price-tracker-submit').html());
+          $('#price-tracker-submit').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+        },
+        complete: function() {
+          masked('body', false);
+
+          setTimeout(function() {
+            $('#price-tracker-submit').html($('#price-tracker-submit').data('original-content')).prop('disabled', false);
+          }, 600);
+        },
+        success: function(json) {
+          if (json['error']) {
+            $('#priceTrackerModal .text-danger').remove();
+            let errorOption = '';
+
+            $.each(json['error'], function(i, val) {
+              if (i === 'phone') {
+                const telInput = document.querySelector('#inputTrackerPhone');
+                if (telInput) telInput.classList.add('error_style');
+              } else {
+                $('#priceTrackerModal [name="' + i + '"]').addClass('error_style');
+              }
+              errorOption += '<div class="alert-text-item">' + val + '</div>';
+            });
+
+            prNotify('danger', errorOption);
+          } else {
+            if (json['output']) {
+              $("#pr-popup-success-tracker-text").html(json['output']);
+              $("#tracker-main-block").html($(".pr-popup-success"));
+              $('.modal-dialog').removeClass('wide');
+              $(".pr-popup-success").removeClass("d-none");
+            }
+          }
+        }
+      });
+    });
+  </script>
+  <script>
+  if (typeof trackerIti === 'undefined') {
+    var trackerIti = null;
+  }
+  if (typeof defaultTrackerCountry === 'undefined') {
+    var defaultTrackerCountry = '{{ default_phone_country|default("ua") }}';
+  }
+  
+  if (typeof trackerPhoneMasks === 'undefined') {
+    var trackerPhoneMasks = {};
+    try {
+      const phoneMasksJson = {{ phone_masks|raw }};
+      if (phoneMasksJson && typeof phoneMasksJson === 'object') {
+        trackerPhoneMasks = phoneMasksJson;
+      }
+    } catch (e) {
+      console.warn('Failed to parse phone masks:', e);
+    }
+  }
+  
+  if (typeof trackerAllowedCountries === 'undefined') {
+    var trackerAllowedCountries = [];
+    try {
+      const allowedCountriesJson = {{ allowed_countries|raw }};
+      if (allowedCountriesJson && Array.isArray(allowedCountriesJson)) {
+        trackerAllowedCountries = allowedCountriesJson;
+      }
+    } catch (e) {
+      console.warn('Failed to parse allowed countries:', e);
+    }
+  }
+
+  if (typeof getTrackerFullPhoneNumber === 'undefined') {
+    function getTrackerFullPhoneNumber() {
+      if (!trackerIti) return '';
+      
+      const telInput = document.querySelector('#inputTrackerPhone');
+      if (!telInput) return '';
+      
+      const selectedCountryData = trackerIti.getSelectedCountryData();
+      const dialCode = selectedCountryData.dialCode || '';
+      let rawValue = telInput.value.replace(/\D/g, '');
+      
+      if (rawValue.length > 15) {
+        rawValue = rawValue.substring(0, 15);
+      }
+      
+      return rawValue ? '+' + dialCode + rawValue : '';
+    }
+  }
+
+  if (typeof updateTrackerHiddenPhoneField === 'undefined') {
+    function updateTrackerHiddenPhoneField() {
+      const fullNumber = getTrackerFullPhoneNumber();
+      const hiddenField = document.querySelector('#inputTrackerPhoneFull');
+      if (hiddenField) {
+        hiddenField.value = fullNumber;
+      }
+      return fullNumber;
+    }
+  }
+
+  if (typeof initTrackerIntlTelInput === 'undefined') {
+    function initTrackerIntlTelInput() {
+    const telInput = document.querySelector('#inputTrackerPhone');
+    if (telInput && !telInput.classList.contains('iti__tel-input')) {
+      if (trackerIti) {
+        trackerIti.destroy();
+      }
+
+      const itiOptions = {
+        initialCountry: defaultTrackerCountry,
+        geoIpLookup: function(callback) {
+          callback(defaultTrackerCountry);
+        },
+        separateDialCode: true,
+        nationalMode: true,
+        formatOnDisplay: false,
+        strictMode: false,
+        allowDropdown: true,
+        useFullscreenPopup: false,
+        containerClass: "input-group"
+      };
+
+      if (trackerAllowedCountries.length > 0) {
+        itiOptions.onlyCountries = trackerAllowedCountries;
+        
+        if (trackerAllowedCountries.length === 1) {
+          itiOptions.allowDropdown = false;
+        }
+      }
+
+      trackerIti = window.intlTelInput(telInput, itiOptions);
+
+      const applyTrackerInputMask = function() {
+        if (typeof $.fn.inputmask === 'undefined') {
+          console.warn('Inputmask not loaded yet');
+          return;
+        }
+        
+        const countryData = trackerIti.getSelectedCountryData();
+        let maskData = trackerPhoneMasks[countryData.iso2];
+        let mask = null;
+        
+        if (maskData && typeof maskData === 'object' && maskData.mask) {
+          mask = maskData.mask;
+        } else if (typeof maskData === 'string') {
+          mask = maskData;
+        }
+        
+        if (!mask) {
+          const defaultMasks = {
+            'ua': '99 999 99 99',
+            'pl': '999 999 999',
+            'us': '(999) 999-9999',
+            'ca': '(999) 999-9999',
+            'gb': '99999 999999',
+            'de': '9999 99999999',
+            'fr': '9 99 99 99 99',
+            'it': '999 999 9999',
+            'es': '999 99 99 99',
+            'ru': '(999) 999-99-99',
+            'by': '(99) 999-99-99',
+          };
+          mask = defaultMasks[countryData.iso2];
+        }
+        
+        if (!mask) {
+          const dialCodeLength = countryData.dialCode.length;
+          if (dialCodeLength === 1) {
+            mask = '(999) 999-9999';
+          } else if (dialCodeLength === 2) {
+            mask = '99 999 99 99';
+          } else {
+            mask = '999 999 9999';
+          }
+        }
+        
+        if ($(telInput).inputmask) {
+          $(telInput).inputmask('remove');
+        }
+        
+        $(telInput).inputmask({
+          mask: mask,
+          clearMaskOnLostFocus: false,
+          showMaskOnHover: false,
+          placeholder: '_',
+          onincomplete: function() {
+            updateTrackerHiddenPhoneField();
+          },
+          oncomplete: function() {
+            updateTrackerHiddenPhoneField();
+          },
+          oncleared: function() {
+            updateTrackerHiddenPhoneField();
+          }
+        });
+        
+        const placeholderText = mask.replace(/9/g, '_');
+        telInput.setAttribute('placeholder', placeholderText);
+      };
+      
+      setTimeout(function() {
+        applyTrackerInputMask();
+      }, 300);
+
+      telInput.addEventListener('input', function(e) {
+        updateTrackerHiddenPhoneField();
+      });
+
+      telInput.addEventListener('paste', function(e) {
+        setTimeout(function() {
+          updateTrackerHiddenPhoneField();
+        }, 10);
+      });
+
+      telInput.addEventListener('countrychange', function() {
+        applyTrackerInputMask();
+        updateTrackerHiddenPhoneField();
+      });
+
+      telInput.addEventListener('blur', function() {
+        updateTrackerHiddenPhoneField();
+      });
+    }
+  }
+  }
+
+  $('#priceTrackerModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+    initTrackerIntlTelInput();
+  });
+
+  $("#inputTrackerName, #inputTrackerPhone, #inputTrackerEmail, #agreeTrackerCheck").off("change paste keyup").on("change paste keyup", function() {
+    $(this).removeClass('error_style');
+  });
+</script>
+
+</div>

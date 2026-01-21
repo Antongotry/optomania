@@ -1,0 +1,456 @@
+{{ header }}
+<div id="product-category" class="container-xl flex-grow-1">
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    {% if oct_promo_data.micro is defined and oct_promo_data.micro %}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement":
+            [
+                {% for breadcrumb in breadcrumbs %}
+                    {% if loop.first %}
+                    {% else %}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ loop.index -1 }},
+                        "item":
+                        {
+                            "@id": "{{ breadcrumb.href }}",
+                            "name": "{{ breadcrumb.text }}"
+                        }
+                    }{% if not loop.last %},{% endif %}
+                    {% endif %}
+                {% endfor %}
+            ]
+        }
+        </script>
+    {% endif %}
+    <main>
+        <div class="content-top-box">
+            {{ content_top }}
+        </div>
+        <div class="row g-3 g-xxl-4 pr-category">
+            {{ column_left }}
+            {% if column_left and column_right %}
+                {% set class = 'col-xl-6 is-cols' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-xl-9' %}
+            {% else %}
+                {% set class = 'col-xl-12 no-col' %}
+            {% endif %}
+            <div id="content" class="{{ class }}">
+                <div class="col-12 pr-page-title pb-3">
+                    <h1>{{ heading_title }}</h1>
+                </div>
+                {% if oct_promo_data.category_desc_position is defined and oct_promo_data.category_desc_position == 'top' %}
+                    {% if thumb or description %}
+                        <div class="pr-category-description content-block d-flex flex-column flex-md-row mb-3">
+                            {% if thumb %}
+                                <div class="pr-category-description-img">
+                                    <img src="{{ thumb }}" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ cat_image_width }}" height="{{ cat_image_height }}" fetchpriority="high" />
+                                </div>
+                            {% endif %}
+                            {% if description %}
+                                <div id="pr-category-description"{% if thumb %} class="pt-3 pt-md-0 ps-md-3"{% endif %}>
+                                    <div class="pr-category-description-text dark-text fsz-16">
+                                        {{ description }}
+                                        {% if categories_page is defined and categories_page is not empty %}
+                                            <div class="pr-category-categories_page-text mt-3">
+                                                <ul class="category-landing-links list-unstyled ps-0">
+                                                {% for oct_page in categories_page %}
+                                                    {% if oct_page.page_links is not empty %}
+                                                    <li class="category-landing-links-item">
+                                                        <span class="category-landing-links-item-title">{{ oct_page.page_group[language_id] }}</span>
+                                                        {% for link in oct_page.page_links %}
+                                                        <a href="{{ link[language_id].link }}" class="blue-link d-flex-inline align-items-center" title="{{ link[language_id].title }}">{{ link[language_id].title }}</a>
+                                                        {% endfor %}
+                                                    </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <!-- if button enabled -->
+                                    {% if description|length > 700 and (categories or products) and oct_promo_data.category_desc_up is not defined %}
+                                        <div class="mt-3">
+                                            <span class="pr-category-description-text-toggle text-decoration-underline fsz-12 fw-500 dark-text">
+                                                {{ oct_expand }}
+                                                <svg class="ms-1" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                                                    <path d="M1 1L4 4L7 1" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    toggleCategoryDescription();
+                                                });
+                                            </script>
+                                        </div>
+                                    {% else %}
+                                        <style>
+                                            .pr-category-description-text {
+                                                max-height: none !important;
+                                            }
+                                        </style>
+                                    {% endif %}
+                                    <!-- end if -->
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if categories %}
+                    <div class="col-12 pr-subcategories mb-3">
+                        <div class="pr-subcategories-box d-flex align-items-stretch gap-3 overflow-x-auto">
+                            {% for category in categories %}
+                                <a href="{{ category.href }}" class="pr-subcategories-link content-block d-flex flex-column align-items-center text-center gap-2 p-2">
+                                    {% if oct_promo_data.category_subcategory_photo %}
+                                        {% if loop.first %}
+                                            <img class="img-fluid" src="{{ category.image }}" alt="" title="{{ category.name }}" width="{{ category.width }}" height="{{ category.height }}" fetchpriority="high">
+                                        {% else %}
+                                            <img class="img-fluid" src="{{ category.image }}" alt="" title="{{ category.name }}" width="{{ category.width }}" height="{{ category.height }}" loading="lazy">
+                                        {% endif %}
+                                    {% endif %}
+                                    <span class="fsz-12 fw-600 lh-sm">{{ category.name }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if products %}
+                    {% if oct_promo_data.category_view_sort_oder is defined and(oct_promo_data.category_view_sort_oder or oct_promo_data.category_view_sort_oder == 'on') %}
+                        <div class="col-12 pr-category-sort mb-3">
+                            <div class="content-block py-3 px-3 px-md-4 d-flex align-items-center justify-content-between gap-md-3">
+                                <div class="d-flex align-items-center gap-3 gap-md-2 flex-grow-1 flex-grow-md-0">
+                                    <div class="dark-text fw-700 d-none d-md-block">{{ text_sort }}</div>
+                                    <select id="input-sort" class="pr-category-sort-select form-select fsz-14 grey-text fw-500" onchange="location = this.value;" aria-label="Sort select">
+                                        {% for sorts in sorts %}
+                                            {% if sorts.value == '%s-%s'|format(sort, order) %}
+                                                <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
+                                            {% else %}
+                                                <option value="{{ sorts.href }}">{{ sorts.text }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <select id="input-limit" class="pr-category-limit-select form-select fsz-14 grey-text fw-500" onchange="location = this.value;" aria-label="Limit select">
+                                        {% for limits in limits %}
+                                            {% if limits.value == limit %}
+                                                <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+                                            {% else %}
+                                                <option value="{{ limits.href }}">{{ limits.text }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="pr-category-appearance btn-group d-none d-md-flex br-8 align-items-center gap-2 bg-grey">
+                                    <button type="button" aria-label="Grid view" id="grid-view" class="pr-category-appearance-btn br-4 border-0 p-0 active" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ button_grid }}" data-bs-original-title="{{ button_grid }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M1 1.33333C1 1.14924 1.14924 1 1.33333 1H3C3.18409 1 3.33333 1.14924 3.33333 1.33333V3C3.33333 3.18409 3.18409 3.33333 3 3.33333H1.33333C1.14924 3.33333 1 3.18409 1 3V1.33333Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M1 6.16667C1 5.98257 1.14924 5.83333 1.33333 5.83333H3C3.18409 5.83333 3.33333 5.98257 3.33333 6.16667V7.83333C3.33333 8.01743 3.18409 8.16667 3 8.16667H1.33333C1.14924 8.16667 1 8.01743 1 7.83333V6.16667Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M1 11C1 10.8159 1.14924 10.6667 1.33333 10.6667H3C3.18409 10.6667 3.33333 10.8159 3.33333 11V12.6667C3.33333 12.8508 3.18409 13 3 13H1.33333C1.14924 13 1 12.8508 1 12.6667V11Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M5.83333 1.33333C5.83333 1.14924 5.98257 1 6.16667 1H7.83333C8.01743 1 8.16667 1.14924 8.16667 1.33333V3C8.16667 3.18409 8.01743 3.33333 7.83333 3.33333H6.16667C5.98257 3.33333 5.83333 3.18409 5.83333 3V1.33333Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M5.83333 6.16667C5.83333 5.98257 5.98257 5.83333 6.16667 5.83333H7.83333C8.01743 5.83333 8.16667 5.98257 8.16667 6.16667V7.83333C8.16667 8.01743 8.01743 8.16667 7.83333 8.16667H6.16667C5.98257 8.16667 5.83333 8.01743 5.83333 7.83333V6.16667Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M5.83333 11C5.83333 10.8159 5.98257 10.6667 6.16667 10.6667H7.83333C8.01743 10.6667 8.16667 10.8159 8.16667 11V12.6667C8.16667 12.8508 8.01743 13 7.83333 13H6.16667C5.98257 13 5.83333 12.8508 5.83333 12.6667V11Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M10.6667 1.33333C10.6667 1.14924 10.8159 1 11 1H12.6667C12.8508 1 13 1.14924 13 1.33333V3C13 3.18409 12.8508 3.33333 12.6667 3.33333H11C10.8159 3.33333 10.6667 3.18409 10.6667 3V1.33333Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M10.6667 6.16667C10.6667 5.98257 10.8159 5.83333 11 5.83333H12.6667C12.8508 5.83333 13 5.98257 13 6.16667V7.83333C13 8.01743 12.8508 8.16667 12.6667 8.16667H11C10.8159 8.16667 10.6667 8.01743 10.6667 7.83333V6.16667Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M10.6667 11C10.6667 10.8159 10.8159 10.6667 11 10.6667H12.6667C12.8508 10.6667 13 10.8159 13 11V12.6667C13 12.8508 12.8508 13 12.6667 13H11C10.8159 13 10.6667 12.8508 10.6667 12.6667V11Z" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                    <button type="button" aria-label="List view" id="list-view" class="pr-category-appearance-btn br-4 border-0 p-0 bg-grey" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ button_list }}" data-bs-original-title="{{ button_list }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+                                            <path d="M17.3077 1.46154H6.23078M17.3077 7H6.23078M17.3077 12.5385H6.23078M1.6154 1.46154C1.6154 1.71644 1.40876 1.92308 1.15386 1.92308C0.89896 1.92308 0.692322 1.71644 0.692322 1.46154M1.6154 1.46154C1.6154 1.20664 1.40876 1 1.15386 1C0.89896 1 0.692322 1.20664 0.692322 1.46154M1.6154 1.46154H0.692322M1.6154 7C1.6154 7.2549 1.40876 7.46154 1.15386 7.46154C0.89896 7.46154 0.692322 7.2549 0.692322 7M1.6154 7C1.6154 6.7451 1.40876 6.53846 1.15386 6.53846C0.89896 6.53846 0.692322 6.7451 0.692322 7M1.6154 7H0.692322M1.6154 12.5385C1.6154 12.7934 1.40876 13 1.15386 13C0.89896 13 0.692322 12.7934 0.692322 12.5385M1.6154 12.5385C1.6154 12.2836 1.40876 12.0769 1.15386 12.0769C0.89896 12.0769 0.692322 12.2836 0.692322 12.5385M1.6154 12.5385H0.692322" stroke="#0C296A" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                    <button type="button" aria-label="Price view" id="price-view" class="pr-category-appearance-btn br-4 border-0 p-0 bg-grey" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ oct_pricelist }}" data-bs-original-title="{{ oct_pricelist }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
+                                            <path d="M0.799988 1H15.2M0.799988 5H15.2M0.799988 9H15.2M0.799988 13H15.2" stroke="#0C296A" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <script>
+                                window.addEventListener('DOMContentLoaded', () => {
+                                    switchCategoryDisplay();
+                                });
+                            </script>
+                        </div>
+                    {% endif %}
+                    <div class="pr-module pr-category-products"
+                        {% if oct_promo_data.category_show_type == '' %} data-type="split"{% endif %}
+                        {% if oct_promo_data.category_show_type == 'width-100' %} data-type="width100"{% endif %}
+                        {% if oct_promo_data.category_show_type == 'width-50' %} data-type="width50"{% endif %}
+                        {% if oct_promo_data.category_show_type == 'width-minimal' %} data-type="minimal"{% endif %}>
+                        <div class="pr-module-items d-flex align-items-lg-stretch gap-3 flex-wrap">
+                            {% for product in products %}
+                                <div class="pr-module-item product-layout content-block p-3 d-flex flex-column product-grid pr-module-col{% if product.oct_grayscale %} pr-no-stock{% endif %}" data-product-id="{{ product.product_id }}">
+                                    <div class="pr-module-item-top position-relative">
+                                        <div class="pr-module-item-stickers-box d-flex justify-content-between align-items-start fsz-12 fw-500 position-absolute top-0 start-0 w-100 z-2">
+                                            {% if product.oct_stickers is not empty %}
+                                                <div class="pr-module-item-stickers-images d-flex gap-1">
+                                                    {% for key, oct_sticker in product.oct_stickers %}
+                                                        {% if oct_sticker is iterable and oct_sticker.image is defined %}
+                                                            <img src="{{ oct_sticker.image }}" alt="{{ oct_sticker.title }}" data-bs-html="true" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover" title="{{ oct_sticker.title }}" data-bs-content="{{ oct_sticker.description }}" width="{{ oct_sticker.image_width|default(20) }}" height="{{ oct_sticker.image_height|default(20) }}" loading="lazy"/>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="pr-module-item-stickers d-flex flex-wrap justify-content-end gap-1 white-text">
+                                                    {% for key, oct_sticker in product.oct_stickers %}
+                                                        {% if oct_sticker is not iterable %}
+                                                            <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker }}</div>
+                                                        {% elseif oct_sticker is iterable and oct_sticker.image is not defined %}
+                                                            <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                        {% elseif oct_sticker is iterable and oct_sticker.image is defined and not oct_sticker.image_only %}
+                                                            <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="pr-module-item-image d-flex justify-content-center position-relative mb-3">
+                                            <div class="pr-module-item-buttons d-flex flex-column gap-2 position-absolute end-0">
+                                                {% if oct_popup_view_status %}
+                                                    <button type="button" aria-label="Quick view" class="pr-module-item-button pr-module-item-button-viewed button button-light p-2" title="{{ oct_popup_view }}" onclick="octPopUpView('{{ product.product_id }}')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                            <path d="M12.7267 5.64745C12.8255 5.88193 12.8255 6.13879 12.7267 6.37327C12.2555 7.49168 10.5419 10.8105 6.79897 10.8105C3.05534 10.8105 1.34383 7.49053 0.87366 6.37269C0.775186 6.13856 0.775186 5.88216 0.87366 5.64803C1.34383 4.53019 3.05534 1.21021 6.79897 1.21021C10.5419 1.21021 12.2555 4.52904 12.7267 5.64745Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M9.20054 6.01036C9.20054 7.33589 8.12598 8.41044 6.80046 8.41044C5.47493 8.41044 4.40038 7.33589 4.40038 6.01036C4.40038 4.68483 5.47493 3.61028 6.80046 3.61028C8.12598 3.61028 9.20054 4.68483 9.20054 6.01036Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </button>
+                                                {% endif %}
+                                                <button type="button" aria-label="Wishlist" class="pr-module-item-button pr-module-item-button-wishlist button button-light p-2" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                        <path d="M6.80165 3.0415L6.80078 3.03971M6.80078 3.03971C6.50027 2.41728 5.76091 0.9104 3.86208 0.9104C2.23678 0.9104 0.742537 2.59985 0.802528 4.43946C0.843052 5.80634 1.7624 6.92471 2.84224 7.98094C3.91774 9.03293 4.92721 9.98253 5.65768 10.66C6.30491 11.2603 7.29817 11.2601 7.94521 10.6596C8.67584 9.98149 9.68533 9.03145 10.7593 7.98094C11.8392 6.92471 12.7585 5.80634 12.799 4.43946C12.859 2.59985 11.3648 0.9104 9.73948 0.9104C7.84066 0.9104 7.10129 2.41728 6.80078 3.03971ZM6.80078 3.03971L6.79991 3.0415" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </button>
+                                                <button type="button" aria-label="Compare" class="pr-module-item-button pr-module-item-button-compare button button-light p-2" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                                        <path d="M1.40039 11.2103H10.4004C11.3945 11.2103 12.2004 10.4044 12.2004 9.41025V7.61025M1.40039 11.2103L3.20039 9.41025M1.40039 11.2103L3.20039 13.0103M12.2004 2.81025H3.20039C2.20628 2.81025 1.40039 3.61614 1.40039 4.61025L1.40039 6.41025M12.2004 2.81025L10.4004 4.61025M12.2004 2.81025L10.4004 1.01025" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <a href="{{ product.href }}" class="d-block mx-auto">
+                                                {% if loop.first %}
+                                                    <img src="{{ product.thumb }}" class="img-fluid" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}" fetchpriority="high" />
+                                                {% else %}
+                                                    <img src="{{ product.thumb }}" class="img-fluid" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}" loading="lazy" />
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="pr-module-item-info fsz-12 d-flex gap-3 justify-content-between align-items-center">
+                                            {% if not product.quantity %}
+                                                <span class="pr-stock-sticker green">{{ oct_product_stock }}</span>
+                                            {% else %}
+                                                <span class="pr-stock-sticker red">{{ product.stock }}</span>
+                                            {% endif %}
+                                            {% if product.oct_model is not empty %}
+                                                <span class="pr-module-item-info-code grey-text">{{ oct_view_model_cat }} {{ product.oct_model }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="pr-module-item-bottom d-flex flex-column gap-3 mt-3 flex-grow-1 justify-content-between">
+                                        <a href="{{ product.href }}" class="pr-module-item-title dark-link fw-600 fsz-14 lh-sm">{{ product.name }}</a>
+                                        {% if product.rating is not same as(false) %}
+                                            <div class="pr-module-item-rating d-flex align-items-center">
+                                                <div class="pr-module-item-rating-stars d-flex align-items-center me-2" data-rating="{{ product.rating }}">
+                                                    {% for i in 1..5 %}
+                                                        <span class="pr-module-item-rating-star">
+                                                            <span class="pr-module-item-rating-star-inner"></span>
+                                                        </span>
+                                                    {% endfor %}
+                                                </div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                    <path d="M4.20107 7C4.20107 7.16569 4.06676 7.3 3.90107 7.3C3.73539 7.3 3.60107 7.16569 3.60107 7M4.20107 7C4.20107 6.83431 4.06676 6.7 3.90107 6.7C3.73539 6.7 3.60107 6.83431 3.60107 7M4.20107 7H3.60107M6.90107 7C6.90107 7.16569 6.76676 7.3 6.60107 7.3C6.43539 7.3 6.30107 7.16569 6.30107 7M6.90107 7C6.90107 6.83431 6.76676 6.7 6.60107 6.7C6.43539 6.7 6.30107 6.83431 6.30107 7M6.90107 7H6.30107M9.60107 7C9.60107 7.16569 9.46676 7.3 9.30107 7.3C9.13539 7.3 9.00107 7.16569 9.00107 7M9.60107 7C9.60107 6.83431 9.46676 6.7 9.30107 6.7C9.13539 6.7 9.00107 6.83431 9.00107 7M9.60107 7H9.00107M2.35843 2.75736C4.70158 0.414214 8.50057 0.414214 10.8437 2.75736C13.1869 5.1005 13.1869 8.8995 10.8437 11.2426C8.9095 13.1769 5.98325 13.5144 3.70277 12.2553L1.55314 12.7714C1.1175 12.876 0.725061 12.4836 0.829653 12.0479L1.34575 9.8983C0.0866548 7.61783 0.424217 4.69158 2.35843 2.75736Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <span class="pr-module-item-rating-count ms-1 fsz-12 fw-500 dark-text">{{ product.reviews }}</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="pr-module-item-price-box d-flex gap-3 justify-content-between mt-auto position-relative">
+                                            {% if product.price %}
+                                                <div class="pr-module-item-price d-flex flex-column gap-1">
+                                                    {% if product.tax %}
+                                                    <div class="price-tax fw-300 fsz-12 light-text mb-1">
+                                                        {{ text_tax }} {{ product.tax }}
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if not product.special %}
+                                                        <div class="pr-price-new fsz-20 fw-700 dark-text">{{ product.price }}</div>
+                                                    {% else %}
+                                                        <div class="pr-module-item-price-old d-flex gap-2 align-items-center">
+                                                            <span class="grey-text text-decoration-line-through fsz-14 fw-500">{{ product.price }}</span>
+                                                            {% if oct_sticker_you_save and product.you_save %}
+                                                                <div class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">{{ product.you_save }}</div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <span class="pr-price-new pr-module-item-price-new fw-600 fsz-22">{{ product.special }}</span>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                            {% if product.can_buy is not empty and product.can_buy %}
+                                                <div class="button button-primary button-cart">
+                                                    {% if oct_promo_data.category_view_quantity is defined and oct_promo_data.category_view_quantity and product.can_buy is not empty %}
+                                                        <div class="buttons-quantity button-quantity d-none d-lg-flex">
+                                                            <input type="text" class="number fw-500 border-0 p-0 text-center fsz-12 fw-500" name="quantity" value="{% if product.minimum %}{{ product.minimum }}{% else %}1{% endif %}" aria-label="Quantity" />
+                                                            <div class="controls d-flex flex-column">
+                                                                <button type="button" aria-label="Plus" class="plus p-0" onclick="changeQuantity(this, 'increase')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                                                        <path d="M3.40002 0.997314V4.99731M1.40002 2.99731H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                    </svg>
+                                                                </button>
+                                                                <button type="button" aria-label="Minus" class="minus p-0" onclick="changeQuantity(this, 'decrease')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="6" height="2" viewBox="0 0 6 2" fill="none">
+                                                                        <path d="M1.40002 0.999023H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    <span class="button-icon button-icon-cart"></span>
+                                                    <span class="button-text">{{ button_cart }}</span>
+                                                    <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if product.oct_atributes is defined and product.oct_atributes %}
+                                        <div class="pr-module-attributes fsz-12 dark-text d-none d-md-flex flex-column gap-2">
+                                            {% for attribute in product.oct_atributes %}
+                                            <div class="pr-module-attributes-item d-flex justify-content-between gap-2">
+                                                <span class="grey-text">{{ attribute.name }}:</span>
+                                                <span>{{ attribute.text }}</span>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% if oct_promo_data.category_show_more is defined and oct_promo_data.category_show_more and pagination %}
+                        <div class="pr-module-show-more d-flex justify-content-center py-3 py-xl-4 oct-load-more">
+                            <button class="button button-success button-large fsz-14 br-8 oct-load-more-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 18 17" fill="none">
+                                    <path d="M16.5448 11.1667C15.4466 14.2738 12.4833 16.5 9 16.5C4.58172 16.5 1 12.9183 1 8.5C1 4.08172 4.58172 0.5 9 0.5C13 0.5 14.7778 3.16667 17 5.38889M12.5556 5.38889L16.9991 5.38982V0.944444" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                {{ oct_show_more }}
+                            </button>
+                        </div>
+                        {{ pagination }}
+                        <script>
+                            window.addEventListener('DOMContentLoaded', () => {
+                                let scShowMoreBtn = document.querySelector('.oct-load-more-button');
+                                octCheckPagination();
+
+                                scShowMoreBtn.addEventListener('click', () => {
+                                    octLoadMore(0);
+                                });
+
+                                {% if oct_infinite_scroll_status is defined and oct_infinite_scroll_status %}
+
+                                let hasClicked = false;
+
+                                const observerCallback = entries => {
+                                    entries.forEach(entry => {
+                                    if (entry.isIntersecting && !hasClicked) {
+                                        hasClicked = true;
+                                        scShowMoreBtn.click();
+                                    } else if (!entry.isIntersecting) {
+                                        hasClicked = false;
+                                    }
+                                    });
+                                };
+
+                                const observerOptions = {
+                                    root: null,
+                                    rootMargin: '0px',
+                                    threshold: 0.5
+                                };
+                                
+                                const observer = new IntersectionObserver(observerCallback, observerOptions);
+                                observer.observe(scShowMoreBtn);
+
+                                {% endif %}
+                            });
+                        </script>
+                    {% else %}
+                        {{ pagination }}
+                    {% endif %}
+                {% else %}
+                    <div class="content-block">
+                        <p class="fw-500 dark-text">{{ text_empty }}</p>
+                        <a href="{{ continue }}" class="button button-primary mt-3 d-inline-flex">{{ button_continue }}</a>
+                    </div>
+                {% endif %}
+                {% if oct_promo_data.category_desc_position is defined and oct_promo_data.category_desc_position == 'bottom' %}
+                    {% if thumb or description %}
+                        <div class="pr-category-description content-block d-flex flex-column flex-md-row my-3 mt-xl-4">
+                            {% if thumb %}
+                                <div class="pr-category-description-img">
+                                    <img src="{{ thumb }}" class="d-block mx-auto" alt="{{ heading_title }}" title="{{ heading_title }}" width="{{ cat_image_width }}" height="{{ cat_image_height }}" loading="lazy" />
+                                </div>
+                            {% endif %}
+                            {% if description %}
+                                <div id="pr-category-description"{% if thumb %} class="pt-3 pt-md-0 ps-md-3"{% endif %}>
+                                    <div class="pr-category-description-text dark-text fsz-16">
+                                        {{ description }}
+                                        {% if categories_page is defined and categories_page is not empty %}
+                                            <div class="pr-category-categories_page-text mt-3">
+                                                <ul class="category-landing-links list-unstyled ps-0">
+                                                {% for oct_page in categories_page %}
+                                                    {% if oct_page.page_links is not empty %}
+                                                    <li class="category-landing-links-item">
+                                                        <span class="category-landing-links-item-title">{{ oct_page.page_group[language_id] }}</span>
+                                                        {% for link in oct_page.page_links %}
+                                                        <a href="{{ link[language_id].link }}" class="blue-link d-flex-inline align-items-center" title="{{ link[language_id].title }}">{{ link[language_id].title }}</a>
+                                                        {% endfor %}
+                                                    </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <!-- if button enabled -->
+                                    {% if description|length > 700 and (categories or products) and oct_promo_data.category_desc_up is not defined %}
+                                        <div class="mt-3">
+                                            <span class="pr-category-description-text-toggle text-decoration-underline fsz-12 fw-500 dark-text">
+                                                {{ oct_expand }}
+                                                <svg class="ms-1" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                                                    <path d="M1 1L4 4L7 1" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    toggleCategoryDescription();
+                                                });
+                                            </script>
+                                        </div>
+                                    {% else %}
+                                        <style>
+                                            .pr-category-description-text {
+                                                max-height: none !important;
+                                            }
+                                        </style>
+                                    {% endif %}
+                                    <!-- end if -->
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {{ column_right }}
+        </div>
+        {{ content_bottom }}
+    </main>
+</div>
+{{ footer }}

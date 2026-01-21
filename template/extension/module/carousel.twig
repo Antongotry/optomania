@@ -1,0 +1,62 @@
+{% if banners %}
+	<div class="pr-carousel-module mt-4">
+		{% if heading_title is not empty %}
+			<div class="pr-page-title fw-700 dark-text mb-3">
+				{{ heading_title }}
+			</div>
+		{% endif %}
+		<div id="pr-carousel-{{ module }}" class="pr-carousel-module-items swiper">
+			<div class="swiper-wrapper">
+				{% for banner in banners %}
+					{% if banner.link %}
+						<a href="{{ banner.link }}" class="swiper-slide">
+					{% else %}
+						<span class="swiper-slide">
+					{% endif %}
+						<span class="pr-carousel-module-item content-block d-flex flex-column align-items-center h-100 gap-3">
+							<img src="{{ banner.image }}" alt="{{ banner.title }}" width="{{ banner.width }}" height="{{ banner.height }}" class="d-block mx-auto mb-2 br-4" loading="lazy" />
+							<span class="pr-carousel-title dark-text text-center fw-500">{{ banner.title }}</span>
+						</span>
+					{% if banner.link %}
+						</a>
+					{% else %}
+						</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="swiper-button-prev mt-0 swiper-button-prev-{{ module }}">
+				<svg xmlns="http://www.w3.org/2000/svg" width="6" height="8" viewBox="0 0 6 8" fill="none">
+					<path d="M4.5 1.00391L1.5 4.00391L4.5 7.00391" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</div>
+			<div class="swiper-button-next mt-0 swiper-button-next-{{ module }}">
+				<svg xmlns="http://www.w3.org/2000/svg" width="6" height="8" viewBox="0 0 6 8" fill="none">
+					<path d="M1.5 7.00391L4.5 4.00391L1.5 1.00391" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function () {
+			var carouselSwiper = new Swiper('#pr-carousel-{{ module }}', {
+				slidesPerView: 2,
+				spaceBetween: 16,
+				navigation: {
+					nextEl: '.swiper-button-next',
+					prevEl: '.swiper-button-prev',
+				},
+				breakpoints: {
+					320: {
+						slidesPerView: 2,
+					},
+					768: {
+						slidesPerView: 4,
+					},
+					1200: {
+						slidesPerView: 6,
+					},
+				}
+			});
+		});
+	</script>
+{% endif %}

@@ -1,0 +1,31 @@
+.ocf-theme-light-block .ocf-search-btn-static, .ocf-theme-light-block .ocf-search-btn-popover, .ocf-theme-light-block .ocf-search-btn-static.ocf-disabled, .ocf-theme-light-block .ocf-search-btn-popover.ocf-disabled, .ocf-noUi-connect:before, .ocf-noUi-handle {background-color:rgb(12, 41, 106) !important;}
+:root {--pr-primary-dark-color:rgb(12, 41, 106);}
+:root {--pr-primary-light-color:rgb(79, 95, 153);}
+:root {--pr-links-color:rgb(53, 122, 240);}
+.blue-link:hover, .pr-information a:hover, .pr-product-sticky-block .official-rep-text a:hover, .form-check-label a:hover {color:rgb(78, 136, 236);}
+#top .light-link, #top .pr-dropdown-toggle, #top .pr-dropdown-toggle > .d-none.d-lg-inline, #top .pr-dropdown-box .pr-dropdown-button {color:rgb(79, 95, 153);}
+#top .light-link:hover, #top .pr-dropdown-toggle:hover, #top .pr-dropdown-toggle > .d-none.d-lg-inline:hover, #top .pr-dropdown-box .pr-dropdown-button:hover {color:rgb(116, 136, 212);}
+.pr-footer .white-link {color:rgb(255, 255, 255);}
+.pr-footer .white-link:hover {color:rgb(53, 122, 240);}
+.pr-footer .light-link, .pr-footer a.agree {color:rgb(79, 95, 153);}
+.pr-footer .light-link:hover, .pr-footer a.agree:hover {color:rgb(116, 136, 212);}
+:root {--pr-interactive-color:rgb(82, 187, 56);}
+.pr-module-item-price-old+.pr-module-item-price-new, .pr-product-price-new.red {color:rgb(213, 56, 61);}
+.light-theme body {background-color:rgb(243, 243, 243);}
+.light-theme .dark-text, .light-theme .content-block, .light-theme .dark-link:not(:hover) {color:rgb(18, 23, 21);}
+.light-theme .grey-text {color:rgb(157, 164, 174);}
+.light-theme .pr-header {background-color:rgb(255, 255, 255);}
+.light-theme .pr-footer {background-color:rgb(18, 23, 21);}
+.light-theme .pr-footer .grey-text, .light-theme .pr-footer-item-subscribe-text {color:rgb(157, 164, 174);}
+.light-theme .pr-footer-item-title {color:rgb(255, 255, 255);}
+.dark-theme body {background-color:rgb(0, 0, 0);}
+.dark-theme .dark-text, .dark-theme .content-block, .dark-theme .dark-link:not(:hover) {color:rgb(255, 255, 255);}
+.dark-theme .grey-text {color:rgb(157, 164, 174);}
+.dark-theme .pr-header {background-color:rgb(29, 29, 29);}
+.dark-theme .pr-footer {background-color:rgb(18, 23, 21);}
+.dark-theme .pr-footer .grey-text, .dark-theme .pr-footer-item-subscribe-text {color:rgb(157, 164, 174);}
+.dark-theme .pr-footer-item-title {color:rgb(255, 255, 255);}
+.oct_dynamic_stylesheet_begin{display: none;}
+html {
+  scrollbar-gutter: stable;
+}.oct_dynamic_stylesheet_end{display: none;}

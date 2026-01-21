@@ -1,0 +1,217 @@
+<div id="{{ oct_id_div }}" class="pr-product-tab-faq pr-product-faq pr-product-tab-content content-block mt-3">
+    {% if next_page == 2 %}
+        <div class="pr-product-tab-content-title d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 pb-4 mb-4 border-bottom">
+            <span class="pr-product-tab-content-title-icon d-flex align-items-center gap-3 dark-text fsz-20 fw-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="20" viewBox="0 0 22 20" fill="none">
+                    <path d="M9 5.88296C9.26082 5.08156 10.1111 4.50024 11 4.50024C12.1111 4.50024 13 5.41382 13 6.50024V6.51024C13 8.2158 11 8.50024 11 8.95024V9.25024M11 12.5002V12.5102M6 16.5002V18.4981C6 19.2873 6.87134 19.7655 7.53706 19.3417L11.2628 16.9696C11.7443 16.6631 12.3032 16.5002 12.874 16.5002H18C19.6569 16.5002 21 15.1571 21 13.5002V3.50024C21 1.84339 19.6569 0.500244 18 0.500244H4C2.34315 0.500244 1 1.84339 1 3.50024V13.5002C1 15.1571 2.34315 16.5002 4 16.5002H6ZM11.25 12.5002C11.25 12.6383 11.1381 12.7502 11 12.7502C10.8619 12.7502 10.75 12.6383 10.75 12.5002C10.75 12.3622 10.8619 12.2502 11 12.2502C11.1381 12.2502 11.25 12.3622 11.25 12.5002Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                {{ text_faq_title }}
+            </span>
+            <button type="button" class="button button-light button-large fsz-14" data-bs-toggle="modal" data-bs-target="#faqModal">{{ text_faq_button }}</button>
+        </div>
+        {% if oct_faqs %}
+            <div class="grey-text fsz-14 mb-4">
+                {{ text_faq_text }}
+            </div>
+        {% endif %}
+        <div class="modal fade" id="faqModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header p-4 bg-grey">
+                        <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="faqModalLabel">{{ text_faq }}</h5>
+                        <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="pr-product-content-reviews-rating-text grey-text fsz-14 mb-4 text-sm-start">{{ text_faq_text }}</div>
+                        <form id="form-faq" enctype="multipart/form-data" method="post">
+                            <div class="input-group mt-4">
+                                <span class="input-group-text" id="faqUsernameIcon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M8.73803 10.9984H5.11457C2.84216 10.9984 1 12.8405 1 15.1129C1 15.4917 1.30703 15.7987 1.68576 15.7987H6.647M13.4308 10.8284L15.571 12.9685M10.8007 4.79794C10.8007 6.67584 9.27834 8.19817 7.40044 8.19817C5.52254 8.19817 4.00021 6.67584 4.00021 4.79794C4.00021 2.92004 5.52254 1.39771 7.40044 1.39771C9.27834 1.39771 10.8007 2.92004 10.8007 4.79794ZM11.546 16.3612L10.1232 16.5983C9.93373 16.6299 9.76942 16.4656 9.80101 16.2761L10.0381 14.8533C10.1204 14.3599 10.3547 13.9044 10.7085 13.5507L14.5084 9.75083C14.977 9.28216 15.7369 9.28216 16.2055 9.75083L16.6485 10.1938C17.1172 10.6625 17.1172 11.4223 16.6485 11.891L12.8486 15.6909C12.4949 16.0446 12.0395 16.279 11.546 16.3612Z" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                                <div class="form-floating">
+                                    <input type="text" name="name"{% if firstname %} value="{{ firstname }}"{% endif %} class="form-control" id="faqInputName" placeholder="{{ entry_name }}" aria-label="Username" aria-describedby="faqUsernameIcon">
+                                    <label class="px-3 secondary-text fsz-14" for="faqInputName">{{ entry_name }}</label>
+                                </div>
+                            </div>
+                            <div class="input-group my-4">
+                                <span class="input-group-text" id="faqEmailIcon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+                                        <path d="M17 3V11C17 12.3255 15.9255 13.4 14.6 13.4H3.4C2.07452 13.4 1 12.3255 1 11V3M17 3C17 1.67452 15.9255 0.599998 14.6 0.599998H3.4C2.07452 0.599998 1 1.67452 1 3M17 3V3.25396C17 3.83747 16.6823 4.37471 16.1711 4.65591L10.1566 7.96387C9.43641 8.35997 8.56359 8.35997 7.8434 7.96387L1.82893 4.65591C1.31765 4.37471 1 3.83747 1 3.25396V3" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                                <div class="form-floating">
+                                    <input type="text" name="email"{% if email_user %} value="{{ email_user }}"{% endif %} class="form-control" id="faqInputEmail" placeholder="{{ text_faq_email }}" inputmode="email" aria-label="email" aria-describedby="faqEmailIcon">
+                                    <label class="px-3 secondary-text fsz-14" for="faqInputEmail">{{ text_faq_email }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group my-3">
+                                <textarea id="faqText" name="text" class="form-control" placeholder="{{ text_faq_textarea }}" rows="7"></textarea>
+                            </div>
+                            <div class="form-group">
+                                {{ captcha }}
+                            </div>
+                            <button type="button" id="button-oct_faq" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_continue }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div id="{{ oct_faqs_id }}" class="pr-product-faq-content pr-store-reviews-items d-flex flex-column gap-3">
+        {% if oct_faqs %}
+            {% for oct_faq in oct_faqs %}
+                <div class="pr-store-reviews-item br-12 d-flex flex-column gap-3 p-3 p-xl-4">
+                    <div class="pr-store-reviews-item-author d-flex gap-3 align-items-center pb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="35" viewBox="0 0 34 35" fill="none">
+                            <path d="M3.16183 32.429L4.92054 29.9668C6.9228 27.1636 10.1556 25.5 13.6004 25.5H20.3996C23.8444 25.5 27.0772 27.1636 29.0795 29.9668L30.8382 32.429M6.33333 1.5H27.6667C30.6122 1.5 33 3.88781 33 6.83333V28.1667C33 31.1122 30.6122 33.5 27.6667 33.5H6.33333C3.38782 33.5 1 31.1122 1 28.1667V6.83333C1 3.88782 3.38781 1.5 6.33333 1.5ZM22.7778 13.5C22.7778 16.691 20.191 19.2778 17 19.2778C13.809 19.2778 11.2222 16.691 11.2222 13.5C11.2222 10.309 13.809 7.72222 17 7.72222C20.191 7.72222 22.7778 10.309 22.7778 13.5Z" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <div class="pr-store-reviews-item-author-info d-flex flex-column">
+                            <div class="pr-store-reviews-item-author-name dark-text fsz-14 fw-600">{{ oct_faq.author }}</div>
+                            <div class="pr-store-reviews-item-date d-flex align-items-center gap-1 grey-text fsz-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                    <path d="M1 5.16666H13M3.66667 1.16666V2.49999M10.3333 1.16666V2.49999M4 7.83332C4 8.01742 3.85076 8.16666 3.66667 8.16666C3.48257 8.16666 3.33333 8.01742 3.33333 7.83332M4 7.83332C4 7.64923 3.85076 7.49999 3.66667 7.49999C3.48257 7.49999 3.33333 7.64923 3.33333 7.83332M4 7.83332H3.33333M7.33333 7.83332C7.33333 8.01742 7.1841 8.16666 7 8.16666C6.81591 8.16666 6.66667 8.01742 6.66667 7.83332M7.33333 7.83332C7.33333 7.64923 7.1841 7.49999 7 7.49999C6.81591 7.49999 6.66667 7.64923 6.66667 7.83332M7.33333 7.83332H6.66667M10.6667 7.83332C10.6667 8.01742 10.5174 8.16666 10.3333 8.16666C10.1492 8.16666 10 8.01742 10 7.83332M10.6667 7.83332C10.6667 7.64923 10.5174 7.49999 10.3333 7.49999C10.1492 7.49999 10 7.64923 10 7.83332M10.6667 7.83332H10M4 11.1667C4 11.3508 3.85076 11.5 3.66667 11.5C3.48257 11.5 3.33333 11.3508 3.33333 11.1667M4 11.1667C4 10.9826 3.85076 10.8333 3.66667 10.8333C3.48257 10.8333 3.33333 10.9826 3.33333 11.1667M4 11.1667H3.33333M7.33333 11.1667C7.33333 11.3508 7.1841 11.5 7 11.5C6.81591 11.5 6.66667 11.3508 6.66667 11.1667M7.33333 11.1667C7.33333 10.9826 7.1841 10.8333 7 10.8333C6.81591 10.8333 6.66667 10.9826 6.66667 11.1667M7.33333 11.1667H6.66667M10.6667 11.1667C10.6667 11.3508 10.5174 11.5 10.3333 11.5C10.1492 11.5 10 11.3508 10 11.1667M10.6667 11.1667C10.6667 10.9826 10.5174 10.8333 10.3333 10.8333C10.1492 10.8333 10 10.9826 10 11.1667M10.6667 11.1667H10M3 13.8333H11C12.1046 13.8333 13 12.9379 13 11.8333V3.83332C13 2.72875 12.1046 1.83332 11 1.83332H3C1.89543 1.83332 1 2.72875 1 3.83332V11.8333C1 12.9379 1.89543 13.8333 3 13.8333Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                {{ oct_faq.date_added }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pr-store-reviews-item-text dark-text fsz-14 pb-3 border-bottom">
+                        {{ oct_faq.text }}
+                    </div>
+                    {% if oct_faq.answer is defined and oct_faq.answer %}
+                        <div class="pr-store-reviews-item-answer p-3 bg-grey br-8 fsz-14">
+                            <div class="fw-600 mb-2">{{ text_faq_answer }}</div>
+                            {{ oct_faq.answer }}
+                            <p class="grey-text fsz-12 mt-2">{{ oct_faq.date_modified }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="d-flex flex-column justify-content-center pr-empty-reviews mb-3 mb-md-0 text-center p-4 br-4">
+                <p class="fw-500 fsz-16 mb-5">{{ text_faq_empty }}</p>
+                <svg class="mx-auto" xmlns="http://www.w3.org/2000/svg" width="80" height="77" viewBox="0 0 80 77" fill="none">
+                    <path d="M39.9979 0.489746C16.4455 0.489746 0 15.2089 0 36.2815C0 44.9716 2.77917 52.7527 8.05468 58.8492C7.47787 61.4006 5.88148 65.4253 1.46066 68.9957C0.14704 70.1072 -0.323947 71.8839 0.252865 73.5133C0.829678 75.1301 2.2951 76.2035 3.97081 76.2414C4.5392 76.2624 5.11926 76.2712 5.72133 76.2712C12.0326 76.2712 19.9185 75.0415 25.4551 69.9259C30.0149 71.349 34.8992 72.0732 40.0021 72.0732C63.5545 72.0732 80 57.3541 80 36.2815C80 15.2089 63.5504 0.489746 39.9979 0.489746ZM39.9979 67.867C34.895 67.867 30.0406 67.084 25.5692 65.5388C24.7777 65.2652 23.9142 65.4845 23.3458 66.0908C18.4029 71.3663 10.2223 72.2418 4.22264 72.2418C4.19738 72.2418 4.16773 72.2418 4.14247 72.2418C8.6475 68.5999 11.5829 63.7372 12.3955 58.5501C12.4924 57.9143 12.2979 57.2702 11.86 56.7944C6.85815 51.3757 4.21031 44.2811 4.21031 36.2815C4.21031 17.6846 18.9253 4.70006 39.9979 4.70006C61.0705 4.70006 75.7856 17.6846 75.7856 36.2815C75.7856 54.8784 61.0705 67.867 39.9979 67.867ZM49.8412 27.6378C50.5401 31.6292 48.8524 35.208 45.0799 37.7216C42.6337 39.3468 42.1078 40.2979 41.9941 40.6347C41.6994 41.5104 40.8779 42.0666 39.9979 42.0666C39.7748 42.0666 39.552 42.0334 39.3247 41.9576C38.2216 41.5871 37.6322 40.3912 38.0069 39.2881C38.5795 37.5956 40.0866 35.9827 42.7517 34.2144C45.1432 32.6229 46.1113 30.707 45.6987 28.3661C45.2861 26.0462 43.3826 24.1431 41.067 23.739C39.3155 23.4316 37.6148 23.8782 36.2759 24.9981C34.9623 26.1012 34.2088 27.7178 34.2088 29.4356C34.2088 30.5977 33.2657 31.5408 32.1036 31.5408C30.9416 31.5408 29.9985 30.5977 29.9985 29.4356C29.9985 26.4716 31.3042 23.6803 33.5735 21.7772C35.8429 19.8699 38.8444 19.0824 41.7916 19.5919C45.8209 20.2992 49.1339 23.6085 49.8412 27.6378ZM43.1557 51.0135C43.1557 52.7607 41.749 54.1712 40.0144 54.1712C38.284 54.1712 36.8402 52.7607 36.8402 51.0135C36.8402 49.2662 38.217 47.8557 39.9517 47.8557H40.0144C41.749 47.8557 43.1557 49.2662 43.1557 51.0135Z" fill="#F2F2F2"/>
+                </svg>
+            </div>
+        {% endif %}
+    </div>
+    {% if has_more %}
+        <div id="faq-pagination" class="d-none" data-has-more="{{ has_more ? 'true' : 'false' }}" data-next-page="{{ next_page }}"></div>
+        <div class="pr-module-show-more d-flex justify-content-center pt-3 pt-md-4">
+            <button id="load-more-faq" class="button button-success button-large fsz-14 br-8">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 18 17" fill="none">
+                    <path d="M16.5448 11.1667C15.4466 14.2738 12.4833 16.5 9 16.5C4.58172 16.5 1 12.9183 1 8.5C1 4.08172 4.58172 0.5 9 0.5C13 0.5 14.7778 3.16667 17 5.38889M12.5556 5.38889L16.9991 5.38982V0.944444" stroke="#FFFDFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                {{ oct_show_more }}
+            </button>
+        </div>
+    {% endif %}
+
+    <script>
+    $("#faqInputName, #faqInputEmail, #faqText").on("change paste keyup", function() {
+        $(this).removeClass('error_style');
+    });
+
+    function loadMoreFaq() {
+        if (window.loadingMoreFaq) return;
+        window.loadingMoreFaq = true;
+        
+        var $pagination = $('#faq-pagination');
+        var hasMore = $pagination.attr('data-has-more');
+        var nextPage = $pagination.attr('data-next-page');
+        
+        if (hasMore === "false" || !nextPage) {
+            $('#load-more-faq').remove();
+            window.loadingMoreFaq = false;
+            return;
+        }
+        
+        $.ajax({
+            url: 'index.php?route=octemplates/faq/oct_product_faq',
+            type: 'GET',
+            data: {
+                page: nextPage,
+                oct_product_id: '{{ product_id }}'
+            },
+            dataType: 'html',
+            beforeSend: function() {
+                $('#load-more-faq').prop('disabled', true);
+                masked('body', true);
+            },
+            complete: function() {
+                $('#load-more-faq').prop('disabled', false);
+                masked('body', false);
+            },
+            success: function(html) {
+                var $temp = $('<div>').html(html);
+                var $newFaqContainer = $temp.find('#{{ oct_faqs_id }}');
+                var newFaqContent = $newFaqContainer.length ? $newFaqContainer.html() : $temp.html();
+                $('#{{ oct_faqs_id }}').append(newFaqContent);
+                
+                var $newPagination = $temp.find('#faq-pagination');
+                if ($newPagination.length) {
+                    $('#faq-pagination').attr('data-has-more', $newPagination.attr('data-has-more'));
+                    $('#faq-pagination').attr('data-next-page', $newPagination.attr('data-next-page'));
+                    if ($newPagination.attr('data-has-more') === "false") {
+                        $('#load-more-faq').remove();
+                    }
+                } else {
+                    $('#load-more-faq').remove();
+                }
+                window.loadingMoreFaq = false;
+            },
+            error: function() {
+                window.loadingMoreFaq = false;
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        $(document).on('click', '#load-more-faq', function(e) {
+            e.preventDefault();
+            loadMoreFaq();
+        });
+        
+        $('#button-oct_faq').on('click', function() {
+            $.ajax({
+                url: 'index.php?route=octemplates/faq/oct_product_faq/write&faqp_id={{ product_id }}',
+                type: 'post',
+                dataType: 'json',
+                data: $("#form-faq").serialize(),
+                beforeSend: function() {
+                    $('#button-oct_faq').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    $('#faqModal input, #faqModal textarea').removeClass('error_style');
+                    masked('body', true);
+                },
+                complete: function() {
+                    masked('body', false);
+                    setTimeout(function () {
+                        $('#button-oct_faq').prop('disabled', false).html('{{ button_continue }}');
+                    }, 600);
+                },
+                success: function(json) {
+                    $('.alert-dismissible').remove();
+                    if (json['error']) {
+                        var errorOption = '';
+                        $.each(json['error'], function(i, val) {
+                            $('#faqModal [name="' + i + '"]').addClass('error_style');
+                            errorOption += '<div class="alert-text-item">' + val + '</div>';
+                        });
+                        prNotify('danger', errorOption);
+                    }
+                    if (json['success']) {
+                        prNotify('success', json['success']);
+                        $('#faqModal').modal('hide');
+                        $('#form-faq input[name="name"]').val('');
+                        $('#form-faq textarea[name="text"]').val('');
+                    }
+                }
+            });
+        });
+    });
+    </script>
+</div>

@@ -1,0 +1,61 @@
+{{ header }}
+<div id="account-address" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if success %}
+			<script>
+				prNotify('success', '{{ success }}');
+			</script>
+		{% endif %}
+		{% if error_warning %}
+			<script>
+				prNotify('warning', '{{ error_warning }}');
+			</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+			    <div class="content-block pr-account-page">
+					<div class="pr-page-title d-flex pb-xl-1 align-items-center gap-3">
+						<h1>{{ text_address_book }}</h1>
+					</div>
+					{% if addresses %}
+						{% for result in addresses %}
+							<div class="content-block pt-3 pt-xl-4 border mt-3">
+								<div class="mb-3 d-flex justify-content-between align-items-center">
+									<a href="{{ result.update }}" class="blue-link fsz-14">{{ button_edit }}</a>
+									<a href="{{ result.delete }}" class="d-flex align-items-center red fsz-14"><i class="fas fa-times"></i><span class="ms-1">{{ button_delete }}</span></a>
+								</div>
+								<div class="dark-text">{{ result.address }}</div>
+							</div>
+						{% endfor %}
+					{% else %}
+						<div class="fw-500 dark-text mb-4">{{ text_empty }}</div>
+					{% endif %}
+					<a href="{{ add }}" class="button button-secondary large pr-account-login-button mt-3">+ {{ button_new_address }}</a>
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

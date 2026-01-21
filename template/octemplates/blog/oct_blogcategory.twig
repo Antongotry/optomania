@@ -1,0 +1,101 @@
+{{ header }}
+<div class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+    {% if oct_promo_data.micro is defined and oct_promo_data.micro %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+            {% for breadcrumb in breadcrumbs %}
+                {% if loop.first %}
+                {% else %}
+                {
+                    "@type": "ListItem",
+                    "position": {{ loop.index -1 }},
+                    "item":
+                    {
+                        "@id": "{{ breadcrumb.href }}",
+                        "name": "{{ breadcrumb.text }}"
+                    }
+                }{% if not loop.last %},{% endif %}
+                {% endif %}
+            {% endfor %}
+        ]
+    }
+    </script>
+    {% endif %}
+	<main>
+		<div class="pr-page-title mb-3 mb-xl-4">
+			<h1 class="m-0 lh-sm">{{ heading_title }}</h1>
+		</div>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4 pr-blog">
+			{{ column_left }}
+			{% if column_left and column_right %}
+				{% set class = 'col-xl-6' %}
+			{% elseif column_left or column_right %}
+				{% set class = 'col-xl-9' %}
+			{% else %}
+				{% set class = 'col-xl-12' %}
+			{% endif %}
+			<div id="content" class="{{ class }}">
+				{% if articles %}
+					<div class="pr-module-news-items d-flex align-items-lg-stretch gap-3 flex-wrap">
+						{% for article in articles %}
+							<div class="pr-module-news-item content-block p-0 d-flex flex-column overflow-hidden">
+								<a href="{{ article.href }}" title="{{ article.name }}" class="pr-module-news-item-image">
+									<img src="{{ article.thumb }}" class="img-fluid" alt="{{ article.name }}" width="{{ article.width }}" height="{{ article.height }}"{% if not loop.first %} loading="lazy"{% endif %} />
+								</a>
+								<div class="pr-module-news-item-caption d-flex flex-column justify-content-between gap-3 p-3 h-100">
+									<a class="pr-module-news-item-title dark-link fw-700 fsz-14 lh-sm" href="{{ article.href }}">{{ article.name }}</a>
+									<div class="pr-module-news-item-info d-flex align-items-center justify-content-between gap-3 fsz-12 grey-text">
+										<div class="pr-module-news-item-info-date d-flex align-items-center gap-1">
+											<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                <path d="M1 4.67102H13M3.66667 0.671021V2.00435M10.3333 0.671021V2.00435M4 7.33769C4 7.52178 3.85076 7.67102 3.66667 7.67102C3.48257 7.67102 3.33333 7.52178 3.33333 7.33769M4 7.33769C4 7.15359 3.85076 7.00435 3.66667 7.00435C3.48257 7.00435 3.33333 7.15359 3.33333 7.33769M4 7.33769H3.33333M7.33333 7.33769C7.33333 7.52178 7.1841 7.67102 7 7.67102C6.81591 7.67102 6.66667 7.52178 6.66667 7.33769M7.33333 7.33769C7.33333 7.15359 7.1841 7.00435 7 7.00435C6.81591 7.00435 6.66667 7.15359 6.66667 7.33769M7.33333 7.33769H6.66667M10.6667 7.33769C10.6667 7.52178 10.5174 7.67102 10.3333 7.67102C10.1492 7.67102 10 7.52178 10 7.33769M10.6667 7.33769C10.6667 7.15359 10.5174 7.00435 10.3333 7.00435C10.1492 7.00435 10 7.15359 10 7.33769M10.6667 7.33769H10M4 10.671C4 10.8551 3.85076 11.0044 3.66667 11.0044C3.48257 11.0044 3.33333 10.8551 3.33333 10.671M4 10.671C4 10.4869 3.85076 10.3377 3.66667 10.3377C3.48257 10.3377 3.33333 10.4869 3.33333 10.671M4 10.671H3.33333M7.33333 10.671C7.33333 10.8551 7.1841 11.0044 7 11.0044C6.81591 11.0044 6.66667 10.8551 6.66667 10.671M7.33333 10.671C7.33333 10.4869 7.1841 10.3377 7 10.3377C6.81591 10.3377 6.66667 10.4869 6.66667 10.671M7.33333 10.671H6.66667M10.6667 10.671C10.6667 10.8551 10.5174 11.0044 10.3333 11.0044C10.1492 11.0044 10 10.8551 10 10.671M10.6667 10.671C10.6667 10.4869 10.5174 10.3377 10.3333 10.3377C10.1492 10.3377 10 10.4869 10 10.671M10.6667 10.671H10M3 13.3377H11C12.1046 13.3377 13 12.4423 13 11.3377V3.33769C13 2.23312 12.1046 1.33769 11 1.33769H3C1.89543 1.33769 1 2.23312 1 3.33769V11.3377C1 12.4423 1.89543 13.3377 3 13.3377Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+											{{ article.date_added }}
+										</div>
+										<div class="pr-module-news-item-info-category d-flex align-items-center gap-1">
+											<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                <path d="M2.8 11.4044H11.2C12.1941 11.4044 13 10.5985 13 9.60437V4.20437C13 3.21026 12.1941 2.40437 11.2 2.40437H7.84853C7.6894 2.40437 7.53679 2.34116 7.42426 2.22863L5.97574 0.780106C5.86321 0.667584 5.7106 0.60437 5.55147 0.60437H2.8C1.80589 0.60437 1 1.41026 1 2.40437V9.60437C1 10.5985 1.80589 11.4044 2.8 11.4044Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+											{% for blog_category_name in article.blog_categories %}
+												{{ blog_category_name }}
+												{% if not loop.last %}, {% endif %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					{% if pagination|striptags %}
+						<div class="pt-3 pt-md-4">
+							{{ pagination }}
+						</div>
+					{% endif %}
+				{% else %}
+					<div class="content-block">
+						<p class="mb-3 fw-500">{{ text_empty }}</p>
+						<a href="{{ continue }}" class="button button-primary">{{ button_continue }}</a>
+					</div>
+				{% endif %}
+			</div>
+			{{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

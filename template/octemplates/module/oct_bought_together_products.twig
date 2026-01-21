@@ -1,0 +1,112 @@
+<div class="mt-3 mt-xl-4 pt-3 pt-xl-4 border-top">
+    <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 gap-3 pb-2 pb-xl-3">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 0.5C5.21 0.5 0.5 5.21 0.5 11C0.5 16.79 5.21 21.5 11 21.5C16.79 21.5 21.5 16.79 21.5 11C21.5 5.21 16.79 0.5 11 0.5ZM11 20.5C5.762 20.5 1.5 16.238 1.5 11C1.5 5.762 5.762 1.5 11 1.5C16.238 1.5 20.5 5.762 20.5 11C20.5 16.238 16.238 20.5 11 20.5ZM14.115 8.41699H12.554V7.20898C12.554 6.51098 12.207 5.86301 11.626 5.47601C11.282 5.24701 10.862 5.19098 10.473 5.31598C10.082 5.44198 9.776 5.73498 9.625 6.13898L8.526 9.47302H7.04102C6.32802 9.47302 5.74902 10.053 5.74902 10.765V14.46C5.74902 15.172 6.32802 15.752 7.04102 15.752H13.0601C14.4451 15.752 14.795 15.048 15.037 14.328L16.093 11.161C16.35 10.388 16.291 9.68302 15.927 9.17902C15.677 8.83002 15.16 8.41699 14.115 8.41699ZM6.75 14.458V10.763C6.75 10.602 6.88099 10.471 7.04199 10.471H8V14.749H7.04199C6.88099 14.75 6.75 14.619 6.75 14.458ZM15.144 10.842L14.088 14.009C13.918 14.518 13.841 14.75 13.061 14.75H9V10.436C9.164 10.395 9.30904 10.294 9.36304 10.128L10.568 6.46899C10.618 6.33599 10.723 6.28499 10.781 6.26599C10.839 6.24699 10.955 6.22801 11.072 6.30701C11.374 6.50801 11.554 6.84501 11.554 7.20801V8.91602C11.554 9.19202 11.778 9.41602 12.054 9.41602H14.115C14.458 9.41602 14.91 9.47599 15.116 9.76099C15.284 9.99499 15.295 10.389 15.144 10.842Z" fill="var(--pr-black-color)"/>
+        </svg>
+        {{ oct_product_bought_together }}
+    </div>
+    <div class="pr-product-bought-together swiper">
+        <div class="swiper-wrapper d-flex align-items-stretch">
+            {% for product in bought_together %}
+                <div class="pr-product-bought-together-item swiper-slide content-block h-auto d-flex gap-3 border">
+                    <div class="pr-product-bought-together-item-img pr-module-img">
+                        <a href="{{ product.href }}">
+                            <img class="d-block mx-auto" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.width }}" height="{{ product.height }}" loading="lazy"/>
+                        </a>
+                    </div>
+                    <div class="pr-module-caption d-flex flex-column align-items-start h-100 pt-0 w-100">
+                        <a href="{{ product.href }}" class="pr-module-item-title dark-link fw-600 fsz-14 lh-sm">{{ product.name }}</a>
+                        <div class="d-flex gap-3 justify-content-between align-items-end mt-auto pt-3 w-100">
+                            <div class="pr-module-item-price d-flex flex-column gap-1">
+                            {% if product.special %}
+                                <div class="pr-module-item-price-old grey-text text-decoration-line-through fsz-14 fw-500">
+                                    {{ product.price }}
+                                </div>
+                                <div class="pr-module-item-price-new fw-600 fsz-22">
+                                    {{ product.special }}
+                                </div>
+                            {% else %}
+                                <div class="pr-module-item-price-new fw-600 fsz-22">
+                                    {{ product.price }}
+                                </div>
+                            {% endif %}
+                            </div>
+                            <button type="button" aria-label="To cart" class="button button-primary p-2 button-cart pr-product-bought-together-button-cart">
+                                <span class="button-icon button-icon-cart"></span>
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const sliderSelector = '.pr-product-bought-together';
+        const sliderElement = document.querySelector(sliderSelector);
+        const totalSlides = sliderElement.querySelectorAll('.swiper-slide').length;
+
+        const togglePaginationClass = (swiper) => {
+            const slidesPerView = swiper.params.slidesPerView;
+
+            if (totalSlides > slidesPerView) {
+                sliderElement.classList.add('with-pagination');
+            } else {
+                sliderElement.classList.remove('with-pagination');
+            }
+        };
+
+        const productBoughtSwiper = new Swiper(sliderSelector, {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            breakpoints: {
+                680: {
+                    slidesPerView: 2,
+                    spaceBetween: 16,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 16,
+                },
+                992: {
+                    slidesPerView: 1,
+                    spaceBetween: 16,
+                },
+                1140: {
+                    slidesPerView: 2,
+                    spaceBetween: 16,
+                },
+                1600: {
+                    slidesPerView: 3,
+                    spaceBetween: 16,
+                },
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            autoplay: {
+                delay: 5000,
+            },
+            loop: false,
+            speed: 500,
+            on: {
+                init: function () {
+                    togglePaginationClass(this);
+                    
+                    if (window.interactiveButtonsManager && window.interactiveButtonsManager.initialized) {
+                        setTimeout(() => {
+                            window.interactiveButtonsManager.refreshObserver();
+                        }, 100);
+                    }
+                },
+                resize: function () {
+                    togglePaginationClass(this);
+                }
+            }
+        });
+    });
+</script>

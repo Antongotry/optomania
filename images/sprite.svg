@@ -1,0 +1,18 @@
+<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style>:root&gt;svg{display:none}:root&gt;svg:target{display:block}</style>
+    <svg id="icon-menu-back" xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+        <path d="M7 1L1 7L7 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg id="icon-menu-close" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1L13 13M13 1L1 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <svg id="icon-menu-toggle" xmlns="http://www.w3.org/2000/svg" width="5" height="8" viewBox="0 0 5 8" fill="none">
+        <path d="M1 7L4 4L1 1" stroke="#121715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg id="icon-menu-horizontal-toggle" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6" fill="none">
+        <path d="M1 1.5L4 4.5L7 1.5" stroke="#121715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" id="button-cart-icon" width="20" height="20" viewBox="0 0 19 19" fill="none">
+        <path d="M15.9031 14.1665H7.4931C6.33794 14.1665 5.34659 13.3437 5.1337 12.2084L3.34511 2.66919C3.20318 1.91227 2.54228 1.36377 1.77218 1.36377H1.5M6.70111 16.9671C6.70111 17.1881 6.52198 17.3672 6.30102 17.3672C6.08006 17.3672 5.90094 17.1881 5.90094 16.9671M6.70111 16.9671C6.70111 16.7461 6.52198 16.567 6.30102 16.567C6.08006 16.567 5.90094 16.7461 5.90094 16.9671M6.70111 16.9671H5.90094M15.503 16.9671C15.503 17.1881 15.3239 17.3672 15.1029 17.3672C14.8819 17.3672 14.7028 17.1881 14.7028 16.9671M15.503 16.9671C15.503 16.7461 15.3239 16.567 15.1029 16.567C14.8819 16.567 14.7028 16.7461 14.7028 16.9671M15.503 16.9671H14.7028M3.4004 2.96411H15.8993C16.8784 2.96411 17.6279 3.83534 17.4817 4.8034L16.7568 9.60442C16.6386 10.3871 15.9659 10.9658 15.1744 10.9658H4.90072L3.4004 2.96411Z" stroke="#FFFDFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</svg>

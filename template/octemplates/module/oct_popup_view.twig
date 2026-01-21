@@ -1,0 +1,702 @@
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered large">
+        <div class="modal-content">
+            <div class="modal-header p-4 bg-white">
+                <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="quickViewModalLabel">{{ heading_title }}</h5>
+                <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-quick-view p-4 bg-grey">
+                <div class="pr-product-main position-relative">
+                    <div class="col-lg-8">
+                        <div class="content-block pr-product-tab-main-content pr-product-tab-content">
+                            <div class="row flex-column flex-xl-row g-4">
+                                {% if image_view and thumb %}
+                                    <div class="col-xl-5">
+                                        {% if thumb %}
+                                            <div class="pr-product-images sticky-top pr-sticky-column pr-product-sticky-block-column z-1">
+                                                {% if oct_product_stickers %}
+                                                    <div class="pr-product-stickers position-absolute">
+                                                        <div class="pr-module-item-stickers-box d-flex justify-content-between align-items-start fsz-12 fw-500">
+                                                            <div class="pr-module-item-stickers-images d-flex gap-1">
+                                                                {% for key, oct_sticker in oct_product_stickers %}
+                                                                    {% if oct_sticker is not empty and oct_sticker is iterable and oct_sticker.image is defined %}
+                                                                            <img src="{{ oct_sticker.image }}" alt="{{ oct_sticker.title }}" data-bs-html="true" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="hover" title="{{ oct_sticker.title }}" data-bs-content="{{ oct_sticker.description }}" width="{{ oct_sticker.image_width|default(20) }}" height="{{ oct_sticker.image_height|default(20) }}" />
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                            <div class="pr-module-item-stickers d-flex gap-1 white-text">
+                                                                {% for key, oct_sticker in oct_product_stickers %}
+                                                                    {% if oct_sticker is not empty and oct_sticker is not iterable %}
+                                                                        <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker }}</div>
+                                                                    {% elseif oct_sticker is iterable and oct_sticker.image is not defined %}
+                                                                        <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                                    {% elseif oct_sticker is iterable and oct_sticker.image is defined and not oct_sticker.image_only %}
+                                                                        <div class="pr-module-item-sticker br-4 px-1 pr-module-sticker-{{ key }}">{{ oct_sticker.title }}</div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="pr-product-images-main">
+                                                    <img src="{{ thumb }}" class="d-block mx-auto" alt="{{ product_name }}" title="{{ product_name }}" width="400" height="400">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                <div class="col-xl-7">
+                                    <div class="pr-product-main-info d-flex flex-column">
+                                        <div class="pr-page-title border-bottom pb-4">
+                                            <h3>{{ product_name }}</h3>
+                                        </div>
+                                        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mt-4 pb-4 border-bottom">
+                                            {% if review_status %}
+                                                <div class="pr-module-item-rating d-flex align-items-center">
+                                                    <div class="pr-module-item-rating-stars d-flex align-items-center me-2" data-rating="{{ oct_rating }}">
+                                                        {% for i in 1..5 %}
+                                                            <span class="pr-module-item-rating-star">
+                                                                <span class="pr-module-item-rating-star-inner"></span>
+                                                            </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                        <path d="M4.20107 7C4.20107 7.16569 4.06676 7.3 3.90107 7.3C3.73539 7.3 3.60107 7.16569 3.60107 7M4.20107 7C4.20107 6.83431 4.06676 6.7 3.90107 6.7C3.73539 6.7 3.60107 6.83431 3.60107 7M4.20107 7H3.60107M6.90107 7C6.90107 7.16569 6.76676 7.3 6.60107 7.3C6.43539 7.3 6.30107 7.16569 6.30107 7M6.90107 7C6.90107 6.83431 6.76676 6.7 6.60107 6.7C6.43539 6.7 6.30107 6.83431 6.30107 7M6.90107 7H6.30107M9.60107 7C9.60107 7.16569 9.46676 7.3 9.30107 7.3C9.13539 7.3 9.00107 7.16569 9.00107 7M9.60107 7C9.60107 6.83431 9.46676 6.7 9.30107 6.7C9.13539 6.7 9.00107 6.83431 9.00107 7M9.60107 7H9.00107M2.35843 2.75736C4.70158 0.414214 8.50057 0.414214 10.8437 2.75736C13.1869 5.1005 13.1869 8.8995 10.8437 11.2426C8.9095 13.1769 5.98325 13.5144 3.70277 12.2553L1.55314 12.7714C1.1175 12.876 0.725061 12.4836 0.829653 12.0479L1.34575 9.8983C0.0866548 7.61783 0.424217 4.69158 2.35843 2.75736Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                    <span class="pr-module-item-rating-count ms-1 fsz-12 fw-500 dark-text">{{ total_reviews }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if oct_promo_data.product_model is defined and oct_promo_data.product_model == 'on' %}
+                                                <div class="pr-product-main-info-code grey-text fsz-12 fw-500">
+                                                    {{ text_model }} {{ model }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="pr-product-sticky-block col-lg-4">
+                                            <div class="d-flex flex-column gap-lg-3 ms-lg-4 sticky-top pr-sticky-column pr-product-sticky-block-column">
+                                                {% if manufacturer %}
+                                                    <div class="official-rep content-block no-hover-shadow order-1 order-lg-0 d-flex align-items-center">
+                                                        <span class="grey-text fsz-12 fw-500">{{ oct_product_manufacturer }} <a href="{{ manufacturers }}" class="blue-link">{{ manufacturer }}</a></span>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="content-block pr-product-actions order-0 order-lg-1 d-flex flex-column gap-4 overflow-y-auto">
+                                                    <div class="pr-product-actions-info d-flex flex-column gap-3 pb-4 border-bottom position-relative">
+                                                        {% if wishlist_view or compare_view %}
+                                                            <div class="pr-product-actions-buttons d-flex gap-2 position-absolute end-0">
+                                                                {% if wishlist_view %}
+                                                                    <button class="pr-module-item-button pr-module-item-button-wishlist button button-light p-2" onclick="wishlist.add('{{ product_id }}');" title="{{ button_wishlist }}" aria-label="Wishlist button">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                                            <path d="M6.80165 3.0415L6.80078 3.03971M6.80078 3.03971C6.50027 2.41728 5.76091 0.9104 3.86208 0.9104C2.23678 0.9104 0.742537 2.59985 0.802528 4.43946C0.843052 5.80634 1.7624 6.92471 2.84224 7.98094C3.91774 9.03293 4.92721 9.98253 5.65768 10.66C6.30491 11.2603 7.29817 11.2601 7.94521 10.6596C8.67584 9.98149 9.68533 9.03145 10.7593 7.98094C11.8392 6.92471 12.7585 5.80634 12.799 4.43946C12.859 2.59985 11.3648 0.9104 9.73948 0.9104C7.84066 0.9104 7.10129 2.41728 6.80078 3.03971ZM6.80078 3.03971L6.79991 3.0415" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                {% endif %}
+                                                                {% if compare_view %}
+                                                                    <button class="pr-module-item-button pr-module-item-button-compare button button-light p-2"  onclick="compare.add('{{ product_id }}');" title="{{ button_compare }}" aria-label="Compare button">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                                                            <path d="M1.40039 11.2103H10.4004C11.3945 11.2103 12.2004 10.4044 12.2004 9.41025V7.61025M1.40039 11.2103L3.20039 9.41025M1.40039 11.2103L3.20039 13.0103M12.2004 2.81025H3.20039C2.20628 2.81025 1.40039 3.61614 1.40039 4.61025L1.40039 6.41025M12.2004 2.81025L10.4004 4.61025M12.2004 2.81025L10.4004 1.01025" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endif %}
+                                                        <div class="pr-product-actions-stock fsz-14 fw-500{% if out_of_stock %} red{% else %} green{% endif %}">
+                                                            {{ stock }}
+                                                        </div>
+                                                        {% if price %}
+                                                            <div class="pr-product-price d-flex flex-column">
+                                                                {% if not special %}
+                                                                    <div class="pr-product-price-new fw-600 fsz-28">{{ price }}</div>
+                                                                {% else %}
+                                                                    <div class="pr-product-price-old d-flex gap-2 align-items-center">
+                                                                        <span class="grey-text text-decoration-line-through fw-500">{{ price }}</span>
+                                                                        {% if oct_sticker_you_save %}
+                                                                            <span class="pr-module-item-price-sale px-1 fsz-10 br-4 bg-red fw-600 white-text">{{ you_save }}</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="pr-product-price-new fw-600 fsz-28 red">{{ special }}</div>
+                                                                    <div class="pr-product-price-discount fsz-12 mt-1 grey-text">{{ oct_product_you_save }} <span id="main-product-you-save">{{ you_save_price }}</span></div>
+                                                                    {% if tax %}
+                                                                        <div class="price-tax fsz-10 fw-300 mt-1">{{ text_tax }}
+                                                                            <span>{{ tax }}</span>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if discounts %}
+                                                                        {% for discount in discounts %}
+                                                                            <div class="pr-product-price-discount fsz-12 mt-1 grey-text">{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</div>
+                                                                        {% endfor %}
+                                                                    {% endif %}
+                                                                    {% if minimum > 1 %}
+                                                                        <div class="pr-product-option-minquant fsz-12 mt-1 grey-text">{{ text_minimum }}</div>
+                                                                    {% endif %}
+                                                                    {% if points %}
+                                                                        <div class="pr-product-option-bonus fsz-12 mt-1 grey-text">{{ text_points }}
+                                                                            {{ points }}</div>
+                                                                        {% if reward %}
+                                                                            <div class="pr-product-option-bonus fsz-12 mt-1 grey-text">{{ text_reward }}
+                                                                                {{ reward }}</div>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    {% if recurrings %}
+                                                                        <div class="form-group d-flex flex-column flex-md-row align-items-md-center">
+                                                                            <div class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ text_payment_recurring }}
+                                                                                <span class="required"> *</span></div>
+                                                                            <div class="form-group">
+                                                                                <select name="recurring_id" class="form-select form-control">
+                                                                                    <option value="">{{ text_select }}</option>
+                                                                                    {% for recurring in recurrings %}
+                                                                                        <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                <div class="help-block" id="recurring-description"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </div>
+                                                            {% if oct_popup_found_cheaper_status is defined and oct_popup_found_cheaper_status == 'on' and can_buy %}
+                                                                <span class="pr-product-found-cheaper blue-link fsz-12 fw-500" onclick="octPopupFoundCheaper('{{ product_id }}');">{{ oct_product_cheaper }}</span>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if can_buy is not empty %}
+                                                        {% if options %}
+                                                            <div id="productPopupOptions" class="pr-product-options d-flex flex-column gap-4 pb-4 border-bottom">
+                                                                {% for option in options %}
+                                                                    {% if option.type == 'select' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>
+                                                                                {% endif %}
+                                                                            </label>
+                                                                            <select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-select form-control">
+                                                                                <option value="">{{ text_select }}</option>
+                                                                                {% for option_value in option.product_option_value %}
+                                                                                    <option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                                                                                        {% if option_value.price %}
+                                                                                            ({{ option_value.price_prefix }}{{ option_value.price }})
+                                                                                        {% endif %}
+                                                                                    </option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'radio' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <div id="input-option{{ option.product_option_id }}" class="options-box d-flex gap-2 flex-wrap">
+                                                                                {% for option_value in option.product_option_value %}
+                                                                                    <div class="radio">
+                                                                                        <label
+                                                                                            data-bs-toggle="tooltip"
+                                                                                            data-bs-placement="top"
+                                                                                            class="option optid-{{ option.product_option_id }} not-selected{% if option_value.image %} radio-img{% else %} pr-radio{% endif %}{% if option.option_id in allowed_options_ids and loop.index == 1 %} auto-choose{% endif %}"
+                                                                                            title="{{ option_value.name }} {% if option_value.price %}{{ option_value.price_prefix }}{{ option_value.price }}{% endif %}">
+                                                                                            <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" class="input-radio"/>
+                                                                                            {% if option_value.image %}
+                                                                                                <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" width="50" height="50" loading="lazy" />
+                                                                                            {% else %}
+                                                                                                {{ option_value.name }}
+                                                                                            {% endif %}
+                                                                                        </label>
+                                                                                        <script>
+                                                                                            $(document).ready(function() {
+                                                                                                $(document).on('click', 'label.optid-{{ option.product_option_id }}', function(event) {
+                                                                                                    $('label.optid-{{ option.product_option_id }}').removeClass('selected').addClass('not-selected');
+                                                                                                    $(this).removeClass('not-selected').addClass('selected');
+                                                                                                });
+                                                                                            });
+                                                                                        </script>
+                                                                                    </div>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'checkbox' %}
+                                                                        <div class="form-checkbox-group">
+                                                                            <div class="pr-control-label fw-700 dark-text fsz-14 mb-2">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </div>
+                                                                            <div id="input-option{{ option.product_option_id }}">
+                                                                                {% for option_value in option.product_option_value %}
+                                                                                    <div class="form-check d-flex align-items-center gap-2">
+                                                                                        <input type="checkbox" id="option[{{ option.product_option_id }}][{{ option_value.product_option_value_id }}]" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" class="form-check-input"/>
+                                                                                        <label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="option[{{ option.product_option_id }}][{{ option_value.product_option_value_id }}]">
+                                                                                            {% if option_value.image %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="36" height="36" loading="lazy" />{% endif %}
+                                                                                            {{ option_value.name }}
+                                                                                            {% if option_value.price %}
+                                                                                                ({{ option_value.price_prefix }}{{ option_value.price }})
+                                                                                            {% endif %}
+                                                                                        </label>
+                                                                                    </div>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'text' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>
+                                                                                {% endif %}
+                                                                            </label>
+                                                                            <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control" inputmode="text">
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'textarea' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'file' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2 d-block">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="button button-secondary">
+                                                                                <i class="fa fa-upload me-2"></i>
+                                                                                {{ button_upload }}</button>
+                                                                            <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}"/>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'date' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <div class="input-group date">
+                                                                                <input type="date" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'datetime' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <div class="input-group datetime">
+                                                                                <input type="datetime-local" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                    {% if option.type == 'time' %}
+                                                                        <div class="form-group">
+                                                                            <label class="pr-control-label fw-700 dark-text fsz-14 mb-2" for="input-option{{ option.product_option_id }}">{{ option.name }}
+                                                                                {% if option.required %}
+                                                                                    <span class="required option-required"> *</span>{% endif %}
+                                                                            </label>
+                                                                            <div class="input-group time">
+                                                                                <input type="time" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                        <div class="pr-product-buttons d-flex flex-column gap-4 pb-4 border-bottom">
+                                                            <div class="d-flex align-items-stretch gap-4">
+                                                                <div class="pr-product-buttons-quantity buttons-quantity button-quantity position-relative{% if not quantity_view %} d-none{% endif %}">
+                                                                    <input class="number fw-500 border-end-0 p-0 text-center fsz-14 fw-500" type="number" name="quantity" value="{{ minimum }}" id="popup-input-quantity" aria-label="Quantity" inputmode="numeric">
+                                                                    <div class="controls d-flex flex-column">
+                                                                        <button class="plus p-0" type="button" onclick="updateValuePopUpView(false, true, false);">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 6 6" fill="none">
+                                                                                <path d="M3.40002 0.997314V4.99731M1.40002 2.99731H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                        <button class="minus p-0" type="button" onclick="updateValuePopUpView(true, false, false);">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="3" viewBox="0 0 6 2" fill="none">
+                                                                                <path d="M1.40002 0.999023H5.40002" stroke="#E5E9EF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                        <input type="hidden" name="product_id" value="{{ product_id }}"/>
+                                                                        <input type="hidden" id="min-popup-view-quantity" value="{{ minimum }}" name="min_quantity">
+                                                                        <input type="hidden" id="max-popup-view-quantity" value="{{ max_quantity }}" name="max_quantity">
+                                                                    </div>
+                                                                </div>
+                                                                <button id="oct-popup-button-cart" data-product-id="{{ product_id }}" data-loading-text="{{ text_loading }}" type="button" class="button button-primary large flex-grow-1 fsz-14 gap-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none">
+                                                                        <path d="M15.9031 14.1665H7.4931C6.33794 14.1665 5.34659 13.3437 5.1337 12.2084L3.34511 2.66919C3.20318 1.91227 2.54228 1.36377 1.77218 1.36377H1.5M6.70111 16.9671C6.70111 17.1881 6.52198 17.3672 6.30102 17.3672C6.08006 17.3672 5.90094 17.1881 5.90094 16.9671M6.70111 16.9671C6.70111 16.7461 6.52198 16.567 6.30102 16.567C6.08006 16.567 5.90094 16.7461 5.90094 16.9671M6.70111 16.9671H5.90094M15.503 16.9671C15.503 17.1881 15.3239 17.3672 15.1029 17.3672C14.8819 17.3672 14.7028 17.1881 14.7028 16.9671M15.503 16.9671C15.503 16.7461 15.3239 16.567 15.1029 16.567C14.8819 16.567 14.7028 16.7461 14.7028 16.9671M15.503 16.9671H14.7028M3.4004 2.96411H15.8993C16.8784 2.96411 17.6279 3.83534 17.4817 4.8034L16.7568 9.60442C16.6386 10.3871 15.9659 10.9658 15.1744 10.9658H4.90072L3.4004 2.96411Z" stroke="#FFFDFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                    </svg>
+                                                                    <span class="button-text">{{ button_cart }}</span>
+                                                                </button>
+                                                            </div>
+                                                            {% if oct_popup_purchase_status is defined and can_buy %}
+                                                                <button type="button" class="button button-light button-large w-100 fsz-14" onclick="octPopPurchase('{{ product_id }}')">{{ oct_product_quickbuy }}</button>
+                                                            {% endif %}
+                                                        </div>
+                                                        {{ oct_byoneclick }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="pr-product-info">
+                                            {% if specification_view and attribute_groups %}
+                                                <div class="pr-product-main-attributes fsz-14 dark-text d-none d-md-flex flex-column gap-2 pt-4">
+                                                    <div class="fw-700 dark-text fsz-14 mb-2">{{ oct_product_main_attributes }}</div>
+                                                    {% for attribute_group in attribute_groups %}
+                                                        {% for attribute in attribute_group.attribute|slice(0, 6) %}
+                                                            <div class="pr-module-attributes-item d-flex justify-content-between gap-2">
+                                                                <span class="grey-text">{{ attribute.name }}</span>
+                                                                <span>{{ attribute.text }}</span>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if description is defined and description | length > 10 %}
+                            <div class="pr-product-description content-block mt-3">
+                                <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" viewBox="0 0 18 21" fill="none">
+                                        <path d="M12.75 1.5H14C15.6569 1.5 17 2.84315 17 4.5V17.5C17 19.1569 15.6569 20.5 14 20.5H4C2.34315 20.5 1 19.1569 1 17.5V4.5C1 2.84315 2.34315 1.5 4 1.5H5.25M9 8.505L13 8.495M9 12.505L13 12.495M9 16.505L13 16.495M5 16.5V16.51M5 12.5V12.51M5 8.5V8.51M5.5 4H12.5C12.7761 4 13 3.77614 13 3.5V2.5C13 1.39543 12.1046 0.5 11 0.5H7C5.89543 0.5 5 1.39543 5 2.5V3.5C5 3.77614 5.22386 4 5.5 4ZM5.25 16.5C5.25 16.6381 5.13807 16.75 5 16.75C4.86193 16.75 4.75 16.6381 4.75 16.5C4.75 16.3619 4.86193 16.25 5 16.25C5.13807 16.25 5.25 16.3619 5.25 16.5ZM5.25 12.5C5.25 12.6381 5.13807 12.75 5 12.75C4.86193 12.75 4.75 12.6381 4.75 12.5C4.75 12.3619 4.86193 12.25 5 12.25C5.13807 12.25 5.25 12.3619 5.25 12.5ZM5.25 8.5C5.25 8.63807 5.13807 8.75 5 8.75C4.86193 8.75 4.75 8.63807 4.75 8.5C4.75 8.36193 4.86193 8.25 5 8.25C5.13807 8.25 5.25 8.36193 5.25 8.5Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    {{ oct_product_maintab }}
+                                </div>
+                                <div class="pr-product-tab-content-text">
+                                    {{ description }}
+                                    {% if tags %}
+                                        <p class="pr-product-tags">{{ text_tags }}
+                                            {% for i in 0..tags | length - 1 %}
+                                                <a class="blue-link" href="{{ tags[i].href }}">{{ tags[i].tag }}</a>{% if i < (tags|length - 1) %},{% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if specification_view and attribute_groups %}
+                            <div class="pr-product-attributes pr-product-tab-content content-block mt-3">
+                                <div class="pr-product-tab-content-title d-flex align-items-center dark-text fsz-20 fw-700 pb-4 mb-4 border-bottom gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17" fill="none">
+                                        <path d="M21 1.83333H7.66667M21 8.49999H7.66667M21 15.1667H7.66667M2.11111 1.83333C2.11111 2.14015 1.86238 2.38888 1.55556 2.38888C1.24873 2.38888 1 2.14015 1 1.83333M2.11111 1.83333C2.11111 1.5265 1.86238 1.27777 1.55556 1.27777C1.24873 1.27777 1 1.5265 1 1.83333M2.11111 1.83333H1M2.11111 8.49999C2.11111 8.80682 1.86238 9.05555 1.55556 9.05555C1.24873 9.05555 1 8.80682 1 8.49999M2.11111 8.49999C2.11111 8.19317 1.86238 7.94444 1.55556 7.94444C1.24873 7.94444 1 8.19317 1 8.49999M2.11111 8.49999H1M2.11111 15.1667C2.11111 15.4735 1.86238 15.7222 1.55556 15.7222C1.24873 15.7222 1 15.4735 1 15.1667M2.11111 15.1667C2.11111 14.8598 1.86238 14.6111 1.55556 14.6111C1.24873 14.6111 1 14.8598 1 15.1667M2.11111 15.1667H1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    {{ oct_product_attributes_tab }}
+                                </div>
+                                <div class="pr-product-attributes-items dark-text fsz-14 w-100 d-flex flex-column gap-2 gap-md-3">
+                                    {% for attribute_group in attribute_groups %}
+                                        <div class="fw-700 dark-text fsz-14 mb-2">{{ attribute_group.name }}</div>
+                                        {% for attribute in attribute_group.attribute %}
+                                            <div class="pr-module-attributes-item d-flex flex-column flex-md-row justify-content-md-between gap-2">
+                                                <span>{{ attribute.name }}</span>
+                                                <span class="grey-text">{{ attribute.text }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+if (typeof popupViewUrls === 'undefined') {
+    var popupViewUrls = {
+        upload: '{{ ajax_upload_url|raw }}',
+        cartAdd: '{{ ajax_cart_add_url|raw }}',
+        updatePrices: '{{ ajax_update_prices_url|raw }}'
+    };
+}
+
+$(document).ready(function() {
+    const cartTextHolder = document.querySelector('[data-cart-text]');
+    const popupCartButton = document.getElementById('oct-popup-button-cart');
+    
+    if (cartTextHolder && popupCartButton) {
+        const addText = cartTextHolder.dataset.cartText || '{{ button_cart }}';
+        const addedText = cartTextHolder.dataset.cartTextIn || 'У кошику';
+        
+        popupCartButton.dataset.addText = addText;
+        popupCartButton.dataset.addedText = addedText;
+    }
+});
+
+$('button[id^=\'popup-button-upload\']').on('click', function() {
+    var node = this;
+
+    $('#form-upload').remove();
+
+    $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+    $('#form-upload input[name=\'file\']').trigger('click');
+
+    if (typeof timer != 'undefined') {
+        clearInterval(timer);
+    }
+
+    timer = setInterval(function() {
+        if ($('#form-upload input[name=\'file\']').val() != '') {
+            clearInterval(timer);
+
+            $.ajax({
+                url: popupViewUrls.upload,
+                type: 'post',
+                dataType: 'json',
+                data: new FormData($('#form-upload')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    $(node).button('loading');
+                },
+                complete: function() {
+                    $(node).button('reset');
+                },
+                success: function(json) {
+                    $('.text-danger').remove();
+
+                    if (json['error']) {
+                        $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+                    }
+
+                    if (json['success']) {
+                        alert(json['success']);
+
+                        $(node).parent().find('input').val(json['code']);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        }
+    }, 500);
+});
+
+$('#oct-popup-button-cart').on('click', function() {
+    let formData = $('#quickViewModal input[type=\'text\'], #quickViewModal input[type=\'number\'], #quickViewModal input[type=\'hidden\'], #quickViewModal input[type=\'radio\']:checked, #quickViewModal input[type=\'checkbox\']:checked, #quickViewModal select, #quickViewModal textarea').serialize();
+
+    let quantity = $('#popup-input-quantity').val() || 1;
+    formData += '&quantity=' + quantity;
+    $.ajax({
+        url: popupViewUrls.cartAdd,
+        type: 'post',
+        cache: false,
+        data: formData,
+        dataType: 'json',
+        beforeSend: function() {
+            $('#oct-popup-button-cart').button('loading');
+            masked('body', true);
+
+            $('#oct-popup-button-cart').data('original-content', $('#oct-popup-button-cart').html());
+            $('#oct-popup-button-cart').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+        },
+        complete: function() {
+            $('#oct-popup-button-cart').button('reset');
+            masked('body', false);
+
+            setTimeout(function() {
+                $('#oct-popup-button-cart').html('<i class="fas fa-check fsz-18"></i>').prop('disabled', true);
+            }, 1000);
+
+            setTimeout(function() {
+                $('#oct-popup-button-cart').html($('#oct-popup-button-cart').data('original-content')).prop('disabled', false);
+                
+                const popupCartButton = document.getElementById('oct-popup-button-cart');
+                const productId = popupCartButton?.dataset.productId;
+                
+                if (window.interactiveButtonsManager && window.interactiveButtonsManager.initialized && productId) {
+                    window.interactiveButtonsManager.updateButtonState(popupCartButton, 'cart', window.interactiveButtonsManager.cartIds.has(String(productId)));
+                }
+            }, 1200);
+        },
+        success: function(json) {
+            $('.alert-dismissible, .text-danger').remove();
+            $('.form-group').removeClass('has-error');
+
+            if (json['error']) {
+                if (json['error']['option']) {
+                    let errorOption = '';
+                    for (i in json['error']['option']) {
+                        var element = $('#input-option' + i.replace('_', '-'));
+
+                        if (element.parent().hasClass('input-group')) {
+                            element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+                        } else {
+                            element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+                        }
+                        errorOption += '<div class="alert-text-item">' + json['error']['option'][i] + '</div>';
+                    }
+                    prNotify('danger', errorOption);
+                }
+
+                if (json['error']['error_warning']) {
+                    prNotify('danger', json['error']['error_warning']);
+                }
+
+                if (json['error']['recurring']) {
+                    $('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
+                }
+
+                $('.text-danger').parent().addClass('has-error');
+            }
+
+            if (json['success']) {
+                prNotify('success', json['success']);
+                
+                let cartIdsHolder = document.querySelector("[data-cart-ids]");
+
+                if (json.oct_cart_ids && json.oct_cart_ids.length > 0 && cartIdsHolder) {
+                    cartIdsHolder.dataset.cartIds = json.oct_cart_ids;
+                }
+                
+                const productId = json.product_id || $('#quickViewModal input[name="product_id"]').val();
+                
+                if (window.interactiveButtonsManager && window.interactiveButtonsManager.initialized && productId) {
+                    window.interactiveButtonsManager.add(productId, 'cart');
+                }
+
+                setTimeout(function() {
+                    $('.pr-header-buttons-item-count-cart').addClass('active').html(json['total_products']);
+                }, 100);
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+$('#productPopupOptions input, #productPopupOptions select').on('change', function() {
+    updateViewPrice();
+});
+
+function updateViewPrice() {
+    let priceOld = document.querySelector('#quickViewModal .pr-product-price-old span');
+    let priceNew = document.querySelector('#quickViewModal .pr-product-price-new');
+    let youSavePopup = document.querySelector('#main-product-you-save');
+
+    $.ajax({
+        type: 'post',
+        url: popupViewUrls.updatePrices,
+        data: $('#quickViewModal input[type=\'text\'], #quickViewModal input[type=\'hidden\'], #quickViewModal input[type=\'number\'], #quickViewModal input[type=\'radio\']:checked, #quickViewModal input[type=\'checkbox\']:checked, #quickViewModal select'),
+        dataType: 'json',
+        cache: false,
+        success: function(json) {
+            
+            {% if special %}
+            if (typeof animatePrice === 'function') {
+                animatePrice(json['price'], priceOld);
+                animatePrice(json['special'], priceNew);
+            } else {
+                if (priceOld) priceOld.textContent = json['price'];
+                if (priceNew) priceNew.textContent = json['special'];
+            }
+            {% else %}
+            if (typeof animatePrice === 'function') {
+                animatePrice(json['price'], priceNew);
+            } else {
+                if (priceNew) priceNew.textContent = json['price'];
+            }
+            {% endif %}
+
+            {% if oct_sticker_you_save and you_save %}
+            if (typeof animatePrice === 'function') {
+                animatePrice(json['you_save_price'], youSavePopup);
+            } else {
+                if (youSavePopup) youSavePopup.textContent = json['you_save_price'];
+            }
+            {% endif %}
+
+            {% if tax %}
+            $('#popupQuickviewModalTax').text(json['tax']);
+            {% endif %}
+        }
+    });
+}
+
+$('#popup-input-quantity').on('blur change', function(e) {
+    updateValuePopUpView(false, false, true);
+});
+
+function updateValuePopUpView(minus, plus, manual) {
+    let min = parseInt($('#popup-input-quantity').val());
+    let currentMinimum = parseInt($('#min-popup-view-quantity').val());
+    let max = parseInt($('#max-popup-view-quantity').val());
+    let use_minimum_step = {{ use_minimum_step ?? 0 }};
+    let step = use_minimum_step ? currentMinimum : 1;
+
+    if (isNaN(min)) {
+        $('#popup-input-quantity').val(currentMinimum);
+        updateViewPrice();
+        return;
+    }
+
+    if (max === 0)
+        return;
+
+    if (minus && min > currentMinimum) {
+        if (min - step < currentMinimum) {
+            $('#popup-input-quantity').val(currentMinimum);
+            updateViewPrice();
+            return;
+        } else if (min > max) {
+            $('#popup-input-quantity').val(max);
+            updateViewPrice();
+            return;
+        }
+
+        $('#popup-input-quantity').val(~~ $('#popup-input-quantity').val() - step);
+    }
+
+    if (plus) {
+        if (max && min + step > max) {
+            $('#popup-input-quantity').val(max);
+            updateViewPrice();
+            return;
+        } else if (min < currentMinimum) {
+            $('#popup-input-quantity').val(currentMinimum);
+            updateViewPrice();
+            return;
+        }
+
+        $('#popup-input-quantity').val(~~ $('#popup-input-quantity').val() + step);
+    }
+
+    if (manual) {
+        if (min <= currentMinimum) {
+            $('#popup-input-quantity').val(currentMinimum);
+            updateViewPrice();
+            return;
+        } else if (min > max) {
+            $('#popup-input-quantity').val(max);
+            updateViewPrice();
+            return;
+        }
+
+        if (use_minimum_step && currentMinimum > 1) {
+            let remainder = min % currentMinimum;
+            if (remainder !== 0) {
+                let roundedValue = min - remainder + currentMinimum;
+                if (max && roundedValue > max) {
+                    roundedValue = max;
+                }
+                $('#popup-input-quantity').val(roundedValue);
+            }
+        }
+    }
+
+    updateViewPrice();
+}
+
+{% if minimum > 1 %}
+updateViewPrice();
+{% endif %}
+</script>

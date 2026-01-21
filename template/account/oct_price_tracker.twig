@@ -1,0 +1,113 @@
+{{ header }}
+<div id="oct_price_tracker" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+		<ul class="breadcrumb pr-breadcrumb fsz-12">
+			{% for breadcrumb in breadcrumbs %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+                {% else %}
+                    <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endif %}
+            {% endfor %}
+		</ul>
+	</nav>
+	<main>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if success %}
+			<script>
+				prNotify('success', '{{ success }}');
+			</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+			{% if column_left and column_right %}
+				{% set class = 'col-xl-6' %}
+			{% elseif column_left or column_right %}
+				{% set class = 'col-xl-9' %}
+			{% else %}
+				{% set class = 'col-xl-12' %}
+			{% endif %}
+			<div id="content" class="{{ class }}">
+				<div class="content-block h-100">
+					<div class="pr-page-title mb-3 mb-xl-4 pb-3 pb-xl-4 border-bottom d-flex align-items-center gap-3">
+						<h1>{{ heading_title }}</h1>
+					</div>
+					{% if requests %}
+						<div class="table-responsive fsz-14 fw-300 br-8">
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th>{{ column_product }}</th>
+										<th class="text-center">{{ column_current_price }}</th>
+										<th class="text-center">{{ column_date_created }}</th>
+										<th class="text-center">{{ column_status }}</th>
+										<th class="text-center">{{ column_action }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for request in requests %}
+										<tr>
+											<td class="p-3 fsz-14">
+												<a href="{{ request.product_href }}">{{ request.product_name }}</a>
+											</td>
+											<td class="py-3 text-center fsz-14 fw-500">{{ request.current_price }}</td>
+											<td class="py-3 text-center fsz-12">{{ request.date_created }}</td>
+											<td class="py-3 text-center fsz-14">
+												{% if request.status == 'sent' %}
+													<div class="text-success fw-500">
+														{{ text_status_sent }}
+														<br/>
+														{% if request.date_sent %}
+															<span class="fsz-10">{{ request.date_sent }}</span>
+														{% endif %}
+													</div>
+												{% else %}
+													<div class="text-warning fw-500">{{ text_status_pending }}</div>
+												{% endif %}
+											</td>
+											<td class="py-3 px-4 text-center">
+                                                <button type="button" class="pr-sidebar-cart-product-delete no-btn mx-auto" onclick="removePriceRequest('{{ request.request_id }}'); return false;" aria-label="Delete">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 20 22" fill="none">
+                                                        <path d="M2.5 4.5L3.60314 16.6346C3.74323 18.1756 3.81328 18.9461 4.15838 19.5288C4.4623 20.0419 4.91229 20.4529 5.45087 20.7091C6.06242 21 6.83609 21 8.38343 21H11.6166C13.1639 21 13.9376 21 14.5491 20.7091C15.0877 20.4529 15.5377 20.0419 15.8416 19.5288C16.1867 18.9461 16.2568 18.1756 16.3969 16.6346L17.5 4.5M7.5 10V15M12.5 10V15M5 4.5L6.07865 2.61236C6.41422 2.02512 6.582 1.7315 6.81776 1.51789C7.02635 1.32889 7.27249 1.18605 7.54007 1.09871C7.84251 1 8.18068 1 8.85703 1H11.143C11.8193 1 12.1575 1 12.4599 1.09871C12.7275 1.18605 12.9737 1.32889 13.1822 1.51789C13.418 1.7315 13.5858 2.02512 13.9213 2.61236L15 4.5M5 4.5H1M5 4.5H15M15 4.5H19" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </button>
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="row my-3 dark-text fsz-14">
+							<div class="offset-sm-6 col-sm-6 text-end">{{ results }}</div>
+							<div class="col-sm-12 text-start mt-3">{{ pagination }}</div>
+						</div>
+					{% else %}
+						<div class="fw-500 mb-3 dark-text">{{ text_no_requests }}</div>
+						<a href="{{ continue }}" class="button button-primary">{{ button_continue }}</a>
+					{% endif %}
+				</div>
+			</div>
+			{{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+<script>
+	function removePriceRequest(request_id) {
+if (!confirm('{{ text_confirm_remove }}')) {
+return false;
+}
+$.ajax({
+url: 'index.php?route=account/oct_price_tracker/remove',
+type: 'post',
+data: 'request_id=' + request_id,
+dataType: 'json',
+success: function (json) {
+if (json['success']) {
+location = '{{ continue_redirect }}';
+}
+}
+});
+}
+</script>
+{{ footer }}

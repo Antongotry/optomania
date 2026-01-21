@@ -1,0 +1,93 @@
+{{ header }}
+<div id="account-wishlist" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		<div class="pr-page-title mb-3 mb-xl-4">
+			<h1 class="m-0 lh-sm">{{ heading_title }}</h1>
+		</div>
+		<div class="content-top-box">{{ content_top }}</div>
+		{% if success %}
+			<script>
+				prNotify('success', '{{ success }}');
+			</script>
+		{% endif %}
+		<div class="row g-3 g-xxl-4 pr-account">
+			{{ column_left }}
+		    {% if column_left and column_right %}
+		    	{% set class = 'col-xl-6' %}
+		    {% elseif column_left or column_right %}
+		    	{% set class = 'col-xl-9' %}
+		    {% else %}
+		    	{% set class = 'col-xl-12' %}
+		    {% endif %}
+		    <div id="content" class="{{ class }}">
+			    <div class="d-flex flex-column flex-lg-row gap-3 gap-xxl-4 pr-account-wishlist">
+					{% if products %}
+						{% for product in products %}
+							<div class="pr-account-wishlist-item content-block d-flex gap-3 gap-lg-4 position-relative">
+								<div class="d-flex align-items-center gap-3 gap-lg-4 flex-grow-1">
+									{% if product.thumb %}
+										<a href="{{ product.href }}"><img src="{{ product.thumb }}"  alt="{{ product.name }}" title="{{ product.name }}" width="140" height="140"></a>
+									{% endif %}
+									<div class="pr-account-wishlist-item-info d-flex flex-column w-100 align-self-stretch">
+										<a href="{{ product.href }}" class="pr-account-wishlist-item-name dark-link fw-500 pe-4">{{ product.name }}</a>
+										<div class="pr-account-wishlist-item-code fsz-12 mt-2"><span class="grey-text">{{ column_model }}:</span> {{ product.model }}</div>
+										<div class="pr-account-wishlist-item-stock fsz-12"><span class="grey-text">{{ column_stock }}:</span> {{ product.stock }}</div>
+										{% if product.price %}
+											<div class="pr-account-wishlist-price py-3 d-flex flex-column gap-2">
+												{% if not product.special %}
+													<span class="pr-account-wishlist-item-price mt-auto fsz-20 fw-600">{{ product.price }}</span>
+												{% else %}
+													<span class="grey-text text-decoration-line-through fsz-14 fw-500">{{ product.price }}</span>
+													<span class="pr-account-wishlist-item-price py-3 mt-auto fsz-20 fw-600">{{ product.special }}</span>
+												{% endif %}
+											</div>
+										{% endif %}
+										{% if product.can_buy %}
+											<button type="button" aria-label="To cart" class="button button-primary pr-module-cart-btn d-flex" title="{{ button_cart }}" onclick="cart.add('{{ product.product_id }}', '1');">
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 19 19" fill="none">
+													<path d="M15.9031 14.1665H7.4931C6.33794 14.1665 5.34659 13.3437 5.1337 12.2084L3.34511 2.66919C3.20318 1.91227 2.54228 1.36377 1.77218 1.36377H1.5M6.70111 16.9671C6.70111 17.1881 6.52198 17.3672 6.30102 17.3672C6.08006 17.3672 5.90094 17.1881 5.90094 16.9671M6.70111 16.9671C6.70111 16.7461 6.52198 16.567 6.30102 16.567C6.08006 16.567 5.90094 16.7461 5.90094 16.9671M6.70111 16.9671H5.90094M15.503 16.9671C15.503 17.1881 15.3239 17.3672 15.1029 17.3672C14.8819 17.3672 14.7028 17.1881 14.7028 16.9671M15.503 16.9671C15.503 16.7461 15.3239 16.567 15.1029 16.567C14.8819 16.567 14.7028 16.7461 14.7028 16.9671M15.503 16.9671H14.7028M3.4004 2.96411H15.8993C16.8784 2.96411 17.6279 3.83534 17.4817 4.8034L16.7568 9.60442C16.6386 10.3871 15.9659 10.9658 15.1744 10.9658H4.90072L3.4004 2.96411Z" stroke="#FFFDFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+												</svg>
+												{{ button_cart }}
+											</button>
+										{% else %}
+											{% if oct_stock_notifier_status and oct_stock_notifier_status %}
+												<button type="button" onclick="octStockNotifier('{{ product.product_id }}');" aria-label="Notice" class="button button-secondary">{{ button_oct_stock_notifier }}</button>
+											{% endif %}
+										{% endif %}
+										<input type="hidden" name="product_id" value="{{ product.product_id }}" />
+									</div>
+									<a href="{{ product.remove }}" title="{{ button_remove }}" class="pr-sidebar-cart-product-delete no-btn align-self-start">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 22" fill="none">
+                                            <path d="M2.5 4.5L3.60314 16.6346C3.74323 18.1756 3.81328 18.9461 4.15838 19.5288C4.4623 20.0419 4.91229 20.4529 5.45087 20.7091C6.06242 21 6.83609 21 8.38343 21H11.6166C13.1639 21 13.9376 21 14.5491 20.7091C15.0877 20.4529 15.5377 20.0419 15.8416 19.5288C16.1867 18.9461 16.2568 18.1756 16.3969 16.6346L17.5 4.5M7.5 10V15M12.5 10V15M5 4.5L6.07865 2.61236C6.41422 2.02512 6.582 1.7315 6.81776 1.51789C7.02635 1.32889 7.27249 1.18605 7.54007 1.09871C7.84251 1 8.18068 1 8.85703 1H11.143C11.8193 1 12.1575 1 12.4599 1.09871C12.7275 1.18605 12.9737 1.32889 13.1822 1.51789C13.418 1.7315 13.5858 2.02512 13.9213 2.61236L15 4.5M5 4.5H1M5 4.5H15M15 4.5H19" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </a>
+								</div>
+							</div>
+						{% endfor %}
+					{% else %}
+						<div class="col-12 fw-500 mb-3 dark-text">
+							<div class="content-block">
+								<p class="mb-3">{{ text_empty }}</p>
+								<a href="{{ continue }}" class="button button-secondary button-large d-inline-flex align-self-start">{{ button_continue }}</a>
+							</div>
+						</div>
+					{% endif %}
+			    </div>
+		    </div>
+		    {{ column_right }}
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

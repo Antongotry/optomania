@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}" class="no-transition{% if body_class %} body-product{% endif %}{% if oct_theme is defined and oct_theme == 'dark' %} dark-theme{% else %} light-theme{% endif %}" data-oct-fonts="{{ main_active_font.data_attr }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }}</title>
+{% if (oct_promo_data.open_graph is defined and oct_promo_data.open_graph) and octOpenGraphs is not empty %}
+{% for octOpenGraph in octOpenGraphs %}
+{% if octOpenGraph.content is not empty %}
+<meta property="{{ octOpenGraph.property }}" content="{{ octOpenGraph.content }}" />
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if oct_theme_color is defined and oct_theme_color %}
+<meta name="theme-color" content="{{ oct_theme_color }}" data-oct-theme-color="{{ oct_theme_color }}"/>
+{% endif %}
+{% if oct_promo_data.dark_theme is defined %}
+    <script id="octDetectTheme">
+        (function() {
+            const darkThemeColor = 'rgb(29, 29, 29)';
+            let lightThemeColor = 'rgb(255, 255, 255)';
+
+            const metaThemeColor = document.querySelector('[name="theme-color"]');
+            if (metaThemeColor && metaThemeColor.hasAttribute('data-oct-theme-color')) {
+                lightThemeColor = metaThemeColor.getAttribute('data-oct-theme-color');
+            }
+
+            const storedTheme = localStorage.getItem('theme');
+            const deviceTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'dark' : 'light';
+            const adminTheme = '{{ oct_theme }}';
+
+            let initialTheme;
+
+            if (storedTheme) {
+                initialTheme = storedTheme;
+            } else if (adminTheme === 'auto') {
+                initialTheme = deviceTheme;
+            } else {
+                initialTheme = adminTheme;
+            }
+
+            if (initialTheme) {
+                document.documentElement.classList.remove('light-theme', 'dark-theme');
+                document.documentElement.classList.add(`${initialTheme}-theme`);
+                if (metaThemeColor) {
+                    metaThemeColor.setAttribute('content', initialTheme === 'dark' ? darkThemeColor : lightThemeColor);
+                }
+            }
+        })();
+    </script>
+{% endif %}
+{% if oct_analytics_google_webmaster_code is defined and oct_analytics_google_webmaster_code is not empty %}
+<meta name="google-site-verification" content="{{ oct_analytics_google_webmaster_code }}" />
+{% endif %}
+{% if oct_analytics_googletm_code is defined and oct_analytics_googletm_code is not empty %}
+<!-- Google Tag Manager -->
+<script id="octGtm">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','{{ oct_analytics_googletm_code }}');</script>
+<!-- End Google Tag Manager -->
+{% endif %}
+{% if home_microdata is defined and home_microdata %}
+<script type="application/ld+json">
+{{ home_microdata | raw }}
+</script>
+{% endif %}
+<base href="{{ base }}" />
+{% if robots %}
+<meta name="robots" content="{{ robots }}" />
+{% endif %}
+{% if description %}
+<meta name="description" content="{{ description }}" />
+{% endif %}
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}" />
+{% endif %}
+{% for style in styles %}
+<link href="{{ style.href }}" rel="stylesheet" media="{{ style.media }}" />
+{% endfor %}
+{% if oct_preloads %}
+{% for oct_preload in oct_preloads %}
+<link rel="preload" as="image" href="{{ oct_preload }}">
+{% endfor %}
+{% endif %}
+{% for script in scripts %}
+<script src="{{ script }}"></script>
+{% endfor %}
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+<script{% if oct_footer_scripts is defined and oct_footer_scripts and oct_minify is defined and oct_minify %} id="dataFonts"{% endif %}>
+    let octFonts = localStorage.getItem('octFonts');
+    let fontFamily = document.documentElement.getAttribute('data-oct-fonts');
+    if (octFonts !== null) {
+        var octHead  = document.getElementsByTagName('head')[0];
+        var octLink  = document.createElement('link');
+        octLink.rel  = 'stylesheet';
+        octLink.type = 'text/css';
+        octLink.href = location.protocol + '//' + location.host + `/catalog/view/theme/oct_promo/stylesheet/oct-fonts-${fontFamily}.css`;
+        octLink.media = 'all';
+        octHead.appendChild(octLink);
+    }
+</script>
+<style>
+    :root {
+        --pr-main-font: '{{ main_active_font.name }}', sans-serif;
+    }
+</style>
+</head>
+<body{% if oct_promo_data.oct_popup_options is defined %} data-popup-options="true"{% endif %}{% if oct_promo_data.width is defined %} data-width="{{ main_width }}"{% endif %}{% if oct_home is defined and oct_home %} data-page="home"{% endif %}>
+{% if product_views_count %}
+    <div id="pr_sidebar_viewed" class="pr-sidebar-viewed position-fixed bg-grey">
+        <div class="pr-sidebar-viewed-header d-flex justify-content-between align-items-center py-3 px-3 px-lg-4 bg-white">
+            <div class="dark-text fsz-20 fw-700">{{ oct_product_views }}</div>
+            <button type="button" class="pr-sidebar-viewed-close button-close br-8" aria-label="Close viewed sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 1L13 13M13 1L1 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="pr-sidebar-content pr-sidebar-viewed-products p-3 p-lg-4">
+        
+        </div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setupViewedProductsSidebar();
+        });
+    </script>
+{% endif %}
+{% if oct_analytics_googletm_code is defined and oct_analytics_googletm_code is not empty %}
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ oct_analytics_googletm_code }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% endif %}
+{% if (oct_information_bar_value is defined and oct_information_bar_value is not empty and oct_information_bar_value) %}
+<div id="oct-infobar">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 d-flex align-items-center justify-content-between flex-column flex-md-row py-3 py-md-4">
+                <div class="oct-infobar-text fsz-12">{{ text_oct_information_bar }}</div>
+                <button type="button" aria-label="Information" id="oct-infobar-btn" class="button button-primary button-small br-4 mt-3 mt-md-0 ms-md-4 py-2 px-3">{{ oct_info_bar_close }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('#oct-infobar-btn').on('click', function () {
+    $('#oct-infobar').addClass('hidden');
+    const date = new Date('{{ oct_information_bar_day_now }}'.replace(/-/g, "/"));
+    date.setTime(date.getTime() + ({{ oct_info_max_day }} * 24 * 60 * 60 * 1000));
+    document.cookie = '{{ oct_information_bar_value }}=1; path=/; expires=' + date.toUTCString();
+});
+</script>
+<style>
+#oct-infobar {background:{{ oct_information_bar_background }};}
+.oct-infobar-text {color:{{ oct_information_bar_color_text }};}
+.oct-infobar-text a {color:{{ oct_information_bar_color_url }};}
+</style>
+{% endif %}
+<nav id="top" class="dark-text pr-mobile-menu">
+    <div class="container-xl position-relative z-2">
+        <div class="d-flex align-items-center justify-content-between fw-600 fsz-12 py-2">
+            {% if logo %}
+                {% if oct_home is defined and oct_home %}
+                    <span class="pr-mobile-menu-logo d-lg-none">
+                        <img src="{{ logo }}" alt="{{ name }}"{% if logo_width is defined and logo_width %} width="{{ logo_width }}"{% endif %}{% if logo_height is defined and logo_height %} height="{{ logo_height }}"{% endif %}>
+                    </span>
+                {% else %}
+                    <a class="pr-mobile-menu-logo d-lg-none" href="{{ home }}" title="{{ name }}">
+                        <img src="{{ logo }}" alt="{{ name }}"{% if logo_width is defined and logo_width %} width="{{ logo_width }}"{% endif %}{% if logo_height is defined and logo_height %} height="{{ logo_height }}"{% endif %}>
+                    </a>
+                {% endif %}
+            {% else %}
+                <h1><a href="{{ home }}">{{ name }}</a></h1>
+            {% endif %}
+            {% if header_informations is defined and header_informations is not empty %}
+                <ul class="top-links list-unstyled d-none d-lg-flex gap-3">
+                    {% for header_link in header_informations %}
+                    <li><a href="{{ header_link.href }}" class="light-link">{{ header_link.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="top-right d-flex gap-2 gap-lg-3 align-items-center ms-auto">
+                <div class="top-right-phone fsz-14 d-flex gap-2 align-items-center order-1 order-lg-0">
+                    <div class="pr-dropdown-box position-relative">
+                        <button type="button" class="pr-dropdown-toggle dark-text fw-700 no-bg d-flex gap-2 align-items-center" aria-label="Show contact information">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                <path d="M5.93034 5.50317C6.37092 5.06259 6.48015 4.38951 6.2015 3.83222L5.43561 2.30044C5.10679 1.64279 4.33718 1.33612 3.64618 1.5874L1.93037 2.21133C1.3106 2.4367 0.91569 3.05522 1.01535 3.70712C2.02147 10.2885 6.21154 14.4785 12.7929 15.4846C13.4448 15.5843 14.0633 15.1894 14.2887 14.5696L14.9126 12.8538C15.1639 12.1628 14.8572 11.3932 14.1996 11.0644L12.6678 10.2985C12.1105 10.0199 11.4374 10.1291 10.9968 10.5697L9.92513 11.6414C7.75378 10.9176 5.58243 8.74622 4.85864 6.57487L5.93034 5.50317Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="d-none d-lg-inline">{{ telephone }}</span>
+                            <svg class="pr-arrow-down d-none d-md-inline" width="8" height="4" viewBox="0 0 8 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.99802 4C3.81883 4 3.63961 3.93469 3.50312 3.8047L0.70328 1.13815C0.429595 0.8775 0.429595 0.456145 0.70328 0.195491C0.976964 -0.0651636 1.41938 -0.0651636 1.69307 0.195491L3.99802 2.3907L6.30296 0.195491C6.57665 -0.0651636 7.01907 -0.0651636 7.29275 0.195491C7.56644 0.456145 7.56644 0.8775 7.29275 1.13815L4.49291 3.8047C4.35642 3.93469 4.17721 4 3.99802 4Z" fill="var(--pr-black-color)" />
+                            </svg>
+                        </button>
+                        <div class="pr-dropdown p-3 p-lg-0">
+                            <div class="content-block br-8 d-flex flex-column gap-2 fsz-14 p-3">
+                                {% if main_address_html is defined and main_address_html %}
+                                    <div class="pr-dropdown-title d-flex align-items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
+                                            <path d="M13 7.40121C13 4.01322 10.3137 1 7 1C3.68629 1 1 4.01322 1 7.40121V7.83938C0.999993 11.8962 4.57161 15.3412 6.20358 16.7036C6.67702 17.0988 7.32298 17.0988 7.79642 16.7036C9.42839 15.3412 13 11.8962 13 7.83938V7.40121Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M9.25 7.4012C9.25 8.72694 8.24264 9.80166 7 9.80166C5.75736 9.80166 4.75 8.72694 4.75 7.4012C4.75 6.07547 5.75736 5.00075 7 5.00075C8.24264 5.00075 9.25 6.07547 9.25 7.4012Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="dark-text fw-600">{{ oct_our_address }}</span>
+                                    </div>
+                                    <div class="pr-dropdown-text secondary-text fsz-14 fw-400 mb-3">{{ main_address_html }}</div>
+                                {% endif %}
+                                {% if contact_open is defined and contact_open or oct_contact_telephones is defined and oct_contact_telephones is not empty %}
+                                    {% if oct_contact_telephones is defined and oct_contact_telephones is not empty %}
+                                        <div class="pr-dropdown-title d-flex align-items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path d="M5.93034 5.00317C6.37092 4.56259 6.48015 3.88951 6.2015 3.33222L5.43561 1.80044C5.10679 1.14279 4.33718 0.836123 3.64618 1.0874L1.93037 1.71133C1.3106 1.9367 0.91569 2.55522 1.01535 3.20712C2.02147 9.78846 6.21154 13.9785 12.7929 14.9846C13.4448 15.0843 14.0633 14.6894 14.2887 14.0696L14.9126 12.3538C15.1639 11.6628 14.8572 10.8932 14.1996 10.5644L12.6678 9.7985C12.1105 9.51985 11.4374 9.62907 10.9968 10.0697L9.92513 11.1414C7.75378 10.4176 5.58243 8.24622 4.85864 6.07487L5.93034 5.00317Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <span class="dark-text fw-600">{{ oct_telephones }}</span>
+                                        </div>
+                                        <ul class="list-unstyled fsz-14 fw-500 mb-3 p-0 d-flex flex-column gap-1">
+                                            {% for oct_contact_telephone in oct_contact_telephones %}
+                                                <li>
+                                                    <a href="tel:{{ oct_contact_telephone|replace({" " : "", "-" : "", "(" : "", ")" : ""}) }}" class="light-link">{{ oct_contact_telephone }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    {% if main_contact_email is defined and main_contact_email %}
+                                        <div class="pr-dropdown-title d-flex align-items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+                                                <path d="M17 3.0001V11.0001C17 12.3256 15.9255 13.4001 14.6 13.4001H3.4C2.07452 13.4001 1 12.3256 1 11.0001V3.0001M17 3.0001C17 1.67461 15.9255 0.600098 14.6 0.600098H3.4C2.07452 0.600098 1 1.67461 1 3.0001M17 3.0001V3.25406C17 3.83757 16.6823 4.37481 16.1711 4.65601L10.1566 7.96396C9.43641 8.36007 8.56359 8.36007 7.8434 7.96396L1.82893 4.65601C1.31765 4.37481 1 3.83757 1 3.25406V3.0001" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <span class="dark-text fw-600">E-mail</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <a href="mailto:{{ main_contact_email }}" class="fsz-14 fw-500 light-link d-inline-block mb-3">{{ main_contact_email }}</a>
+                                        </div>
+                                    {% endif %}
+                                    {% if oct_promo_data.contact_open[oct_lang_id] is defined and oct_promo_data.contact_open[oct_lang_id] %}
+                                        <div class="pr-dropdown-title d-flex align-items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                <path d="M9.0002 6.2V9L10.6001 10.5999M17 9C17 13.4183 13.4183 17 9 17C4.58172 17 1 13.4183 1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <span class="dark-text fw-600">{{ oct_working_hours }}</span>
+                                        </div>
+                                        <div class="pr-dropdown-text secondary-text fsz-14 fw-400 mb-3">
+                                            {% set key = 0 %}
+                                            {% for contact_open in oct_contact_opens %}
+                                                {% if key > 0 %}<br>{% endif %}
+                                                {{ contact_open }}
+                                                {% set key = key + 1 %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                <!-- Socials here -->
+                                {% if oct_promo_data.socials is defined and oct_promo_data.socials is not empty %}
+                                    <div class="pr-dropdown-title d-flex align-items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                            <path d="M12.4208 3.43026C12.2684 3.2379 12.1032 3.05228 11.9255 2.87452C9.42613 0.375161 5.37387 0.375161 2.87452 2.87452C0.811352 4.93768 0.451286 8.05901 1.79432 10.4915L1.30477 12.5306C1.16532 13.1114 1.68857 13.6347 2.26943 13.4952L3.52059 13.1948M15.477 8.12304C13.4462 6.09232 10.1538 6.09232 8.12305 8.12304C6.09232 10.1538 6.09232 13.4462 8.12305 15.477C9.79937 17.1533 12.3354 17.4458 14.3119 16.3546L16.3653 16.8476C16.6557 16.9173 16.9173 16.6557 16.8476 16.3653L16.3546 14.3119C17.4458 12.3354 17.1533 9.79937 15.477 8.12304Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="dark-text fw-600">{{ text_socials_contact }}</span>
+                                    </div>
+                                    <div class="d-flex gap-4 mb-3 fsz-12 fw-500">
+                                        <div class="pr-messengers d-flex flex-column">
+                                            {% for social in oct_promo_data.socials %}
+                                                <span class="d-flex align-items-center gap-1">
+                                                    <span class="pr-messengers-icon">
+                                                        <i class="{{ social.icone }}"></i>
+                                                    </span>
+                                                    <a rel="noopener noreferrer" href="{{ (social.link == "#" or social.link is empty) ? 'javascript:;' : social.link }}" class="light-link" aria-label="{{ social.title }}" title="{{ social.title }}" target="_blank">
+                                                        {{ social.title }}
+                                                    </a>
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <a href="{{ contact_link }}" class="button button-primary">{{ oct_go_contact_text }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if oct_popup_call_phone_status is defined and oct_popup_call_phone_status %}
+                        <span class="light-link fw-600 fsz-12 d-none d-lg-inline call-phone-link" onclick="octPopupCallPhone();">{{ oct_call_phone }}</span>
+                    {% endif %}
+                </div>
+                {% if oct_promo_data.header_lang is defined or oct_promo_data.header_cur is defined %}
+                    {% if oct_promo_data.header_lang is defined %}
+                        {{ language }}
+                    {% endif %}
+                    {% if oct_promo_data.header_cur is defined %}
+                        {{ currency }}
+                    {% endif %}
+                {% endif %}
+                {% if oct_promo_data.dark_theme is defined %}
+                    <div class="theme-switcher-wrapper order-0 order-lg-1 position-relative">
+                        <button type="button" class="theme-switcher no-btn" aria-label="Switch theme" data-theme-toggle="light" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                <path d="M9 0.5C9 -0.0522848 8.55229 -0.5 8 -0.5C7.44772 -0.5 7 -0.0522848 7 0.5H9ZM7 1.7C7 2.25228 7.44772 2.7 8 2.7C8.55229 2.7 9 2.25228 9 1.7H7ZM9 15.3C9 14.7477 8.55229 14.3 8 14.3C7.44772 14.3 7 14.7477 7 15.3H9ZM7 16.5C7 17.0523 7.44772 17.5 8 17.5C8.55229 17.5 9 17.0523 9 16.5H7ZM14.364 3.55025C14.7545 3.15973 14.7545 2.52656 14.364 2.13604C13.9734 1.74551 13.3403 1.74551 12.9497 2.13604L14.364 3.55025ZM12.1012 2.98457C11.7107 3.37509 11.7107 4.00826 12.1012 4.39878C12.4917 4.78931 13.1249 4.7893 13.5154 4.39878L12.1012 2.98457ZM3.89878 14.0154C4.28931 13.6249 4.28931 12.9917 3.89878 12.6012C3.50826 12.2107 2.87509 12.2107 2.48457 12.6012L3.89878 14.0154ZM1.63604 13.4497C1.24551 13.8403 1.24551 14.4734 1.63604 14.864C2.02656 15.2545 2.65973 15.2545 3.05025 14.864L1.63604 13.4497ZM3.05025 2.13604C2.65973 1.74551 2.02656 1.74551 1.63604 2.13604C1.24551 2.52656 1.24551 3.15973 1.63604 3.55025L3.05025 2.13604ZM2.48457 4.39878C2.87509 4.7893 3.50826 4.7893 3.89878 4.39878C4.2893 4.00826 4.2893 3.37509 3.89878 2.98457L2.48457 4.39878ZM13.5154 12.6012C13.1249 12.2107 12.4917 12.2107 12.1012 12.6012C11.7107 12.9917 11.7107 13.6249 12.1012 14.0154L13.5154 12.6012ZM12.9497 14.864C13.3403 15.2545 13.9734 15.2545 14.364 14.864C14.7545 14.4734 14.7545 13.8403 14.364 13.4497L12.9497 14.864ZM0 7.5C-0.552285 7.5 -1 7.94772 -1 8.5C-1 9.05229 -0.552285 9.5 0 9.5V7.5ZM1.2 9.5C1.75228 9.5 2.2 9.05229 2.2 8.5C2.2 7.94772 1.75228 7.5 1.2 7.5V9.5ZM14.8 7.5C14.2477 7.5 13.8 7.94772 13.8 8.5C13.8 9.05229 14.2477 9.5 14.8 9.5V7.5ZM16 9.5C16.5523 9.5 17 9.05229 17 8.5C17 7.94772 16.5523 7.5 16 7.5V9.5ZM7 0.5V1.7H9V0.5H7ZM7 15.3V16.5H9V15.3H7ZM12.9497 2.13604L12.1012 2.98457L13.5154 4.39878L14.364 3.55025L12.9497 2.13604ZM2.48457 12.6012L1.63604 13.4497L3.05025 14.864L3.89878 14.0154L2.48457 12.6012ZM1.63604 3.55025L2.48457 4.39878L3.89878 2.98457L3.05025 2.13604L1.63604 3.55025ZM12.1012 14.0154L12.9497 14.864L14.364 13.4497L13.5154 12.6012L12.1012 14.0154ZM0 9.5H1.2V7.5H0V9.5ZM14.8 9.5H16V7.5H14.8V9.5ZM11 8.5C11 10.1569 9.65685 11.5 8 11.5V13.5C10.7614 13.5 13 11.2614 13 8.5H11ZM8 11.5C6.34315 11.5 5 10.1569 5 8.5H3C3 11.2614 5.23858 13.5 8 13.5V11.5ZM5 8.5C5 6.84315 6.34315 5.5 8 5.5V3.5C5.23858 3.5 3 5.73858 3 8.5H5ZM8 5.5C9.65685 5.5 11 6.84315 11 8.5H13C13 5.73858 10.7614 3.5 8 3.5V5.5Z" fill="var(--pr-yellow-color)"></path>
+                            </svg>
+                        </button>
+                        <button type="button" class="theme-switcher no-btn" aria-label="Switch theme" data-theme-toggle="dark" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                                <path d="M8.59697 16.9455C8.20314 16.9455 7.80524 16.9176 7.40403 16.8601C3.80302 16.3465 0.98965 13.4921 0.561368 9.91903C0.348048 8.13863 0.718076 6.3935 1.63289 4.87236C3.08839 2.45117 5.76227 0.947266 8.61174 0.947266C8.99818 0.948086 9.32636 1.17618 9.45682 1.52816C9.58891 1.88342 9.488 2.27313 9.20002 2.52091C7.90533 3.6351 7.32609 5.3113 7.65181 7.00392C8.02922 8.97139 9.6488 10.4753 11.6803 10.7469C12.9085 10.9102 14.0908 10.6353 15.0926 9.94775C15.4068 9.73361 15.8105 9.73526 16.1198 9.95268C16.4283 10.1685 16.567 10.5434 16.4742 10.9069C15.5529 14.5087 12.2808 16.9447 8.59697 16.9455ZM7.75189 2.23212C5.66053 2.49549 3.77264 3.69993 2.68717 5.50659C1.91593 6.79061 1.60252 8.26581 1.78302 9.77218C2.14485 12.7931 4.52748 15.2061 7.57715 15.6418C10.8131 16.1029 13.8701 14.3175 15.0187 11.4106C13.9456 11.9324 12.7305 12.1294 11.5154 11.9677C8.95798 11.6264 6.91913 9.72457 6.44162 7.23693C6.09211 5.40975 6.57781 3.59819 7.75189 2.23212ZM2.16043 5.18907H2.16864H2.16043Z" fill="var(--pr-black-color)"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <script>
+                        function updateThemeButtonsVisibility() {
+                            const currentTheme = document.documentElement.className.includes('dark-theme') ? 'dark' : 'light';
+                            const lightButtons = document.querySelectorAll('[data-theme-toggle="light"]');
+                            const darkButtons = document.querySelectorAll('[data-theme-toggle="dark"]');
+                            
+                            if (currentTheme === 'dark') {
+                                lightButtons.forEach(btn => btn.style.display = 'none');
+                                darkButtons.forEach(btn => btn.style.display = 'flex');
+                            } else {
+                                lightButtons.forEach(btn => btn.style.display = 'flex');
+                                darkButtons.forEach(btn => btn.style.display = 'none');
+                            }
+                        }
+
+                        updateThemeButtonsVisibility();
+
+                        document.addEventListener('DOMContentLoaded', () => {
+                            switchTheme();
+                            
+                            const themeButtons = document.querySelectorAll('[data-theme-toggle]');
+                            themeButtons.forEach(button => {
+                                button.addEventListener('click', () => {
+                                    setTimeout(updateThemeButtonsVisibility, 50);
+                                });
+                            });
+                        });
+                    </script>
+                {% endif %}
+                <button type="button" class="pr-mobile-menu-close button-close d-lg-none br-8 order-2" aria-label="Close mobile menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M1 1L13 13M13 1L1 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="pr-mobile-menu-content d-lg-none bg-grey p-3 overflow-y-auto position-relative">
+        <div class="pr-mobile-menu-content-buttons-wrapper position-relative content-block br-16 p-0 overflow-hidden mb-3">
+            <div class="pr-mobile-menu-content-buttons d-flex align-items-center w-100 overflow-x-auto py-3">
+                <button type="button" class="pr-header-open-mobile-search no-btn d-flex d-md-none flex-column align-items-center gap-2 px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                            <path d="M1.5 17L5.36057 13.1394M17.5 8.11111C17.5 12.0385 14.3162 15.2222 10.3889 15.2222C6.46153 15.2222 3.27778 12.0385 3.27778 8.11111C3.27778 4.18375 6.46153 1 10.3889 1C14.3162 1 17.5 4.18375 17.5 8.11111Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="dark-text fsz-12 fw-500">{{ text_search }}</span>
+                </button>
+                {% if oct_popup_cart_status is defined and oct_popup_cart_status %}
+                <button type="button" class="no-btn d-flex flex-column align-items-center gap-2 px-3" onclick="octSidebarCart();">
+                {% else %}
+                <button type="button" class="no-btn d-flex flex-column align-items-center gap-2 px-3" onclick="location = '{{ cart }}';">
+                {% endif %}
+                    <span class="position-relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                            <path d="M16.303 13.801H7.893C6.73784 13.801 5.74649 12.9783 5.53361 11.8429L3.74501 2.30371C3.60309 1.54679 2.94219 0.998291 2.17208 0.998291H1.8999M7.10101 16.6016C7.10101 16.8226 6.92189 17.0017 6.70092 17.0017C6.47996 17.0017 6.30084 16.8226 6.30084 16.6016M7.10101 16.6016C7.10101 16.3807 6.92189 16.2015 6.70092 16.2015C6.47996 16.2015 6.30084 16.3807 6.30084 16.6016M7.10101 16.6016H6.30084M15.9029 16.6016C15.9029 16.8226 15.7238 17.0017 15.5028 17.0017C15.2818 17.0017 15.1027 16.8226 15.1027 16.6016M15.9029 16.6016C15.9029 16.3807 15.7238 16.2015 15.5028 16.2015C15.2818 16.2015 15.1027 16.3807 15.1027 16.6016M15.9029 16.6016H15.1027M3.80031 2.59863H16.2992C17.2783 2.59863 18.0278 3.46986 17.8816 4.43792L17.1567 9.23894C17.0385 10.0216 16.3658 10.6003 15.5743 10.6003H5.30063L3.80031 2.59863Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="pr-header-buttons-item-count pr-header-buttons-item-count-cart position-absolute">{{ cart_total }}</span>
+                    </span>
+                    <span class="dark-text fsz-12 fw-500">{{ oct_cart }}</span>
+                </button>
+                {% if oct_promo_data.header_account is defined %}
+                    {% if logged %}
+                        <a href="{{ login }}" class="no-btn d-flex flex-column align-items-center gap-2 px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M1.88867 16.2381C1.88867 13.7134 3.93537 11.6667 6.4601 11.6667H11.5395C14.0642 11.6667 16.1109 13.7134 16.1109 16.2381C16.1109 16.6589 15.7698 17 15.349 17H2.65058C2.22979 17 1.88867 16.6589 1.88867 16.2381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M12.7776 4.77778C12.7776 6.86419 11.0862 8.55556 8.99978 8.55556C6.91337 8.55556 5.22201 6.86419 5.22201 4.77778C5.22201 2.69137 6.91337 1 8.99978 1C11.0862 1 12.7776 2.69137 12.7776 4.77778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            <span class="dark-text fsz-12 fw-500">{{ oct_account }}</span>
+                        </a>
+                    {% else %}
+                        <button type="button" class="no-btn d-flex flex-column align-items-center gap-2 px-3" onclick="octPopupLogin();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M1.88867 16.2381C1.88867 13.7134 3.93537 11.6667 6.4601 11.6667H11.5395C14.0642 11.6667 16.1109 13.7134 16.1109 16.2381C16.1109 16.6589 15.7698 17 15.349 17H2.65058C2.22979 17 1.88867 16.6589 1.88867 16.2381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M12.7776 4.77778C12.7776 6.86419 11.0862 8.55556 8.99978 8.55556C6.91337 8.55556 5.22201 6.86419 5.22201 4.77778C5.22201 2.69137 6.91337 1 8.99978 1C11.0862 1 12.7776 2.69137 12.7776 4.77778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            <span class="dark-text fsz-12 fw-500">{{ oct_account }}</span>
+                        </button>
+                    {% endif %}
+                {% endif %}
+                {% if product_views_count %}
+                    <button type="button" class="no-btn d-flex flex-column align-items-center gap-2 px-3" data-sidebar="viewed">
+                        <span class="position-relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="18" viewBox="0 0 23 18" fill="none">
+                                <path d="M21.0772 8.39517C21.2418 8.78595 21.2418 9.21405 21.0772 9.60483C20.2919 11.4688 17.4361 17 11.198 17C4.95881 17 2.10638 11.4669 1.3228 9.60386C1.15868 9.21367 1.15868 8.78634 1.3228 8.39614C2.10638 6.53313 4.95881 1 11.198 1C17.4361 1 20.2919 6.53122 21.0772 8.39517Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M15.2005 9C15.2005 11.2091 13.4096 13 11.2005 13C8.99133 13 7.20047 11.2091 7.20047 9C7.20047 6.79086 8.99133 5 11.2005 5C13.4096 5 15.2005 6.79086 15.2005 9Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span class="pr-header-buttons-item-count position-absolute">{{ viewed_total }}</span>
+                        </span>
+                        <span class="dark-text fsz-12 fw-500">{{ oct_sidebar_views }}</span>
+                    </button>
+                {% endif %}
+                <a href="{{ wishlist }}" class="pr-wishlist-btn no-btn d-flex flex-column align-items-center gap-2 px-3">
+                    <span class="position-relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="19" viewBox="0 0 22 19" fill="none">
+                            <path d="M11.0013 4.84301L10.9999 4.84019M10.9999 4.84019C10.5285 3.86381 9.36871 1.5 6.39007 1.5C3.8405 1.5 1.49652 4.1502 1.59063 7.03594C1.6542 9.18014 3.09635 10.9345 4.79027 12.5914C6.47739 14.2416 8.06091 15.7312 9.20677 16.794C10.2221 17.7357 11.7802 17.7353 12.7952 16.7933C13.9413 15.7296 15.5248 14.2393 17.2096 12.5914C18.9035 10.9345 20.3457 9.18014 20.4092 7.03594C20.5033 4.1502 18.1594 1.5 15.6098 1.5C12.6312 1.5 11.4713 3.86381 10.9999 4.84019ZM10.9999 4.84019L10.9986 4.84301" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="pr-header-buttons-item-count pr-header-buttons-item-count-wishlist position-absolute">{{ wishlist_total }}</span>
+                    </span>
+                    <span class="dark-text fsz-12 fw-500">{{ oct_wishlist_text }}</span>
+                </a>
+                <a href="{{ compare_link }}" class="pr-compare-btn no-btn d-flex flex-column align-items-center gap-2 px-3">
+                    <span class="position-relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 17 19" fill="none">
+                            <path d="M1.30005 15.1H13.3C14.6255 15.1 15.7 14.0255 15.7 12.7V10.3M1.30005 15.1L3.70005 12.7M1.30005 15.1L3.70005 17.5M15.7 3.9H3.70005C2.37457 3.9 1.30005 4.97452 1.30005 6.3L1.30005 8.7M15.7 3.9L13.3 6.3M15.7 3.9L13.3 1.5" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="pr-header-buttons-item-count pr-header-buttons-item-count-compare position-absolute">{{ compare_total }}</span>
+                    </span>
+                    <span class="dark-text fsz-12 fw-500">{{ oct_compare }}</span>
+                </a>
+            </div>
+        </div>
+        <div class="pr-mobile-menu-content-catalog content-block br-12{% if horizontal_menu %} pb-0 mb-3{% endif %}">
+            <button type="button" class="button button-primary gap-2 w-100 fsz-14" data-sidebar="catalog">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="#FFFDFF" stroke-width="1.3">
+                    <rect x="2" y="2" width="6" height="6" transform="rotate(-10 5 5)" rx="1" ry="1"></rect>
+                    <rect x="12" y="2" width="6" height="6" rx="1" ry="1"></rect>
+                    <rect x="2" y="12" width="6" height="6" rx="1" ry="1"></rect>
+                    <rect x="12" y="12" width="6" height="6" rx="1" ry="1"></rect>
+                </svg> 
+                {{ oct_menu_catalog }}
+            </button>
+            {% if horizontal_menu %}
+                <div class="pr-mobile-menu-content-catalog-horizontal"></div>
+            {% endif %}
+        </div>
+        {% if header_informations is defined and header_informations is not empty %}
+            <div class="pr-mobile-menu-content-links content-block br-16">
+                <div class="pr-mobile-menu-content-links d-flex flex-column gap-3 fsz-12 fw-600">
+                    {% for header_link in header_informations %}
+                        <a href="{{ header_link.href }}" class="light-link">{{ header_link.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+<header class="pr-header sticky-top{% if horizontal_menu %} with-categories-menu{% endif %}">
+    <div class="container-xl">
+        <div class="pr-header-box d-flex align-items-center">
+            <button type="button" class="pr-header-mobile-menu-button no-btn d-flex flex-column gap-2 align-items-center d-lg-none" aria-label="Menu">
+                <span class="pr-header-mobile-menu-icon">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+                <span class="pr-header-mobile-menu-text fsz-12 dark-text fw-500 lh-sm d-none d-md-block">{{ oct_menu }}</span>
+            </button>
+            {% if logo %}
+                <div id="logo">
+                    {% if oct_promo_data.dark_theme is defined and dark_logo %}
+                        <style>
+                            :root {
+                                --logo-light: url('{{ logo }}');
+                                --logo-dark: url('{{ dark_logo }}');
+                            }
+
+                            #logo img,
+                            .pr-footer-logo,
+                            .pr-mobile-menu-logo img {
+                                content: var(--logo-light);
+                                display: block;
+                                {% if logo_width is defined and logo_width %}width: {{ logo_width }}px;{% endif %}
+                                {% if logo_height is defined and logo_height %}height: {{ logo_height }}px;{% endif %}
+                                background-repeat: no-repeat;
+                                background-size: contain;
+                                background-position: center;
+                            }
+
+                            .dark-theme #logo img,
+                            .dark-theme .pr-footer-logo,
+                            .dark-theme .pr-mobile-menu-logo img {
+                                content: var(--logo-dark);
+                            }
+                        </style>
+                    {% endif %}
+                    {% if oct_home is defined and oct_home %}
+                        <span>
+                            <img src="{{ logo }}" title="{{ name }}" alt="{{ name }}"{% if logo_width is defined and logo_width %} width="{{ logo_width }}"{% endif %}{% if logo_height is defined and logo_height %} height="{{ logo_height }}"{% endif %} />
+                        </span>
+                    {% else %}
+                        <a href="{{ home }}" title="{{ name }}">
+                            <img src="{{ logo }}" alt="{{ name }}"{% if logo_width is defined and logo_width %} width="{{ logo_width }}"{% endif %}{% if logo_height is defined and logo_height %} height="{{ logo_height }}"{% endif %} />
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <h1><a href="{{ home }}">{{ name }}</a></h1>
+            {% endif %}
+            {% if menu %}
+                <button type="button" class="button button-primary gap-2 px-2 px-xl-4 d-none d-lg-flex" data-sidebar="catalog">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="#FFFDFF" stroke-width="1.3">
+                        <rect x="2" y="2" width="6" height="6" transform="rotate(-10 5 5)" rx="1" ry="1" />
+                        <rect x="12" y="2" width="6" height="6" rx="1" ry="1" />
+                        <rect x="2" y="12" width="6" height="6" rx="1" ry="1" />
+                        <rect x="12" y="12" width="6" height="6" rx="1" ry="1" />
+                    </svg> 
+                    {{ oct_menu_catalog }}
+                </button>
+            {% endif %}
+            {{ search }}
+            <div class="pr-header-buttons d-flex align-items-center ms-auto ms-lg-0">
+                {% if oct_promo_data.dark_theme is defined %}
+                    <div class="theme-switcher-wrapper order-0 order-lg-1 position-relative d-lg-none me-3">
+                        <button type="button" class="theme-switcher no-btn" aria-label="Switch theme" data-theme-toggle="light" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                <path d="M9 0.5C9 -0.0522848 8.55229 -0.5 8 -0.5C7.44772 -0.5 7 -0.0522848 7 0.5H9ZM7 1.7C7 2.25228 7.44772 2.7 8 2.7C8.55229 2.7 9 2.25228 9 1.7H7ZM9 15.3C9 14.7477 8.55229 14.3 8 14.3C7.44772 14.3 7 14.7477 7 15.3H9ZM7 16.5C7 17.0523 7.44772 17.5 8 17.5C8.55229 17.5 9 17.0523 9 16.5H7ZM14.364 3.55025C14.7545 3.15973 14.7545 2.52656 14.364 2.13604C13.9734 1.74551 13.3403 1.74551 12.9497 2.13604L14.364 3.55025ZM12.1012 2.98457C11.7107 3.37509 11.7107 4.00826 12.1012 4.39878C12.4917 4.78931 13.1249 4.7893 13.5154 4.39878L12.1012 2.98457ZM3.89878 14.0154C4.28931 13.6249 4.28931 12.9917 3.89878 12.6012C3.50826 12.2107 2.87509 12.2107 2.48457 12.6012L3.89878 14.0154ZM1.63604 13.4497C1.24551 13.8403 1.24551 14.4734 1.63604 14.864C2.02656 15.2545 2.65973 15.2545 3.05025 14.864L1.63604 13.4497ZM3.05025 2.13604C2.65973 1.74551 2.02656 1.74551 1.63604 2.13604C1.24551 2.52656 1.24551 3.15973 1.63604 3.55025L3.05025 2.13604ZM2.48457 4.39878C2.87509 4.7893 3.50826 4.7893 3.89878 4.39878C4.2893 4.00826 4.2893 3.37509 3.89878 2.98457L2.48457 4.39878ZM13.5154 12.6012C13.1249 12.2107 12.4917 12.2107 12.1012 12.6012C11.7107 12.9917 11.7107 13.6249 12.1012 14.0154L13.5154 12.6012ZM12.9497 14.864C13.3403 15.2545 13.9734 15.2545 14.364 14.864C14.7545 14.4734 14.7545 13.8403 14.364 13.4497L12.9497 14.864ZM0 7.5C-0.552285 7.5 -1 7.94772 -1 8.5C-1 9.05229 -0.552285 9.5 0 9.5V7.5ZM1.2 9.5C1.75228 9.5 2.2 9.05229 2.2 8.5C2.2 7.94772 1.75228 7.5 1.2 7.5V9.5ZM14.8 7.5C14.2477 7.5 13.8 7.94772 13.8 8.5C13.8 9.05229 14.2477 9.5 14.8 9.5V7.5ZM16 9.5C16.5523 9.5 17 9.05229 17 8.5C17 7.94772 16.5523 7.5 16 7.5V9.5ZM7 0.5V1.7H9V0.5H7ZM7 15.3V16.5H9V15.3H7ZM12.9497 2.13604L12.1012 2.98457L13.5154 4.39878L14.364 3.55025L12.9497 2.13604ZM2.48457 12.6012L1.63604 13.4497L3.05025 14.864L3.89878 14.0154L2.48457 12.6012ZM1.63604 3.55025L2.48457 4.39878L3.89878 2.98457L3.05025 2.13604L1.63604 3.55025ZM12.1012 14.0154L12.9497 14.864L14.364 13.4497L13.5154 12.6012L12.1012 14.0154ZM0 9.5H1.2V7.5H0V9.5ZM14.8 9.5H16V7.5H14.8V9.5ZM11 8.5C11 10.1569 9.65685 11.5 8 11.5V13.5C10.7614 13.5 13 11.2614 13 8.5H11ZM8 11.5C6.34315 11.5 5 10.1569 5 8.5H3C3 11.2614 5.23858 13.5 8 13.5V11.5ZM5 8.5C5 6.84315 6.34315 5.5 8 5.5V3.5C5.23858 3.5 3 5.73858 3 8.5H5ZM8 5.5C9.65685 5.5 11 6.84315 11 8.5H13C13 5.73858 10.7614 3.5 8 3.5V5.5Z" fill="var(--pr-yellow-color)"></path>
+                            </svg>
+                        </button>
+                        <button type="button" class="theme-switcher no-btn" aria-label="Switch theme" data-theme-toggle="dark" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                                <path d="M8.59697 16.9455C8.20314 16.9455 7.80524 16.9176 7.40403 16.8601C3.80302 16.3465 0.98965 13.4921 0.561368 9.91903C0.348048 8.13863 0.718076 6.3935 1.63289 4.87236C3.08839 2.45117 5.76227 0.947266 8.61174 0.947266C8.99818 0.948086 9.32636 1.17618 9.45682 1.52816C9.58891 1.88342 9.488 2.27313 9.20002 2.52091C7.90533 3.6351 7.32609 5.3113 7.65181 7.00392C8.02922 8.97139 9.6488 10.4753 11.6803 10.7469C12.9085 10.9102 14.0908 10.6353 15.0926 9.94775C15.4068 9.73361 15.8105 9.73526 16.1198 9.95268C16.4283 10.1685 16.567 10.5434 16.4742 10.9069C15.5529 14.5087 12.2808 16.9447 8.59697 16.9455ZM7.75189 2.23212C5.66053 2.49549 3.77264 3.69993 2.68717 5.50659C1.91593 6.79061 1.60252 8.26581 1.78302 9.77218C2.14485 12.7931 4.52748 15.2061 7.57715 15.6418C10.8131 16.1029 13.8701 14.3175 15.0187 11.4106C13.9456 11.9324 12.7305 12.1294 11.5154 11.9677C8.95798 11.6264 6.91913 9.72457 6.44162 7.23693C6.09211 5.40975 6.57781 3.59819 7.75189 2.23212ZM2.16043 5.18907H2.16864H2.16043Z" fill="var(--pr-black-color)"></path>
+                            </svg>
+                        </button>
+                        <script>
+                            function updateThemeButtonsVisibility() {
+                                const currentTheme = document.documentElement.className.includes('dark-theme') ? 'dark' : 'light';
+                                const lightButtons = document.querySelectorAll('[data-theme-toggle="light"]');
+                                const darkButtons = document.querySelectorAll('[data-theme-toggle="dark"]');
+                                
+                                if (currentTheme === 'dark') {
+                                    lightButtons.forEach(btn => btn.style.display = 'none');
+                                    darkButtons.forEach(btn => btn.style.display = 'flex');
+                                } else {
+                                    lightButtons.forEach(btn => btn.style.display = 'flex');
+                                    darkButtons.forEach(btn => btn.style.display = 'none');
+                                }
+                            }
+
+                            updateThemeButtonsVisibility();
+
+                            document.addEventListener('DOMContentLoaded', () => {
+                                switchTheme();
+                                
+                                const themeButtons = document.querySelectorAll('[data-theme-toggle]');
+                                themeButtons.forEach(button => {
+                                    button.addEventListener('click', () => {
+                                        setTimeout(updateThemeButtonsVisibility, 50);
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                {% endif %}
+                <button type="button" class="pr-header-open-mobile-search no-btn d-md-none me-3" aria-label="Open search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                        <path d="M1.77783 17L5.63841 13.1394M17.7778 8.11111C17.7778 12.0385 14.5941 15.2222 10.6667 15.2222C6.73936 15.2222 3.55561 12.0385 3.55561 8.11111C3.55561 4.18375 6.73936 1 10.6667 1C14.5941 1 17.7778 4.18375 17.7778 8.11111Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                {% if oct_promo_data.header_account is defined %}
+                    {% if logged %}
+                        <div class="pr-dropdown-box position-relative">
+                            <button type="button" class="pr-dropdown-toggle pr-header-open-account no-btn d-md-none me-3" aria-label="Open account">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
+                                    <path d="M1.77783 16.2381C1.77783 13.7134 3.82453 11.6667 6.34926 11.6667H11.4286C13.9534 11.6667 16.0001 13.7134 16.0001 16.2381C16.0001 16.6589 15.6589 17 15.2382 17H2.53974C2.11895 17 1.77783 16.6589 1.77783 16.2381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12.6667 4.77778C12.6667 6.86419 10.9754 8.55556 8.88894 8.55556C6.80253 8.55556 5.11117 6.86419 5.11117 4.77778C5.11117 2.69137 6.80253 1 8.88894 1C10.9754 1 12.6667 2.69137 12.6667 4.77778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="pr-dropdown-toggle pr-header-buttons-item pr-header-buttons-item-account no-btn pe-3 fsz-12 dark-text fw-500 d-none d-lg-flex flex-column gap-2 align-items-center border-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                                    <path d="M1.88892 16.7381C1.88892 14.2134 3.93561 12.1667 6.46034 12.1667H11.5397C14.0644 12.1667 16.1111 14.2134 16.1111 16.7381C16.1111 17.1589 15.77 17.5 15.3492 17.5H2.65082C2.23003 17.5 1.88892 17.1589 1.88892 16.7381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12.7778 5.27778C12.7778 7.36419 11.0864 9.05556 9.00003 9.05556C6.91362 9.05556 5.22225 7.36419 5.22225 5.27778C5.22225 3.19137 6.91362 1.5 9.00003 1.5C11.0864 1.5 12.7778 3.19137 12.7778 5.27778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                {{ oct_account}}
+                            </button>
+                            <div class="pr-dropdown pr-header-user-logged content-block br-8 d-flex flex-column gap-2 fsz-14 p-3">
+                                <div class="d-flex align-items-center">
+                                    <svg width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.3384 7.17401L11.5884 0.424011C11.4826 0.318261 11.3397 0.259766 11.1901 0.259766H4.44012C1.86387 0.259766 0.502625 1.62102 0.502625 4.19727V17.6973C0.502625 20.2735 1.86387 21.6348 4.44012 21.6348H14.5651C17.1414 21.6348 18.5026 20.2735 18.5026 17.6973V7.57227C18.5026 7.42264 18.443 7.27976 18.3384 7.17401ZM11.7526 2.18014L16.5822 7.00977H14.5651C12.62 7.00977 11.7526 6.14239 11.7526 4.19727V2.18014ZM14.5651 20.5098H4.44012C2.495 20.5098 1.62762 19.6424 1.62762 17.6973V4.19727C1.62762 2.25214 2.495 1.38477 4.44012 1.38477H10.6276V4.19727C10.6276 6.77352 11.9889 8.13477 14.5651 8.13477H17.3776V17.6973C17.3776 19.6424 16.5103 20.5098 14.5651 20.5098ZM9.50262 13.5348C10.8369 13.5348 11.9213 12.4503 11.9213 11.116C11.9213 9.78176 10.8357 8.69727 9.50262 8.69727C8.1695 8.69727 7.08398 9.78176 7.08398 11.116C7.08398 12.4503 8.16837 13.5348 9.50262 13.5348ZM9.50262 9.82227C10.217 9.82227 10.7963 10.4028 10.7963 11.116C10.7963 11.8293 10.2159 12.4098 9.50262 12.4098C8.78937 12.4098 8.20898 11.8293 8.20898 11.116C8.20898 10.4028 8.78825 9.82227 9.50262 9.82227ZM13.4401 17.9189V18.2598C13.4401 18.5703 13.1881 18.8223 12.8776 18.8223C12.5671 18.8223 12.3151 18.5703 12.3151 18.2598V17.9189C12.3151 16.9998 11.6605 16.0098 10.225 16.0098H8.78137C7.34587 16.0098 6.69122 16.9998 6.69122 17.9189V18.2598C6.69122 18.5703 6.43922 18.8223 6.12872 18.8223C5.81822 18.8223 5.56622 18.5703 5.56622 18.2598V17.9189C5.56622 16.4103 6.66975 14.8848 8.78137 14.8848H10.225C12.3366 14.8848 13.4401 16.4103 13.4401 17.9189Z" fill="var(--pr-black-color)"></path>
+                                    </svg>
+                                    <div class="pr-header-user-logged-info ms-3">
+                                        <div class="pr-header-user-logged-name fw-500 fsz-14 dark-text">{{ customerName }} {{ customerLastName }}</div>
+                                        <div class="pr-header-user-logged-email light-text fsz-12 secondary-text">{{ customerEmail }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ login }}" class="button button-primary button-small py-3 py-md-2 fsz-14">
+                                    <span class="button-text">{{ oct_to_account }}</span>
+                                </a>
+                                <a href="{{ logout }}" class="button button-secondary button-small py-3 py-md-2 fsz-14">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12" fill="none">
+                                        <path d="M8.30811 9.07714V9.69255C8.30811 11.1806 7.48838 12.0004 6.0003 12.0004H2.30781C0.819734 12.0004 0 11.1806 0 9.69255V2.30756C0 0.819489 0.819734 -0.000244141 2.30781 -0.000244141H6.0003C7.48838 -0.000244141 8.30811 0.819489 8.30811 2.30756V2.92298C8.30811 3.17776 8.10133 3.38454 7.84655 3.38454C7.59177 3.38454 7.38499 3.17776 7.38499 2.92298V2.30756C7.38499 1.33705 6.97081 0.922879 6.0003 0.922879H2.30781C1.3373 0.922879 0.923124 1.33705 0.923124 2.30756V9.69255C0.923124 10.6631 1.3373 11.0772 2.30781 11.0772H6.0003C6.97081 11.0772 7.38499 10.6631 7.38499 9.69255V9.07714C7.38499 8.82235 7.59177 8.61557 7.84655 8.61557C8.10133 8.61557 8.30811 8.82235 8.30811 9.07714ZM11.9649 6.17667C12.0117 6.06405 12.0117 5.93666 11.9649 5.82404C11.9415 5.76742 11.9077 5.71635 11.8652 5.67389L10.019 3.82764C9.83867 3.64733 9.54632 3.64733 9.36601 3.82764C9.18569 4.00796 9.18569 4.30028 9.36601 4.4806L10.4245 5.53912H3.53864C3.28386 5.53912 3.07708 5.7459 3.07708 6.00068C3.07708 6.25546 3.28386 6.46224 3.53864 6.46224H10.4245L9.36601 7.52076C9.18569 7.70107 9.18569 7.9934 9.36601 8.17371C9.45586 8.26357 9.57404 8.30911 9.6922 8.30911C9.81036 8.30911 9.9285 8.26418 10.0183 8.17371L11.8646 6.32747C11.9077 6.28377 11.9415 6.23268 11.9649 6.17667Z" fill="#00A8E8"></path>
+                                    </svg>
+                                    <span class="button-text">{{ text_logout }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <button type="button" class="pr-header-open-account no-btn d-md-none me-3" aria-label="Open account" onclick="octPopupLogin();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
+                                <path d="M1.77783 16.2381C1.77783 13.7134 3.82453 11.6667 6.34926 11.6667H11.4286C13.9534 11.6667 16.0001 13.7134 16.0001 16.2381C16.0001 16.6589 15.6589 17 15.2382 17H2.53974C2.11895 17 1.77783 16.6589 1.77783 16.2381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12.6667 4.77778C12.6667 6.86419 10.9754 8.55556 8.88894 8.55556C6.80253 8.55556 5.11117 6.86419 5.11117 4.77778C5.11117 2.69137 6.80253 1 8.88894 1C10.9754 1 12.6667 2.69137 12.6667 4.77778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="pr-header-buttons-item pr-header-buttons-item-account no-btn pe-3 fsz-12 dark-text fw-500 d-none d-lg-flex flex-column gap-2 align-items-center" onclick="octPopupLogin();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                                <path d="M1.88892 16.7381C1.88892 14.2134 3.93561 12.1667 6.46034 12.1667H11.5397C14.0644 12.1667 16.1111 14.2134 16.1111 16.7381C16.1111 17.1589 15.77 17.5 15.3492 17.5H2.65082C2.23003 17.5 1.88892 17.1589 1.88892 16.7381Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12.7778 5.27778C12.7778 7.36419 11.0864 9.05556 9.00003 9.05556C6.91362 9.05556 5.22225 7.36419 5.22225 5.27778C5.22225 3.19137 6.91362 1.5 9.00003 1.5C11.0864 1.5 12.7778 3.19137 12.7778 5.27778Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            {{ oct_account}}
+                        </button>
+                    {% endif %}
+                {% endif %}
+                {% if product_views_count %}
+                    <button type="button" class="pr-header-buttons-item pr-header-buttons-item-viewed no-btn px-3 fsz-12 dark-text fw-500 d-none d-lg-flex flex-column gap-2 align-items-center" data-sidebar="viewed">
+                        <span class="pr-header-buttons-item-icon position-relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="19" viewBox="0 0 22 19" fill="none">
+                                <path d="M20.877 8.89517C21.0416 9.28595 21.0416 9.71405 20.877 10.1048C20.0917 11.9688 17.2359 17.5 10.9978 17.5C4.75862 17.5 1.90619 11.9669 1.1226 10.1039C0.958482 9.71367 0.958482 9.28634 1.1226 8.89614C1.90619 7.03313 4.75862 1.5 10.9978 1.5C17.2359 1.5 20.0917 7.03122 20.877 8.89517Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15.0003 9.5C15.0003 11.7091 13.2094 13.5 11.0003 13.5C8.79114 13.5 7.00027 11.7091 7.00027 9.5C7.00027 7.29086 8.79114 5.5 11.0003 5.5C13.2094 5.5 15.0003 7.29086 15.0003 9.5Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="pr-header-buttons-item-count position-absolute">{{ viewed_total }}</span>
+                        </span>
+                        {{ oct_sidebar_views }}
+                    </button>
+                {% endif %}
+                <a href="{{ wishlist }}" {% if oct_promo_data.isbuttoninteractive is defined %}data-wishlist-ids="{{ wishlist_ids }}"{% endif %} data-wishlist-text="{{ wishlist_text }}" data-wishlist-text-in="{{ wishlist_text_in }}" class="pr-header-buttons-item pr-header-buttons-item-wishlist no-btn px-3 fsz-12 dark-text fw-500 d-none d-lg-flex flex-column gap-2 align-items-center">
+                    <div class="pr-header-buttons-item-icon position-relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="19" viewBox="0 0 22 19" fill="none">
+                            <path d="M11.0013 4.84301L10.9999 4.84019M10.9999 4.84019C10.5285 3.86381 9.36871 1.5 6.39007 1.5C3.8405 1.5 1.49652 4.1502 1.59063 7.03594C1.6542 9.18014 3.09635 10.9345 4.79027 12.5914C6.47739 14.2416 8.06091 15.7312 9.20677 16.794C10.2221 17.7357 11.7802 17.7353 12.7952 16.7933C13.9413 15.7296 15.5248 14.2393 17.2096 12.5914C18.9035 10.9345 20.3457 9.18014 20.4092 7.03594C20.5033 4.1502 18.1594 1.5 15.6098 1.5C12.6312 1.5 11.4713 3.86381 10.9999 4.84019ZM10.9999 4.84019L10.9986 4.84301" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="pr-header-buttons-item-count position-absolute">{{ wishlist_total }}</span>
+                    </div>
+                    {{ oct_wishlist_text }}
+                </a>
+                <a href="{{ compare_link }}" {% if oct_promo_data.isbuttoninteractive is defined %}data-compare-ids="{{ compare_ids }}"{% endif %} data-compare-text="{{ compare_text }}" data-compare-text-in="{{ compare_text_in }}" class="pr-header-buttons-item pr-header-buttons-item-compare no-btn px-3 fsz-12 dark-text fw-500 d-none d-lg-flex flex-column gap-2 align-items-center">
+                    <div class="pr-header-buttons-item-icon position-relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 17 19" fill="none">
+                            <path d="M1.30005 15.1H13.3C14.6255 15.1 15.7 14.0255 15.7 12.7V10.3M1.30005 15.1L3.70005 12.7M1.30005 15.1L3.70005 17.5M15.7 3.9H3.70005C2.37457 3.9 1.30005 4.97452 1.30005 6.3L1.30005 8.7M15.7 3.9L13.3 6.3M15.7 3.9L13.3 1.5" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="pr-header-buttons-item-count position-absolute">{{ compare_total }}</span>
+                    </div>
+                    {{ oct_compare }}
+                </a>
+                {{ cart }}
+            </div>
+        </div>
+        {% if horizontal_menu %}
+            <div class="pr-header-main-categories d-none d-lg-block">
+                {{ horizontal_menu }}
+            </div>
+        {% endif %}
+    </div>
+</header>
+{% if menu %}
+    {{ menu }}
+{% endif %}
+<div class="pr-mobile-bottom-nav position-fixed d-flex align-items-center justify-content-between gap-3 p-2 p-lg-0">
+    <button type="button" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-catalog d-lg-none" data-sidebar="catalog" aria-label="{{ oct_catalog }}" title="{{ oct_catalog }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="#121715" stroke-width="1.3">
+            <rect x="2" y="2" width="6" height="6" transform="rotate(-10 5 5)" rx="1" ry="1"></rect>
+            <rect x="12" y="2" width="6" height="6" rx="1" ry="1"></rect>
+            <rect x="2" y="12" width="6" height="6" rx="1" ry="1"></rect>
+            <rect x="12" y="12" width="6" height="6" rx="1" ry="1"></rect>
+        </svg>
+    </button>
+    {% if not oct_home %}
+        <a href="{{ home }}" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-home d-lg-none" aria-label="{{ oct_main_page_text }}" title="{{ oct_main_page_text }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M12.9231 16H9.4359V11.6926C9.4359 10.9008 8.79179 10.2568 8 10.2568C7.20821 10.2568 6.5641 10.9008 6.5641 11.6926V16H3.07692C1.09292 16 0 14.9071 0 12.9233V7.71337C0 5.97153 0.480814 5.48497 1.26522 4.83434L6.28676 0.624576C7.27876 -0.208192 8.72124 -0.208192 9.71324 0.624576L14.7348 4.83434C15.5192 5.48497 16 5.97235 16 7.71337V12.9233C16 14.9071 14.9071 16 12.9231 16ZM10.6667 14.7693H12.9231C14.217 14.7693 14.7692 14.2171 14.7692 12.9233V7.71337C14.7692 6.46134 14.5624 6.28988 13.9495 5.7812L8.92308 1.56732C8.3881 1.11935 7.6119 1.11935 7.07692 1.56732L2.05048 5.7812C1.43756 6.28988 1.23077 6.46134 1.23077 7.71337V12.9233C1.23077 14.2171 1.78297 14.7693 3.07692 14.7693H5.33333V11.6926C5.33333 10.2223 6.52964 9.02608 8 9.02608C9.47036 9.02608 10.6667 10.2223 10.6667 11.6926V14.7693Z" fill="#121715"/>
+            </svg>
+        </a>
+    {% endif %}
+    {% if product_views_count %}
+        <div class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-viewed position-relative d-lg-none" data-sidebar="viewed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="18" viewBox="0 0 22 18" fill="none">
+                <path d="M20.9107 8.39517C21.0753 8.78595 21.0753 9.21405 20.9107 9.60483C20.1254 11.4688 17.2696 17 11.0315 17C4.79231 17 1.93988 11.4669 1.15629 9.60386C0.992174 9.21367 0.992174 8.78634 1.15629 8.39614C1.93988 6.53313 4.79231 1 11.0315 1C17.2696 1 20.1254 6.53122 20.9107 8.39517Z" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15.034 9C15.034 11.2091 13.2431 13 11.034 13C8.82483 13 7.03397 11.2091 7.03397 9C7.03397 6.79086 8.82483 5 11.034 5C13.2431 5 15.034 6.79086 15.034 9Z" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="pr-mobile-bottom-nav-item-badge d-grid place-items-center position-absolute">{{ viewed_total }}</div>
+        </div>
+    {% endif %}
+    <a href="{{ wishlist_link }}" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-wishlist position-relative d-lg-none" aria-label="{{ oct_wishlist }}" title="{{ oct_wishlist }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
+            <path d="M10.8011 4.34301L10.7997 4.34019M10.7997 4.34019C10.3283 3.36381 9.16851 1 6.18987 1C3.6403 1 1.29633 3.6502 1.39044 6.53594C1.454 8.68014 2.89616 10.4345 4.59008 12.0914C6.27719 13.7416 7.86071 15.2312 9.00658 16.294C10.0219 17.2357 11.58 17.2353 12.595 16.2933C13.7411 15.2296 15.3246 13.7393 17.0094 12.0914C18.7033 10.4345 20.1455 8.68014 20.209 6.53594C20.3031 3.6502 17.9592 1 15.4096 1C12.431 1 11.2711 3.36381 10.7997 4.34019ZM10.7997 4.34019L10.7984 4.34301" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="pr-mobile-bottom-nav-item-badge d-grid place-items-center position-absolute">{{ wishlist_total }}</div>
+    </a>
+    <a href="{{ compare_link }}" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-compare position-relative d-lg-none" aria-label="{{ oct_compare }}" title="{{ oct_compare }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18" fill="none">
+            <path d="M1.06641 14.6H13.0664C14.3919 14.6 15.4664 13.5255 15.4664 12.2V9.8M1.06641 14.6L3.46641 12.2M1.06641 14.6L3.46641 17M15.4664 3.4H3.46641C2.14092 3.4 1.06641 4.47452 1.06641 5.8L1.06641 8.2M15.4664 3.4L13.0664 5.8M15.4664 3.4L13.0664 1" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="pr-mobile-bottom-nav-item-badge d-grid place-items-center position-absolute">{{ compare_total }}</div>
+    </a>
+    {% if oct_feedback_data is defined and oct_feedback_data %}
+        <button type="button" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-contacts fixed_contact_button d-lg-none" aria-label="{{ oct_menu_contacts }}" title="{{ oct_menu_contacts }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                <path d="M8.5 16.5H10.9C13.1091 16.5 14.9 14.7091 14.9 12.5M2.1 6.9C2.1 3.36538 4.96538 0.5 8.5 0.5C12.0346 0.5 14.9 3.36538 14.9 6.9M14.1 12.5H13.3C12.8582 12.5 12.5 12.1418 12.5 11.7V7.7C12.5 7.25817 12.8582 6.9 13.3 6.9H14.1C15.4255 6.9 16.5 7.97452 16.5 9.3V10.1C16.5 11.4255 15.4255 12.5 14.1 12.5ZM2.9 12.5H3.7C4.14183 12.5 4.5 12.1418 4.5 11.7V7.7C4.5 7.25817 4.14183 6.9 3.7 6.9H2.9C1.57452 6.9 0.5 7.97452 0.5 9.3V10.1C0.5 11.4255 1.57452 12.5 2.9 12.5Z" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    {% else %}
+        <a href="{{ contact_link }}" class="pr-mobile-bottom-nav-item pr-mobile-bottom-nav-item-contacts fixed_contact_button d-lg-none" aria-label="{{ oct_menu_contacts }}" title="{{ oct_menu_contacts }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                <path d="M8.5 16.5H10.9C13.1091 16.5 14.9 14.7091 14.9 12.5M2.1 6.9C2.1 3.36538 4.96538 0.5 8.5 0.5C12.0346 0.5 14.9 3.36538 14.9 6.9M14.1 12.5H13.3C12.8582 12.5 12.5 12.1418 12.5 11.7V7.7C12.5 7.25817 12.8582 6.9 13.3 6.9H14.1C15.4255 6.9 16.5 7.97452 16.5 9.3V10.1C16.5 11.4255 15.4255 12.5 14.1 12.5ZM2.9 12.5H3.7C4.14183 12.5 4.5 12.1418 4.5 11.7V7.7C4.5 7.25817 4.14183 6.9 3.7 6.9H2.9C1.57452 6.9 0.5 7.97452 0.5 9.3V10.1C0.5 11.4255 1.57452 12.5 2.9 12.5Z" stroke="#121715" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+    {% endif %}
+    {% if oct_promo_data.footer_totop is defined and oct_promo_data.footer_totop %}
+        <button id="back-top" class="rounded-circle p-0 m-0" type="button" aria-label="Back to Top">
+            <svg width="36" height="36">
+                <circle cx="18" cy="18" r="16" stroke="#d7e7ff" stroke-width="2" fill="transparent" />
+                <circle class="progress-ring__circle" cx="18" cy="18" r="16" stroke="#121715" stroke-width="2" fill="transparent" stroke-dasharray="138.2" stroke-dashoffset="138.2" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16" fill="none">
+                <path d="M11.7801 7.02978C11.6338 7.17604 11.4418 7.24952 11.2498 7.24952C11.0578 7.24952 10.8658 7.17604 10.7196 7.02978L6.74997 3.05983V14.75C6.74997 15.164 6.41474 15.5 6 15.5C5.58526 15.5 5.25003 15.164 5.25003 14.75V3.05983L1.28044 7.02978C0.9872 7.32305 0.513169 7.32305 0.21993 7.02978C-0.0733099 6.73652 -0.0733099 6.26244 0.21993 5.96918L5.46901 0.719606C5.53876 0.649852 5.6212 0.595068 5.71345 0.556816C5.89644 0.481061 6.10356 0.481061 6.28655 0.556816C6.3788 0.595068 6.46124 0.649852 6.53099 0.719606L11.7801 5.96918C12.0733 6.26244 12.0733 6.73652 11.7801 7.02978Z" fill="#121715"/>
+            </svg>
+        </button>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                scrollToTopButton();
+            });
+        </script>
+    {% endif %}
+</div>

@@ -1,0 +1,193 @@
+{{ header }}
+<div id="information-contact" class="container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+        <ul class="breadcrumb pr-breadcrumb fsz-12">
+        {% for breadcrumb in breadcrumbs %}
+            {% if loop.last %}
+                <li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+            {% else %}
+                <li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </nav>
+	<main>
+		{% if oct_microdata is defined and oct_microdata %}
+			<script type="application/ld+json">
+				{{ oct_microdata | raw }}
+			</script>
+		{% endif %}
+		{% if oct_locations_microdata is defined and oct_locations_microdata %}
+			{{ oct_locations_microdata | raw }}
+		{% endif %}
+		<div class="pr-page-title mb-3 mb-xl-4">
+			<h1 class="m-0 lh-sm">{{ heading_title }}</h1>
+		</div>
+		<div class="content-top-box">{{ content_top }}</div>
+		<div class="row g-3 g-xxl-4 pr-contact-us">
+			<div id="content" class="col-xl-8">
+				<div class="pr-contact-us-items d-flex gap-3 flex-xxl-wrap">
+					{% if oct_contact_image is defined or contact_address is defined or contact_open is defined or contact_telephone is defined or contact_map is defined %}
+						<div class="content-block d-flex flex-column pr-contact-us-item{% if not oct_locations %} w-100{% endif %}">
+							<div class="pr-contact-us-item-title fsz-24 text-center fw-700">{{ store }}</div>
+							<div class="grey-text fw-500 text-center">{{ text_online_store }}</div>
+							<hr>
+							<div class="d-flex flex-column flex-md-row gap-4 align-items-start">
+								{% if oct_contact_image is defined and oct_contact_image %}
+									<img src="{{ oct_contact_image }}" alt="{{ store }}" class="pr-contact-us-item-image br-8 img-fluid d-block mx-auto mx-md-0" width="380" height="290">
+								{% endif %}
+								<div class="pr-contact-us-item-info d-flex flex-column justify-content-between">
+									<div class="d-flex">
+										{% if contact_telephone is defined and contact_telephone %}
+											<div class="pr-contact-us-item-info-item d-flex flex-column">
+												<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+													{{ oct_telephones }}
+												</div>
+												<ul class="list-unstyled p-0 fsz-12">
+													{% for telephone in contact_telephone %}
+														<li class="mb-2"><a href="tel:{{ telephone|replace({" " : "", "-" : "", "(" : "", ")" : ""}) }}" class="blue-link">{{ telephone }}</a></li>
+													{% endfor %}
+												</ul>
+											</div>
+										{% endif %}
+										{% if contact_open is defined and contact_open %}
+											<div class="pr-contact-us-item-info-item d-flex flex-column">
+												<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+													{{ oct_working_hours }}
+												</div>
+												<ul class="list-unstyled p-0 fsz-12 grey-text">
+													{% for open in contact_open %}
+														<li>{{ open }}</li>
+													{% endfor %}
+												</ul>
+											</div>
+										{% endif %}
+									</div>
+									{% if contact_socials is defined and contact_socials %}
+										<div class="pr-contact-us-item-info-socials d-flex pt-3">
+											{% for contact_social in contact_socials %}
+												<a rel="noopener noreferrer" href="{% if contact_social.link %}{{ contact_social.link }}{% else %}javascript:;{% endif %}" class="pr-contact-us-item-info-socials-item d-grid bg-grey br-8" target="_blank">
+													<i class="{{ contact_social.icone }}"></i>
+												</a>
+											{% endfor %}
+										</div>
+									{% endif %}
+								</div>
+							</div>
+							<hr>
+							{% if contact_address is defined and contact_address %}
+								<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+	                                {{ oct_our_address }}
+	                            </div>
+								<div class="fsz-14">{{ contact_address }}</div>
+							{% endif %}
+							{% if contact_map is defined %}
+								<div class="br-8 mt-4 overflow-hidden">
+									{{ contact_map }}
+								</div>
+							{% endif %}
+						</div>
+					{% endif %}
+					{% if oct_locations %}
+						{% for location in oct_locations %}
+							<div class="content-block d-flex flex-column pr-contact-us-item">
+								<div class="pr-contact-us-item-title fsz-24 text-center fw-700">{{ location.title }}</div>
+								{% if location.link is defined and location.link %}
+									<a href="{{ location.link }}" class="blue-link fw-500 text-center">{{ location.link|replace({"https://" : "", "http://" : ""}) }}</a>
+								{% endif %}
+								<hr>
+								<div class="d-flex flex-column flex-md-row gap-4 align-items-start">
+									{% if location.thumb is defined and location.thumb %}
+										<img src="{{ location.thumb }}" alt="{{ location.title }}" class="pr-contact-us-item-image br-8 img-fluid d-block mx-auto mx-md-0" width="380" height="290" loading="lazy">
+									{% endif %}
+									<div class="pr-contact-us-item-info d-flex flex-column justify-content-between">
+										<div class="d-flex">
+											{% if location.phone is defined and location.phone %}
+												<div class="pr-contact-us-item-info-item d-flex flex-column">
+													<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+														{{ oct_telephones }}
+													</div>
+													<ul class="list-unstyled p-0 fsz-12">
+														{% for phone in location.phone %}
+															<li class="mb-2">
+																<a href="tel:{{ phone|replace({" " : "", "-" : "", "(" : "", ")" : ""}) }}" class="blue-link">{{ phone }}</a>
+															</li>
+														{% endfor %}
+													</ul>
+												</div>
+											{% endif %}
+											{% if location.open is defined and location.open %}
+												<div class="pr-contact-us-item-info-item d-flex flex-column">
+													<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+														{{ oct_working_hours }}
+													</div>
+													<ul class="list-unstyled p-0 fsz-12 grey-text">
+														{% for open in location.open %}
+															<li>{{ open }}</li>
+														{% endfor %}
+													</ul>
+												</div>
+											{% endif %}
+										</div>
+									</div>
+								</div>
+								<hr>
+								{% if location.address is defined and location.address %}
+									<div class="pr-contact-us-item-info-title fsz-14 fw-700">
+										{{ oct_our_address }}
+									</div>
+									<div class="fsz-14">{{ location.address }}</div>
+								{% endif %}
+								{% if location.map is defined %}
+									<div class="br-8 mt-4 overflow-hidden">
+										{{ location.map }}
+									</div>
+								{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="col-xl-4">
+				<div class="pr-sticky-column content-block d-flex flex-column gap-3 sticky-top z-1">
+					<div class="pr-contact-us-item-title fsz-24 text-center fw-700 mb-0">{{ text_question_contact }}</div>
+					<div class="grey-text fw-500 text-center">{{ text_write_contact }}</div>
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+						{% if (error_name) or (error_email) or (error_enquiry) or (error_oct_terms) %}
+							<script>
+								prNotify('danger', '{% if error_name %}{{ error_name }}{% endif %}{% if error_email %}<br />{{ error_email }}{% endif %}{% if error_enquiry %}<br />{{ error_enquiry }}{% endif %}{% if error_oct_terms %}<br />{{ error_oct_terms }}{% endif %}');
+							</script>
+						{% endif %}
+						<div class="form-floating">
+							<input type="text" name="name" value="{{ name }}" id="inputContactsName" class="form-control{% if error_name %} error_style{% endif %}" placeholder="{{ entry_name }}" aria-label="Username" aria-describedby="usernameContactsIcon" inputmode="text">
+							<label for="inputContactsName" class="secondary-text fsz-14 px-3">{{ entry_name }}</label>
+						</div>
+						<div class="form-floating">
+							<input type="email" name="email" value="{{ email }}" id="inputContactsEmail" class="form-control{% if error_email %} error_style{% endif %}" placeholder="{{ entry_email }}" aria-label="email" aria-describedby="emailContactsIcon" inputmode="email">
+							<label for="inputContactsEmail" class="secondary-text fsz-14 px-3">{{ entry_email }}</label>
+						</div>
+						<textarea name="enquiry" id="inputContactsComment" class="form-control{% if error_enquiry %} error_style{% endif %}" rows="6" placeholder="{{ entry_enquiry }}">{{ enquiry }}</textarea>
+						{{ captcha }}
+						{% if text_terms %}
+							<div class="form-check d-flex align-items-center gap-2">
+								<input id="agreeCheaperCheck" type="checkbox" class="form-check-input{% if error_oct_terms %} error_style{% endif %}" name="scales"{% if scales_in is defined and scales_in %} checked{% endif %}>
+								<label class="form-check-label d-flex align-items-center fsz-12 dark-text" for="agreeCheaperCheck">{{ text_terms }}</label>
+							</div>
+						{% endif %}
+						<button class="button button-primary button-large w-100" type="submit">{{ button_submit }}</button>
+					</form>
+					<script>
+						window.addEventListener('DOMContentLoaded', () => {
+							stickyColumn();
+						});
+						$("#inputContactsName, #inputContactsEmail, #inputContactsComment, #agreeCheaperCheck").on("change paste keyup", function() {
+							$(this).removeClass('error_style');
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+		{{ content_bottom }}
+	</main>
+</div>
+{{ footer }}

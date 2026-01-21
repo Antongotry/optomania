@@ -1,0 +1,189 @@
+{{ header }}
+<div id="product-compare" class="container-fluid container-xl flex-grow-1">
+	<nav aria-label="breadcrumb">
+		<ul class="breadcrumb pr-breadcrumb fsz-12">
+		{% for breadcrumb in breadcrumbs %}
+			{% if loop.last %}
+				<li class="breadcrumb-item pr-breadcrumb-item">{{ breadcrumb.text }}</li>
+			{% else %}
+				<li class="breadcrumb-item pr-breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+    </nav>
+    <main>
+        <div class="row">
+            <div class="col-12 pr-page-title pb-3">
+                <h1>{{ heading_title }}</h1>
+            </div>
+        </div>
+        <div class="content-top-box">{{ content_top }}</div>
+        {% if success %}
+            <script>
+                prNotify('success', '{{ success }}');
+            </script>
+        {% endif %}
+        <divclass="row g-3">
+            {{ column_left }}
+            {% if column_left and column_right %}
+                {% set class = 'col-xl-6 is-cols' %}
+            {% elseif column_left or column_right %}
+                {% set class = 'col-xl-9' %}
+            {% else %}
+                {% set class = 'col-xl-12 no-col' %}
+            {% endif %}
+            <div id="content"  class="{{ class }}">
+                <div class="content-block fsz-14 p-0 overflow-hidden">
+                    {% if products %}
+                        <div class="table-responsive">
+                            <table class="table pr-table-compare">
+                                <tbody>
+                                    <tr class="pr-table-compare-head">
+                                        <td class="fw-700">{{ text_name }}</td>
+                                        {% for product in products %}
+                                            <td class="pr-table-product-name text-center">
+                                                <a href="{{ product.href }}" class="fw-500 secondary-text">{{ product.name }}</a>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-img">
+                                        <td class="align-middle">{{ text_image }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">
+                                                {% if product.thumb %}
+                                                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}"/>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-price">
+                                        <td>{{ text_price }}</td>
+                                        {% for product in products %}
+                                            <td class="pr-module-price text-center">
+                                                {% if product.price %}
+                                                    {% if not product.special %}
+                                                        <span class="fw-700 fsz-16 secondary-text">{{ product.price }}</span>
+                                                    {% else %}
+                                                        <span class="text-decoration-line-through fsz-12 light-text me-2">{{ product.price }}</span>
+                                                        <span class="fw-700 fsz-16 secondary-text">{{ product.special }}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-model">
+                                        <td>{{ text_model }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">{{ product.model }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-producer">
+                                        <td>{{ text_manufacturer }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">{{ product.manufacturer }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-available">
+                                        <td>{{ text_availability }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">{{ product.availability }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% if review_status %}
+                                        <tr class="pr-table-compare-rating">
+                                            <td class="align-middle">{{ text_rating }}</td>
+                                            {% for product in products %}
+                                                <td class="text-center">
+                                                    <div class="pr-module-rating d-inline-flex align-items-center justify-content-center mb-1 br-4">
+                                                        <div class="pr-module-rating-stars d-flex align-items-center">
+                                                            {% for i in 1..5 %}
+                                                                {% if product.rating < i %}
+                                                                    <span class="pr-module-rating-star"></span>
+                                                                {% else %}
+                                                                    <span class="pr-module-rating-star pr-module-rating-star-is"></span>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="fsz-12 light-text">{{ product.reviews }}</div>
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                    <tr class="pr-table-compare-weight">
+                                        <td>{{ text_weight }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">{{ product.weight }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr class="pr-table-compare-sizes">
+                                        <td>{{ text_dimension }}</td>
+                                        {% for product in products %}
+                                            <td class="text-center">{{ product.length }}
+                                                x
+                                                {{ product.width }}
+                                                x
+                                                {{ product.height }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% for attribute_group in attribute_groups %}
+                                        <tr>
+                                            <td class="pr-table-compare-title" colspan="{{ products|length + 1 }}">
+                                                <strong>{{ attribute_group.name }}</strong>
+                                            </td>
+                                        </tr>
+                                        {% for key, attribute in attribute_group.attribute %}
+                                            <tr>
+                                                <td>{{ attribute.name }}</td>
+                                                {% for product in products %}
+                                                    {% if product.attribute[key] %}
+                                                        <td class="text-center">
+                                                            {{ product.attribute[key] }}</td>
+                                                    {% else %}
+                                                        <td></td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    <tr class="pr-table-compare-btn">
+                                        <td></td>
+                                        {% for product in products %}
+                                            <td class="text-center">
+                                                <div class="d-inline-flex flex-column align-items-stretch">
+                                                    {% if product.can_buy %}
+                                                        <button type="button" aria-label="To cart" class="button button-primary mb-3" onclick="cart.add('{{ product.product_id }}', '1');">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                                                                <path d="M15.9031 13.801H7.4931C6.33794 13.801 5.34659 12.9783 5.1337 11.8429L3.34511 2.30371C3.20318 1.54679 2.54228 0.998291 1.77218 0.998291H1.5M6.70111 16.6016C6.70111 16.8226 6.52198 17.0017 6.30102 17.0017C6.08006 17.0017 5.90094 16.8226 5.90094 16.6016M6.70111 16.6016C6.70111 16.3807 6.52198 16.2015 6.30102 16.2015C6.08006 16.2015 5.90094 16.3807 5.90094 16.6016M6.70111 16.6016H5.90094M15.503 16.6016C15.503 16.8226 15.3239 17.0017 15.1029 17.0017C14.8819 17.0017 14.7028 16.8226 14.7028 16.6016M15.503 16.6016C15.503 16.3807 15.3239 16.2015 15.1029 16.2015C14.8819 16.2015 14.7028 16.3807 14.7028 16.6016M15.503 16.6016H14.7028M3.4004 2.59863H15.8993C16.8784 2.59863 17.6279 3.46986 17.4817 4.43792L16.7568 9.23894C16.6386 10.0216 15.9659 10.6003 15.1744 10.6003H4.90072L3.4004 2.59863Z" stroke="#FFFDFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            </svg>
+                                                            <span class="button-text">{{ button_cart }}</span>
+                                                        </button>
+                                                    {% else %}
+                                                        {% if oct_stock_notifier_status and oct_stock_notifier_status %}
+                                                            <button type="button" onclick="octStockNotifier('{{ product.product_id }}');" aria-label="Notice" class="button button-primary mb-3">{{ button_oct_stock_notifier }}</button>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                                                    <a href="{{ product.remove }}" class="button button-danger text-decoration-none">{{ button_remove }}</a>
+        	                                    </div>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                       <div class="p-3">
+                            <p class="fw-500 dark-text">{{ text_empty }}</p>
+                            <div class="buttons mt-3">
+                                <a href="{{ continue }}" class="button button-primary br-7 d-inline-flex">{{ button_continue }}</a>
+                            </div>
+                       </div>
+                    {% endif %}
+            </div>
+            {{ column_right }}
+        </div>
+        {{ content_bottom }}
+    </main>
+</div>
+{{ footer }}

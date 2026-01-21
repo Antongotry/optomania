@@ -1,0 +1,36 @@
+<div class="content-block pr-smart-checkout-payment h-100 payment-method">
+	<div class="pr-smart-checkout-title fsz-20 fw-700 dark-text d-flex align-items-center gap-3 pb-4 mb-4 border-bottom">
+		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="18" viewbox="0 0 22 18" fill="none">
+			<path d="M1 5H21M5 10H8M4 17H18C19.6569 17 21 15.6569 21 14V4C21 2.34315 19.6569 1 18 1H4C2.34315 1 1 2.34315 1 4V14C1 15.6569 2.34315 17 4 17Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+		{{ heading_payment_block }}
+	</div>
+	{% if error_warning %}
+		<div class="alert alert-warning fsz-14">
+			<i class="fa fa-exclamation-circle"></i>
+			{{ error_warning }}
+		</div>
+	{% endif %}
+	{% if payment_methods %}
+		<p class="fsz-14 grey-text mb-3">{{ text_payment_method }}</p>
+		<div class="pr-smart-checkout-check d-flex flex-column gap-2">
+		    {% for payment_method in payment_methods %}
+    			<div class="pr-smart-checkout-check-item p-3 br-8 payment-method-check-item" {% if payment_method.hidden %} style="opacity: 0.5; cursor: not-allowed;" data-bs-toggle="tooltip" title="({{ payment_method.title }}) - {{ error_method_not_allowed }}" {% elseif payment_method.min_total_disabled %} style="opacity: 0.5; cursor: not-allowed;" data-bs-toggle="tooltip" title="({{ payment_method.title }}) - {{ error_payment_min_total|replace({'%s': payment_method.min_total_amount}) }}" {% endif %}>
+    				<div class="form-check">
+    					<label class="form-check-label d-flex align-items-center gap-2 fsz-14">
+    						<input type="radio" class="form-check-input" name="payment_method" value="{{ payment_method.code }}" title="{{ payment_method.title }}" {% if payment_method.hidden or payment_method.min_total_disabled %} disabled {% endif %} {% if payment_method.code == payment_code %} checked="checked" {% endif %}/>
+    						{% if payment_method.image %}
+    							<img src="{{ payment_method.image }}" alt="{{ payment_method.title }}" width="20" height="20"/>
+    						{% endif %}
+    						{{ payment_method.title }}
+    					</label>
+    				</div>
+    				{% if payment_method.description %}
+    					<p class="fsz-12 grey-text mt-2">{{ payment_method.description }}</p>
+    				{% endif %}
+    				<div id="payment-fields-{{ payment_method.code }}" class="payment-fields-container"></div>
+    			</div>
+    		{% endfor %}
+		</div>
+	{% endif %}
+</div>

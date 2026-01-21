@@ -1,0 +1,99 @@
+<div class="pr-store-reviews-items d-flex flex-column gap-3" id="comments-container">
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="pr-store-reviews-item br-12 d-flex flex-column gap-3 p-3 p-xl-4">
+                <div class="pr-store-reviews-item-author d-flex gap-3 align-items-center pb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="35" viewBox="0 0 34 35" fill="none">
+                        <path d="M3.16183 32.429L4.92054 29.9668C6.9228 27.1636 10.1556 25.5 13.6004 25.5H20.3996C23.8444 25.5 27.0772 27.1636 29.0795 29.9668L30.8382 32.429M6.33333 1.5H27.6667C30.6122 1.5 33 3.88781 33 6.83333V28.1667C33 31.1122 30.6122 33.5 27.6667 33.5H6.33333C3.38782 33.5 1 31.1122 1 28.1667V6.83333C1 3.88782 3.38781 1.5 6.33333 1.5ZM22.7778 13.5C22.7778 16.691 20.191 19.2778 17 19.2778C13.809 19.2778 11.2222 16.691 11.2222 13.5C11.2222 10.309 13.809 7.72222 17 7.72222C20.191 7.72222 22.7778 10.309 22.7778 13.5Z" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <div class="pr-store-reviews-item-author-info d-flex flex-column">
+                        <div class="pr-store-reviews-item-author-name dark-text fsz-14 fw-600">{{ comment.author }}</div>
+                        <div class="pr-store-reviews-item-date d-flex align-items-center gap-1 grey-text fsz-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                <path d="M1 5.16666H13M3.66667 1.16666V2.49999M10.3333 1.16666V2.49999M4 7.83332C4 8.01742 3.85076 8.16666 3.66667 8.16666C3.48257 8.16666 3.33333 8.01742 3.33333 7.83332M4 7.83332C4 7.64923 3.85076 7.49999 3.66667 7.49999C3.48257 7.49999 3.33333 7.64923 3.33333 7.83332M4 7.83332H3.33333M7.33333 7.83332C7.33333 8.01742 7.1841 8.16666 7 8.16666C6.81591 8.16666 6.66667 8.01742 6.66667 7.83332M7.33333 7.83332C7.33333 7.64923 7.1841 7.49999 7 7.49999C6.81591 7.49999 6.66667 7.64923 6.66667 7.83332M7.33333 7.83332H6.66667M10.6667 7.83332C10.6667 8.01742 10.5174 8.16666 10.3333 8.16666C10.1492 8.16666 10 8.01742 10 7.83332M10.6667 7.83332C10.6667 7.64923 10.5174 7.49999 10.3333 7.49999C10.1492 7.49999 10 7.64923 10 7.83332M10.6667 7.83332H10M4 11.1667C4 11.3508 3.85076 11.5 3.66667 11.5C3.48257 11.5 3.33333 11.3508 3.33333 11.1667M4 11.1667C4 10.9826 3.85076 10.8333 3.66667 10.8333C3.48257 10.8333 3.33333 10.9826 3.33333 11.1667M4 11.1667H3.33333M7.33333 11.1667C7.33333 11.3508 7.1841 11.5 7 11.5C6.81591 11.5 6.66667 11.3508 6.66667 11.1667M7.33333 11.1667C7.33333 10.9826 7.1841 10.8333 7 10.8333C6.81591 10.8333 6.66667 10.9826 6.66667 11.1667M7.33333 11.1667H6.66667M10.6667 11.1667C10.6667 11.3508 10.5174 11.5 10.3333 11.5C10.1492 11.5 10 11.3508 10 11.1667M10.6667 11.1667C10.6667 10.9826 10.5174 10.8333 10.3333 10.8333C10.1492 10.8333 10 10.9826 10 11.1667M10.6667 11.1667H10M3 13.8333H11C12.1046 13.8333 13 12.9379 13 11.8333V3.83332C13 2.72875 12.1046 1.83332 11 1.83332H3C1.89543 1.83332 1 2.72875 1 3.83332V11.8333C1 12.9379 1.89543 13.8333 3 13.8333Z" stroke="#9DA4AE" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            {{ comment.date_added }}
+                        </div>
+                    </div>
+                </div>
+                <div class="pr-store-reviews-item-text dark-text fsz-14">
+                    {{ comment.text }}
+                </div>
+                {% if comment.admin_text %}
+                    <hr class="my-0 border-top" />
+                    <div class="pr-store-reviews-item-answer p-3 bg-grey br-8 fsz-14">
+                        <div class="fw-600 mb-2">{{ text_admin_title }}</div>
+                        <div class="pr-store-reviews-item-answer-text">
+                            {{ comment.admin_text }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div id="comment-pagination" class="d-none" data-has-more="{{ has_more ? 'true' : 'false' }}" data-next-page="{{ next_page }}"></div>
+        {% if has_more %}
+            <div class="pt-3">
+                <button id="load-more-comments" class="button button-primary">{{ oct_show_more }}</button>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="dark-text fw-500 border-top pt-4">{{ entry_empty_comments }}</div>
+    {% endif %}
+</div>
+
+<script>
+function loadMoreComments() {
+    if (window.loadingMoreComments) return;
+    window.loadingMoreComments = true;
+    
+    var $pagination = $('#comment-pagination');
+    var hasMore = $pagination.attr('data-has-more');
+    var nextPage = $pagination.attr('data-next-page');
+    
+    if (hasMore === "false" || !nextPage) {
+        $('#load-more-comments').remove();
+        window.loadingMoreComments = false;
+        return;
+    }
+    
+    $.ajax({
+        url: 'index.php?route=octemplates/blog/oct_blogarticle/comment',
+        type: 'GET',
+        data: {
+            blogarticle_id: '{{ blogarticle_id }}',
+            page: nextPage
+        },
+        dataType: 'html',
+        beforeSend: function() {
+            $('#load-more-comments').prop('disabled', true);
+            masked('body', true);
+        },
+        complete: function() {
+            masked('body', false);
+        },
+        success: function(html) {
+            var $temp = $('<div>').html(html);
+
+            var $newComments = $temp.find('#comments-container').children().not('#comment-pagination, #load-more-comments').clone();
+
+            $('#comments-container').append($newComments);
+			$('#load-more-comments').remove();
+            
+            var $newPagination = $temp.find('#comment-pagination');
+            if ($newPagination.length) {
+                $('#comment-pagination').replaceWith($newPagination);
+            } 
+
+            window.loadingMoreComments = false;
+        },
+        error: function() {
+            window.loadingMoreComments = false;
+        }
+    });
+}
+
+$(document).on('click', '#load-more-comments', function(e) {
+    e.preventDefault();
+    loadMoreComments();
+});
+</script>

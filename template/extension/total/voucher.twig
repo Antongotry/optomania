@@ -1,0 +1,44 @@
+<div class="pr-cart-column-item pb-3 mb-3 border-bottom">
+    <div class="pr-cart-column-item-title d-flex align-items-center justify-content-between gap-3 dark-text fsz-14 fw-500">
+		{{ heading_title }}
+		<svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+			<path d="M1 1L6 6L11 1" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</div>
+    <div id="collapse-voucher" class="form-group pr-cart-column-item-block-group">
+		<label for="input-voucher" class="control-label fsz-12 grey-text mb-2 mt-3">{{ entry_voucher }}</label>
+		<input type="text" name="voucher" value="{{ voucher }}" placeholder="{{ entry_voucher }}" id="input-voucher" class="form-control fsz-12">
+		<button type="button" id="button-voucher" data-loading-text="{{ text_loading }}" class="button button-primary input-with-btn w-100 mt-3 fsz-12">{{ text_apply }}</button>
+		<script>
+		$('#button-voucher').on('click', function() {
+			$.ajax({
+				url: 'index.php?route=extension/total/voucher/voucher',
+				type: 'post',
+				data: 'voucher=' + encodeURIComponent($('input[name=\'voucher\']').val()),
+				dataType: 'json',
+				cache: false,
+				beforeSend: function() {
+					$('#button-voucher').button('loading');
+				},
+				complete: function() {
+					$('#button-voucher').button('reset');
+				},
+				success: function(json) {
+					$('.alert-dismissible').remove();
+
+					if (json['error']) {
+						prNotify('danger', json['error']);
+					}
+
+					if (json['redirect']) {
+						location = json['redirect'];
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		});
+		</script>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+{% if languages|length > 1 %}
+<div id="language" class="pr-dropdown-box position-relative order-1 order-lg-0">
+	<div class="pr-dropdown-toggle currency lanuage-currency br-8 bg-white primary-light-text d-flex gap-2 align-items-center py-1 px-2">
+		{% for language in languages %}
+			{% if language.code == code %}
+				<img src="{{ language.store_url }}catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" class="lang" width="16" height="11" />
+				{{ language.oct_template_code }}
+			{% endif %}
+		{% endfor %}
+		<svg class="pr-arrow-down" xmlns="http://www.w3.org/2000/svg" width="6" height="5" viewBox="0 0 6 5" fill="none">
+			<path d="M1 1.5L3 3.5L5 1.5" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</div>
+	<div class="pr-dropdown p-3 p-lg-0">
+		<form id="form-language" class="content-block br-8 d-flex flex-column gap-2 fsz-14 p-3" action="{{ action }}" method="post" enctype="multipart/form-data">
+			{% for language in languages %}
+				<button class="pr-dropdown-menu-item pr-dropdown-button no-btn br-8 w-100 primary-light-text d-flex align-items-center gap-2 language-select{% if language.code == code %} pr-dropdown-button-active{% endif %}" type="button" name="{{ language.code }}">
+					<span class="pr-dropdown-button-check"></span>
+					<img src="{{ language.store_url }}catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" width="16" height="11" />
+					<span>{{ language.name }}</span>
+				</button>
+			{% endfor %}
+			<input type="hidden" name="code" value="" />
+			<input type="hidden" name="redirect" value="{{ redirect }}" />
+		</form>
+	</div>
+</div>
+{% endif %}

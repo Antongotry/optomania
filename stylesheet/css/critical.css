@@ -1,0 +1,420 @@
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+    scroll-behavior: smooth;
+    width: 100vw
+}
+
+body {
+    font-family: var(--pr-main-font);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--pr-light-text-color);
+    background-color: var(--pr-body-bg-color);
+    margin: 0;
+    padding: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden
+}
+
+img {
+    border-style: none;
+}
+
+button,input,optgroup,select,textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0
+}
+
+button,input {
+    overflow: visible
+}
+
+button,select {
+    text-transform: none
+}
+
+[type=button],[type=reset],[type=submit],button {
+    -webkit-appearance: button
+}
+
+[type=checkbox],[type=radio] {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0
+}
+
+*,::after,::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+* {
+    outline: 0
+}
+
+h1,h2,h3,h4,h5,h6,li,ol,p,ul {
+    margin: 0
+}
+
+li,ul {
+    padding: 0
+}
+
+a,a:active,a:hover {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer
+}
+
+button {
+    cursor: pointer;
+    border: 0
+}
+
+a,button,div,form,input,p,span {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+form {
+    -webkit-margin-after: 0;
+    margin-block-end:0}
+
+.btn,.btn:hover,button,button:active,button:hover,input,input:active,input:hover {
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
+
+input[type=email],input[type=text],textarea {
+    -webkit-appearance: none
+}
+
+.content-block {
+    border: var(--pr-main-border);
+    background-color: var(--pr-white-color);
+    color: var(--pr-light-text-color);
+    padding: 1rem;
+    -webkit-transition: -webkit-box-shadow var(--pr-main-transition);
+    transition: -webkit-box-shadow var(--pr-main-transition);
+    transition: box-shadow var(--pr-main-transition);
+    transition: box-shadow var(--pr-main-transition),-webkit-box-shadow var(--pr-main-transition);
+    border-radius: .25rem
+}
+
+.blue-link {
+    color: var(--pr-links-color);
+    text-decoration: underline;
+    cursor: pointer
+}
+
+.light-text {
+    color: var(--pr-light-text-color)
+}
+
+.dark-text {
+    color: var(--pr-dark-text-color)
+}
+
+.secondary-text {
+    color: var(--pr-secondary-text-color)
+}
+
+.green-text {
+    color: var(--pr-green-color)
+}
+
+.red-text,.red-text:hover,.required {
+    color: var(--pr-red-color)
+}
+
+.red-bg {
+    background-color: var(--pr-red-color)
+}
+
+.content-border {
+    border: var(--pr-main-border)
+}
+
+.br-4 {
+    border-radius: .25rem
+}
+
+.br-8 {
+    border-radius: .5rem
+}
+
+.br-10 {
+    border-radius: .625rem
+}
+
+.br-12 {
+    border-radius: .75rem
+}
+
+.br-7 {
+    border-radius: .4375rem
+}
+
+.pr-dropdown {
+    top: 100%;
+    left: 0;
+    right: 0;
+    min-width: 200px;
+    opacity: 0;
+    z-index: -1;
+    margin-top: 1.5rem;
+    -webkit-transition: opacity var(--pr-main-transition) .1s,margin-top var(--pr-main-transition) .1s;
+    transition: opacity var(--pr-main-transition) .1s,margin-top var(--pr-main-transition) .1s;
+    visibility: hidden;
+    cursor: default;
+    -webkit-transform: translate(0,-100%);
+    -ms-transform: translate(0,-100%);
+    transform: translate(0,-100%)
+}
+
+.pr-dropdown-box {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex
+}
+
+.pr-dropdown-inner {
+    background: var(--pr-white-color);
+    -webkit-box-shadow: 0 2px 24px 0 rgba(37,38,39,.08);
+    box-shadow: 0 2px 24px 0 rgba(37,38,39,.08);
+    min-width: 290px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto
+}
+
+.pr-dropdown-toggle {
+    gap: .25rem;
+    cursor: pointer
+}
+
+.pr-dropdown-toggle span {
+    text-decoration: underline;
+    -webkit-transition: color var(--pr-main-transition);
+    transition: color var(--pr-main-transition)
+}
+
+.pr-dropdown-toggle svg path {
+    -webkit-transition: fill var(--pr-main-transition);
+    transition: fill var(--pr-main-transition)
+}
+
+.pr-dropdown-contacts-button svg {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 .75rem;
+    flex: 0 0 .75rem
+}
+
+.pr-dropdown-contacts-button svg path {
+    fill: var(--pr-green-color)
+}
+
+.pr-socials {
+    gap: .5rem
+}
+
+.pr-socials .button,.pr-socials button {
+    width: 2rem;
+    height: 2rem
+}
+
+.slick-dotted ul {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    -webkit-transform: translate(-50%,150%);
+    -ms-transform: translate(-50%,150%);
+    transform: translate(-50%,150%);
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: .5rem .75rem;
+    background: var(--pr-white-color);
+    border-radius: 7px
+}
+
+.slick-dotted ul li {
+    margin: 0 .25rem
+}
+
+.slick-dotted ul li button {
+    height: 8px;
+    width: 8px;
+    overflow: hidden;
+    border: none;
+    text-indent: -9999px;
+    font-size: 0;
+    border-radius: 100%;
+    background-color: var(--pr-light-text-color);
+    line-height: 1;
+    display: block;
+    padding: 2px
+}
+
+.slick-dotted ul li.slick-active button {
+    background-color: var(--pr-secondary-dark-color);
+    width: 10px;
+    height: 10px
+}
+
+.fw-300 {
+    font-weight: 300
+}
+
+.fw-400 {
+    font-weight: 400
+}
+
+.fw-500 {
+    font-weight: 500
+}
+
+.fw-700 {
+    font-weight: 700
+}
+
+.fsz-10 {
+    font-size: .625rem
+}
+
+.fsz-12 {
+    font-size: .75rem
+}
+
+.fsz-14 {
+    font-size: .875rem
+}
+
+.fsz-16 {
+    font-size: 1rem
+}
+
+.fsz-18 {
+    font-size: 1.125rem
+}
+
+.fsz-20 {
+    font-size: 1.25rem
+}
+
+.fsz-24 {
+    font-size: 1.5rem!important
+}
+
+#logo {
+    block-size: auto;
+}
+
+.pr-header {
+    background: var(--pr-white-color);
+    -webkit-box-shadow: var(--pr-medium-shadow);
+    box-shadow: var(--pr-medium-shadow);
+    z-index: 12300
+}
+
+.pr-header-left {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto
+}
+
+.pr-header-right>.button-transparent {
+    height: 20px;
+    display: grid;
+    place-items: center
+}
+
+.pr-header-right>.button-transparent>svg path {
+    -webkit-transition: fill var(--pr-main-transition);
+    transition: fill var(--pr-main-transition)
+}
+
+.pr-header-menu-button {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 1.25rem;
+    flex: 0 0 1.25rem
+}
+
+.pr-header-catalog-button {
+    border-width: 2px;
+    width: 100%
+}
+
+.pr-header-search {
+    position: fixed;
+    z-index: 2
+}
+
+@media (max-width: 767.98px) {
+    .pr-header-search {
+        left: 2.5rem;
+        right: 2.5rem;
+        top: .325rem;
+        -webkit-transform: translateX(100%);
+        -ms-transform: translateX(100%);
+        transform: translateX(100%);
+        -webkit-transition: -webkit-transform var(--pr-main-transition);
+        transition: -webkit-transform var(--pr-main-transition);
+        transition: transform var(--pr-main-transition);
+        transition: transform var(--pr-main-transition),-webkit-transform var(--pr-main-transition);
+        width: 0;
+        overflow: hidden
+    }
+}
+
+.pr-header-search .form-control {
+    padding: 1rem 1.75rem;
+    border: 2px solid var(--pr-border-color);
+    background: var(--pr-light-bg-color);
+    height: 2.25rem
+}
+
+.pr-header-search .form-control::-webkit-input-placeholder {
+    font-size: .75rem
+}
+
+.pr-header-search .form-control::placeholder {
+    font-size: .75rem
+}
+
+.pr-header-search-button,.pr-header-search-close {
+    position: absolute!important;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+
+.pr-header-search-button {
+    right: .5rem
+}
+
+.pr-header-search-button svg path {
+    -webkit-transition: fill var(--pr-main-transition);
+    transition: fill var(--pr-main-transition)
+}
+
+.pr-header-search-close {
+    left: .5rem
+}

@@ -1,0 +1,25 @@
+{% if oct_benefits %}
+<div id="pr-shop-advantages-{{ module }}" class="pr-advantage mt-1 row g-3">
+	{% set key = 0 %}
+	{% for oct_benefit in oct_benefits %}
+	{% set key = key + 1 %}
+		{% if oct_benefit.title[language_id] is defined and oct_benefit.title[language_id] %}
+			<div class="col-6 col-md-4 col-lg-2">
+				<div id="block{{ module }}-{{ key }}" class="pr-advantages-item content-block h-100">
+					<span class="pr-advantages-item-icon d-grid br-12 bg-grey p-1">
+						<img src="{{ oct_benefit.icon }}" alt="{{ oct_benefit.title[language_id] }}" width="30" height="30" loading="lazy">
+					</span>
+					{% if oct_benefit.link[language_id] is defined and oct_benefit.link[language_id] %}
+						<a href="{{ oct_benefit.link[language_id] }}" class="pr-advantages-item-title fw-700 dark-text mt-3 mb-2 lh-sm d-inline-block">{{ oct_benefit.title[language_id] }}</a>
+					{% else %}
+						<span class="pr-advantages-item-title fw-700 dark-text mt-3 mb-2 lh-sm d-block">{{ oct_benefit.title[language_id] }}</span>
+					{% endif %}
+					{% if oct_benefit.text[language_id] is defined and oct_benefit.text[language_id] %}
+						<span class="pr-advantages-item-description fsz-14 fw-500 grey-text lh-sm">{{ oct_benefit.text[language_id] }}</span>
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endif %}

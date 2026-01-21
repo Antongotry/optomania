@@ -1,0 +1,17 @@
+{% if informations %}
+    <div class="pr-column-categories pr-column-account d-flex flex-column content-block p-0 overflow-hidden">
+        <ul class="list-unstyled pr-column-categories-list p-0 d-flex flex-column">
+            {% for information in informations %}
+                <li class="pr-column-categories-list-item without-icon px-4 d-flex align-items-center gap-3">
+                    <a class="dark-link fw-500 fsz-14 lh-sm" href="{{ information.href }}">{{ information.title }}</a>
+                </li>
+            {% endfor %}
+            <li class="pr-column-categories-list-item without-icon px-4 d-flex align-items-center gap-3">
+                <a class="dark-link fw-500 fsz-14 lh-sm" href="{{ contact }}">{{ text_contact }}</a>
+            </li>
+            <li class="pr-column-categories-list-item without-icon px-4 d-flex align-items-center gap-3">
+                <a class="dark-link fw-500 fsz-14 lh-sm" href="{{ sitemap }}">{{ text_sitemap }}</a>
+            </li>
+        </ul>
+    </div>
+{% endif %}

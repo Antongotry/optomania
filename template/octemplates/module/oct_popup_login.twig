@@ -1,0 +1,659 @@
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-4 bg-grey">
+        <h5 class="modal-title fsz-20 fw-700 d-flex align-items-center justify-content-between dark-text" id="loginModalLabel">{{ heading_title }}</h5>
+        <button type="button" class="btn-close br-8 bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="dark-text pb-4 fw-500 text-center{% if not otp_module_status %} d-none{% endif %}">{{ text_choose_login }}</div>
+        <ul class="nav nav-tabs justify-content-center p-0 border-0 fsz-14{% if not otp_module_status %} d-none{% endif %}" id="loginTabs" role="tablist">
+          {% if otp_module_status %}
+            <li class="nav-item" role="presentation">
+              <button class="nav-link d-flex align-items-center justify-content-center gap-2 w-100 border-0 active" id="otp-login-tab" data-bs-toggle="tab" data-bs-target="#otp-login" type="button" role="tab"  aria-selected="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="22" viewBox="0 0 19 22" fill="none">
+                  <path d="M9.92926 1.53663C10.2014 1.58365 10.4601 1.40118 10.5071 1.12907C10.5541 0.856957 10.3716 0.598252 10.0995 0.551233L9.92926 1.53663ZM13 12.8975C13 12.6214 12.7761 12.3975 12.5 12.3975C12.2239 12.3975 12 12.6214 12 12.8975H13ZM7.5 18.5C7.77614 18.5 8 18.2761 8 18C8 17.7239 7.77614 17.5 7.5 17.5V18.5ZM5.5 17.5C5.22386 17.5 5 17.7239 5 18C5 18.2761 5.22386 18.5 5.5 18.5V17.5ZM13.25 5C13.25 5.27614 13.4739 5.5 13.75 5.5C14.0261 5.5 14.25 5.27614 14.25 5H13.25ZM16.75 5C16.75 5.27614 16.9739 5.5 17.25 5.5C17.5261 5.5 17.75 5.27614 17.75 5H16.75ZM13.25 5C13.25 5.27614 13.4739 5.5 13.75 5.5C14.0261 5.5 14.25 5.27614 14.25 5H13.25ZM16.75 5C16.75 5.27614 16.9739 5.5 17.25 5.5C17.5261 5.5 17.75 5.27614 17.75 5H16.75ZM3.5 1.5H9.5V0.5H3.5V1.5ZM9.5 20.5H3.5V21.5H9.5V20.5ZM1 18V4H0V18H1ZM3.5 20.5C2.11929 20.5 1 19.3807 1 18H0C0 19.933 1.567 21.5 3.5 21.5V20.5ZM12 18C12 19.3807 10.8807 20.5 9.5 20.5V21.5C11.433 21.5 13 19.933 13 18H12ZM3.5 0.5C1.567 0.5 0 2.067 0 4H1C1 2.61929 2.11929 1.5 3.5 1.5V0.5ZM9.5 1.5C9.64673 1.5 9.79012 1.51259 9.92926 1.53663L10.0995 0.551233C9.9044 0.517514 9.70405 0.5 9.5 0.5V1.5ZM12 12.8975V18H13V12.8975H12ZM7.5 17.5H5.5V18.5H7.5V17.5ZM13.5 5.5H17.5V4.5H13.5V5.5ZM18 6V8H19V6H18ZM17.5 8.5H13.5V9.5H17.5V8.5ZM13 8V6H12V8H13ZM14.25 5V2.75H13.25V5H14.25ZM16.75 2.75V5H17.75V2.75H16.75ZM15.5 1.5C16.1904 1.5 16.75 2.05964 16.75 2.75H17.75C17.75 1.50736 16.7426 0.5 15.5 0.5V1.5ZM13.5 8.5C13.2239 8.5 13 8.27614 13 8H12C12 8.82843 12.6716 9.5 13.5 9.5V8.5ZM18 8C18 8.27614 17.7761 8.5 17.5 8.5V9.5C18.3284 9.5 19 8.82843 19 8H18ZM17.5 5.5C17.7761 5.5 18 5.72386 18 6H19C19 5.17157 18.3284 4.5 17.5 4.5V5.5ZM14.25 2.75C14.25 2.05964 14.8096 1.5 15.5 1.5V0.5C14.2574 0.5 13.25 1.50736 13.25 2.75H14.25ZM13.5 4.5C12.6716 4.5 12 5.17157 12 6H13C13 5.72386 13.2239 5.5 13.5 5.5V4.5ZM13.5 5.5H17.5V4.5H13.5V5.5ZM18 6V8H19V6H18ZM17.5 8.5H13.5V9.5H17.5V8.5ZM13 8V6H12V8H13ZM14.25 5V2.75H13.25V5H14.25ZM16.75 2.75V5H17.75V2.75H16.75ZM15.5 1.5C16.1904 1.5 16.75 2.05964 16.75 2.75H17.75C17.75 1.50736 16.7426 0.5 15.5 0.5V1.5ZM13.5 8.5C13.2239 8.5 13 8.27614 13 8H12C12 8.82843 12.6716 9.5 13.5 9.5V8.5ZM18 8C18 8.27614 17.7761 8.5 17.5 8.5V9.5C18.3284 9.5 19 8.82843 19 8H18ZM17.5 5.5C17.7761 5.5 18 5.72386 18 6H19C19 5.17157 18.3284 4.5 17.5 4.5V5.5ZM14.25 2.75C14.25 2.05964 14.8096 1.5 15.5 1.5V0.5C14.2574 0.5 13.25 1.50736 13.25 2.75H14.25ZM13.5 4.5C12.6716 4.5 12 5.17157 12 6H13C13 5.72386 13.2239 5.5 13.5 5.5V4.5Z" fill="#121715"></path>
+                </svg>
+                {{ text_otp_tab }}
+              </button>
+            </li>
+          {% endif %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link d-flex align-items-center justify-content-center gap-2 w-100 border-0{% if not otp_module_status %} active{% endif %}" id="email-login-tab" data-bs-toggle="tab" data-bs-target="#email-login" type="button" role="tab" aria-selected="{% if otp_module_status %}false{% else %}true{% endif %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
+                <path d="M0.5 4V14C0.5 15.6569 1.84315 17 3.5 17H10.6051M0.5 4C0.5 2.34315 1.84315 1 3.5 1H17.5C19.1569 1 20.5 2.34315 20.5 4M0.5 4V4.31746C0.5 5.04684 0.897066 5.71839 1.53616 6.06989L9.05424 10.2048C9.95449 10.7 11.0455 10.7 11.9458 10.2048L19.4638 6.06989C20.1029 5.71839 20.5 5.04684 20.5 4.31746V4M20.5 4V9.84766M15.75 17V14.75C15.75 13.7835 16.5335 13 17.5 13C18.4665 13 19.25 13.7835 19.25 14.75V17M15.5 21H19.5C20.0523 21 20.5 20.5523 20.5 20V18C20.5 17.4477 20.0523 17 19.5 17H15.5C14.9477 17 14.5 17.4477 14.5 18V20C14.5 20.5523 14.9477 21 15.5 21Z" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              {{ text_email_tab }}
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content{% if otp_module_status %} tab-content-otp{% endif %}" id="loginTabsContent">
+          {% if otp_module_status %}
+            <div class="tab-pane fade show active" id="otp-login" role="tabpanel" aria-labelledby="otp-login-tab">
+              <div class="grey-text fw-500 py-5 text-center px-4">{{ text_entry_telephone }}</div>
+              <div id="otp-alert" style="display: none;" class="fsz-14 alert" role="alert"></div>
+              <form id="otp-form-telephone">
+                <div class="input-group mb-4">
+                  <span class="input-group-text" id="phoneLoginIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="18" viewBox="0 0 12 18" fill="none">
+                      <path d="M5.20005 2.9C4.92391 2.9 4.70005 3.12386 4.70005 3.4C4.70005 3.67614 4.92391 3.9 5.20005 3.9L5.20005 2.9ZM6.80005 3.9C7.07619 3.9 7.30005 3.67614 7.30005 3.4C7.30005 3.12386 7.07619 2.9 6.80005 2.9L6.80005 3.9ZM8.40005 16.5L3.60005 16.5L3.60005 17.5L8.40005 17.5L8.40005 16.5ZM1.70005 14.6L1.70005 3.4L0.70005 3.4L0.700049 14.6L1.70005 14.6ZM3.60005 1.5L8.40005 1.5L8.40005 0.5L3.60005 0.499999L3.60005 1.5ZM10.3001 3.4L10.3 14.6L11.3 14.6L11.3001 3.4L10.3001 3.4ZM8.40005 1.5C9.44939 1.5 10.3001 2.35066 10.3001 3.4L11.3001 3.4C11.3001 1.79837 10.0017 0.5 8.40005 0.5L8.40005 1.5ZM1.70005 3.4C1.70005 2.35066 2.55071 1.5 3.60005 1.5L3.60005 0.499999C1.99842 0.499999 0.70005 1.79837 0.70005 3.4L1.70005 3.4ZM3.60005 16.5C2.55071 16.5 1.70005 15.6493 1.70005 14.6L0.700049 14.6C0.700049 16.2016 1.99842 17.5 3.60005 17.5L3.60005 16.5ZM8.40005 17.5C10.0017 17.5 11.3 16.2016 11.3 14.6L10.3 14.6C10.3 15.6493 9.44939 16.5 8.40005 16.5L8.40005 17.5ZM5.20005 3.9L6.80005 3.9L6.80005 2.9L5.20005 2.9L5.20005 3.9Z" fill="#5C6168"></path>
+                    </svg>
+                  </span>
+                  <div class="form-floating">
+                    <input type="tel" inputmode="numeric" class="form-control" id="input-telephone" name="mask_telephone_display" value="{{ telephone }}" aria-label="telephone" aria-describedby="phoneLoginIcon">
+                    <input type="hidden" id="inputTelephoneFull" name="telephone" value="{{ telephone }}">
+                  </div>
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                  <input type="hidden" name="country_code" id="country-code" value="">
+                </div>
+                <button type="button" id="button-send-otp" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_send_otp }}</button>
+              </form>
+              <form id="otp-form-code" style="display: none;">
+                <div class="mb-3">
+                  <label for="input-otp" class="form-label">{{ entry_otp }}</label>
+                  <input type="text" name="otp_code" placeholder="{{ entry_otp }}" id="input-otp" class="form-control"/>
+                </div>
+                <button type="button" id="button-verify-otp" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_verify_otp }}</button>
+                <button type="button" id="button-resend-otp" class="button button-secondary py-3 w-100 mt-3">{{ button_resend_otp }}</button>
+                <div class="pt-3 border-0">
+                  <div class="d-flex align-items-center secondary-text collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#otpNotReceivedCollapse" aria-expanded="false" aria-controls="otpNotReceivedCollapse" style="cursor: pointer;">
+                    {{ text_otp_not_received }}
+                    <svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                      <path d="M5.24831 5.67345C5.05631 5.67345 4.86428 5.60048 4.71829 5.45348L0.718285 1.45348C0.425285 1.16048 0.425285 0.685449 0.718285 0.392449C1.01129 0.099449 1.48632 0.099449 1.77932 0.392449L5.24929 3.86242L8.71926 0.392449C9.01226 0.099449 9.4873 0.099449 9.7803 0.392449C10.0733 0.685449 10.0733 1.16048 9.7803 1.45348L5.7803 5.45348C5.6323 5.60048 5.44031 5.67345 5.24831 5.67345Z" fill="var(--pr-primary-light-color)"></path>
+                    </svg>
+                  </div>
+                  <div class="collapse" id="otpNotReceivedCollapse">
+                    <div class="form-group dark-text fsz-14">
+                      <p class="py-3">{{ text_otp_not_sent }}</p>
+                      <div class="p-3 br-8 otp-code-block">{{ text_otp_not_sent_list }}</div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <input type="hidden" id="saved-telephone" value=""/>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            </div>
+          {% endif %}
+          <div class="tab-pane fade{% if not otp_module_status %} show active{% endif %}" id="email-login" role="tabpanel" aria-labelledby="email-login-tab">
+            <div class="grey-text fw-500 text-center px-4{% if not otp_module_status %} pb-4{% else %} py-5{% endif %}">{{ oct_text_popup_login }}</div>
+            <div id="email-alert" style="display: none;" class="fsz-14 alert" role="alert"></div>
+            <form method="post" enctype="multipart/form-data" id="popupLoginForm">
+              <div class="input-group">
+                <span class="input-group-text" id="emailPopupLoginIcon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
+                    <path d="M17 3V11C17 12.3255 15.9255 13.4 14.6 13.4H3.4C2.07452 13.4 1 12.3255 1 11V3M17 3C17 1.67452 15.9255 0.599998 14.6 0.599998H3.4C2.07452 0.599998 1 1.67452 1 3M17 3V3.25396C17 3.83747 16.6823 4.37471 16.1711 4.65591L10.1566 7.96387C9.43641 8.35997 8.56359 8.35997 7.8434 7.96387L1.82893 4.65591C1.31765 4.37471 1 3.83747 1 3.25396V3" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+                <div class="form-floating">
+                  <input type="email" class="form-control" id="inputEmailLogin" placeholder="{{ entry_email }}" name="email" inputmode="text" aria-label="email" aria-describedby="emailPopupLoginIcon" autocomplete="username">
+                  <label class="px-3 secondary-text fsz-14" for="inputEmailLogin">{{ entry_email }}</label>
+                </div>
+              </div>
+              <div class="input-group mt-3">
+                <span class="input-group-text" id="passwordPopupLoginIcon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
+                    <path d="M3.79961 7.4V4.2C3.79961 2.43269 5.2323 1 6.99961 1C8.76692 1 10.1996 2.43269 10.1996 4.2V7.4M6.99961 11.8V13.8M6.99961 11.8C7.22052 11.8 7.39961 11.6209 7.39961 11.4M6.99961 11.8C6.7787 11.8 6.59961 11.6209 6.59961 11.4M7.39961 11.4C7.39961 11.1791 7.22052 11 6.99961 11C6.7787 11 6.59961 11.1791 6.59961 11.4M7.39961 11.4H6.59961M2.99961 17H10.9996C12.3251 17 13.3996 15.9255 13.3996 14.6V9.8C13.3996 8.47452 12.3251 7.4 10.9996 7.4H2.99961C1.67413 7.4 0.599609 8.47452 0.599609 9.8V14.6C0.599609 15.9255 1.67413 17 2.99961 17Z" stroke="#5C6168" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+                <div class="form-floating">
+                  <input type="password" class="form-control" id="inputPasswordLogin" placeholder="{{ entry_password }}" name="password" aria-label="password" aria-describedby="passwordPopupLoginIcon" autocomplete="current-password">
+                  <label class="px-3 secondary-text fsz-14" for="inputPasswordLogin">{{ entry_password }}</label>
+                </div>
+                {% if redirect %}
+                  <input type="hidden" name="redirect" value="{{ redirect }}"/>
+                {% endif %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              </div>
+              <div class="d-flex justify-content-between align-items-center my-3 fsz-12">
+                <a class="blue-link" href="{{ forgotten_url }}">{{ button_forgotten }}</a>
+                <a class="blue-link" href="{{ register_url }}">{{ button_register }}</a>
+              </div>
+              <button id="popup-login-button" type="button" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_login }}</button>
+            </form>
+            {% if otp_email_enabled %}
+              <form id="email-otp-form" style="display: none;">
+                <div class="grey-text fw-500 py-4 text-center px-4" id="email-otp-message"></div>
+                <div class="mb-3">
+                  <label for="input-email-otp" class="form-label">{{ entry_otp }}</label>
+                  <input type="text" name="otp_code" placeholder="{{ entry_otp }}" id="input-email-otp" class="form-control"/>
+                </div>
+                <button type="button" id="button-verify-email-otp" class="button button-primary button-large w-100 py-3 fsz-14">{{ button_verify_otp }}</button>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+if (typeof loginUrls === 'undefined') {
+  var loginUrls = {
+    login: '{{ ajax_login_url|raw }}',
+    sendOtp: '{{ action_send_otp|raw }}',
+    verifyOtp: '{{ action_verify_otp|raw }}',
+    verifyEmailOtp: '{{ action_verify_email_otp|raw }}'
+  };
+}
+
+{% if otp_email_enabled %}
+$('#input-email-otp').on('input', function() {
+  var otpLength = {{ otp_length|default(6) }};
+  var otpValue = $(this).val().replace(/\D/g, '');
+  
+  $(this).val(otpValue);
+  
+  if (otpValue.length === otpLength) {
+    $('#button-verify-email-otp').trigger('click');
+  }
+});
+{% endif %}
+
+{% if otp_module_status %}
+$('#input-otp').on('input', function() {
+  var otpLength = {{ otp_length|default(6) }};
+  var otpValue = $(this).val().replace(/\D/g, '');
+
+  $(this).val(otpValue);
+
+  if (otpValue.length === otpLength) {
+    $('#button-verify-otp').trigger('click');
+  }
+});
+{% endif %}
+$('#popup-login-button').on('click', function() {
+  $.ajax({
+    type: 'post',
+    url: loginUrls.login,
+    dataType: 'json',
+    cache: false,
+    data: $('#popupLoginForm').serialize(),
+    beforeSend: function() {
+      masked('body', true);
+      $('#popup-login-button').data('original-content', $('#popup-login-button').html());
+      $('#popup-login-button').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+    },
+    complete: function() {
+      masked('body', false);
+      setTimeout(function() {
+        $('#popup-login-button').html($('#popup-login-button').data('original-content')).prop('disabled', false);
+      }, 600);
+    },
+    success: function(json) {
+      if (json['warning']) {
+        prNotify('danger', json['warning']);
+      } else if (json['otp_required']) {
+        $('#email-alert').removeClass('alert-success alert-danger').addClass('alert-success');
+        $('#email-alert').html(json['message']);
+        $('#email-alert').show();
+        $('#email-otp-message').html('{{ text_enter_email_otp }}'.replace('%s', json['masked_email']));
+        $('#popupLoginForm').hide();
+        $('#email-otp-form').show();
+      } else {
+        if (json['redirect']) {
+          location = json['redirect'];
+        } else {
+          location = '{{ account_url }}';
+        }
+      }
+    }
+  });
+});
+
+{% if otp_email_enabled %}
+$('#button-verify-email-otp').on('click', function() {
+  var otpCode = $('#input-email-otp').val();
+  var csrfToken = $('input[name="csrf_token"]').val();
+
+  $.ajax({
+    url: loginUrls.verifyEmailOtp,
+    type: 'post',
+    data: { otp_code: otpCode, csrf_token: csrfToken },
+    dataType: 'json',
+    cache: false,
+    headers: { 'Cache-Control': 'no-cache' },
+    beforeSend: function() {
+      masked('body', true);
+      $('#button-verify-email-otp').data('original-content', $('#button-verify-email-otp').html());
+      $('#button-verify-email-otp').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+    },
+    complete: function() {
+      masked('body', false);
+      setTimeout(function() {
+        $('#button-verify-email-otp').html($('#button-verify-email-otp').data('original-content')).prop('disabled', false);
+      }, 600);
+    },
+    success: function(json) {
+      if (json['success']) {
+        $('#email-alert').removeClass('alert-success alert-danger').addClass('alert-success');
+        $('#email-alert').html(json['message']);
+        $('#email-alert').show();
+        setTimeout(function() {
+          $('#loginModal').modal('hide');
+          if (json['redirect']) {
+            window.location.href = json['redirect'];
+          } else {
+            location.reload();
+          }
+        }, 1200);
+      } else if (json['error']) {
+        $('#email-alert').removeClass('alert-success alert-danger').addClass('alert-danger');
+        $('#email-alert').html(json['error']);
+        $('#email-alert').show();
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+$('#email-otp-form').on('submit', function(e) {
+  e.preventDefault();
+  $('#button-verify-email-otp').trigger('click');
+});
+
+$('#input-email-otp').on('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    $('#button-verify-email-otp').trigger('click');
+  }
+});
+{% endif %}
+</script>
+{% if otp_module_status %}
+<script>
+$(document).ready(function() {
+  var otpModal = $('#otpModal');
+  var otpAlert = $('#otp-alert');
+  var otpFormTelephone = $('#otp-form-telephone');
+  var otpFormCode = $('#otp-form-code');
+  var buttonSendOtp = $('#button-send-otp');
+  var buttonVerifyOtp = $('#button-verify-otp');
+  var buttonResendOtp = $('#button-resend-otp');
+
+  otpFormCode.on('submit', function(e) {
+    e.preventDefault();
+    buttonVerifyOtp.trigger('click');
+  });
+
+  var currentUrl = window.location.href;
+
+  $('#input-telephone').on('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      buttonSendOtp.trigger('click');
+    }
+  });
+
+  function showAlert(type, message) {
+    otpAlert.removeClass('alert-success alert-danger').addClass(type);
+    otpAlert.html(message);
+    otpAlert.show();
+  }
+
+  buttonSendOtp.on('click', function() {
+    if (loginIti) {
+      updateLoginHiddenPhoneField();
+    }
+    
+    var telephone = $('#inputTelephoneFull').val() || $('#input-telephone').val();
+    var csrfToken = $('input[name="csrf_token"]').val();
+    var countryCode = $('#country-code').val();
+
+    $.ajax({
+      url: loginUrls.sendOtp,
+      type: 'post',
+      data: {
+        telephone: telephone,
+        csrf_token: csrfToken,
+        country_code: countryCode,
+        redirect: currentUrl
+      },
+      dataType: 'json',
+      headers: { 'Cache-Control': 'no-cache' },
+      beforeSend: function() {
+        buttonSendOtp.prop('disabled', true);
+        masked('body', true);
+        $('#button-send-otp').data('original-content', $('#button-send-otp').html());
+        $('#button-send-otp').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+      },
+      complete: function() {
+        buttonSendOtp.prop('disabled', false);
+        masked('body', false);
+        setTimeout(function() {
+          $('#button-send-otp').html($('#button-send-otp').data('original-content')).prop('disabled', false);
+        }, 600);
+      },
+      success: function(json) {
+        if (json['success']) {
+          showAlert('alert-success', json['message']);
+          $('#saved-telephone').val(telephone);
+          otpFormTelephone.hide();
+          otpFormCode.show();
+        } else if (json['error']) {
+          showAlert('alert-danger', json['error']);
+          if (json['otp_throttle']) {
+            $('#saved-telephone').val(telephone);
+            otpFormTelephone.hide();
+            otpFormCode.show();
+          }
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  });
+
+  buttonVerifyOtp.on('click', function() {
+    var otpCode = $('#input-otp').val();
+    var csrfToken = $('input[name="csrf_token"]').val();
+
+    $.ajax({
+      url: loginUrls.verifyOtp,
+      type: 'post',
+      data: { otp_code: otpCode, csrf_token: csrfToken },
+      dataType: 'json',
+      cache: false,
+      headers: { 'Cache-Control': 'no-cache' },
+      beforeSend: function() {
+        buttonVerifyOtp.prop('disabled', true);
+        masked('body', true);
+        $('#button-verify-otp').data('original-content', $('#button-verify-otp').html());
+        $('#button-verify-otp').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+      },
+      complete: function() {
+        buttonVerifyOtp.prop('disabled', false);
+        masked('body', false);
+        setTimeout(function() {
+          $('#button-verify-otp').html($('#button-verify-otp').data('original-content')).prop('disabled', false);
+        }, 600);
+      },
+      success: function(json) {
+        if (json['success']) {
+          showAlert('alert-success', json['message']);
+          setTimeout(function() {
+            otpModal.modal('hide');
+            if (json['redirect']) {
+              window.location.href = json['redirect'];
+            } else {
+              location.reload();
+            }
+          }, 1200);
+        } else if (json['error']) {
+          showAlert('alert-danger', json['error']);
+          if (json['max_attempts_exceeded']) {
+            otpFormCode.hide();
+            otpFormTelephone.show();
+          } else {
+            otpFormTelephone.hide();
+            otpFormCode.show();
+          }
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  });
+
+  buttonResendOtp.on('click', function() {
+    var telephone = $('#saved-telephone').val();
+    var csrfToken = $('input[name="csrf_token"]').val();
+    var countryCode = $('#country-code').val();
+
+    if (!telephone) {
+      showAlert('alert-danger', '{{ error_telephone }}');
+      otpFormTelephone.show();
+      otpFormCode.hide();
+      return;
+    }
+
+    $.ajax({
+      url: loginUrls.sendOtp,
+      type: 'post',
+      data: {
+        telephone: telephone,
+        csrf_token: csrfToken,
+        country_code: countryCode,
+        redirect: currentUrl
+      },
+      dataType: 'json',
+      headers: { 'Cache-Control': 'no-cache' },
+      beforeSend: function() {
+        buttonResendOtp.prop('disabled', true);
+        masked('body', true);
+        $('#button-resend-otp').data('original-content', $('#button-resend-otp').html());
+        $('#button-resend-otp').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop('disabled', true);
+      },
+      complete: function() {
+        buttonResendOtp.prop('disabled', false);
+        masked('body', false);
+        setTimeout(function() {
+          $('#button-resend-otp').html($('#button-resend-otp').data('original-content')).prop('disabled', false);
+        }, 600);
+      },
+      success: function(json) {
+        if (json['success']) {
+          showAlert('alert-success', json['message']);
+        } else if (json['error']) {
+          showAlert('alert-danger', json['error']);
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  });
+});
+</script>
+{% if phone_masks is defined and phone_masks is not empty %}
+<link rel="stylesheet" href="catalog/view/theme/oct_promo/stylesheet/intlTelInput.css" />
+<script src="catalog/view/theme/oct_promo/js/intlTelInput.min.js"></script>
+
+<script>
+if (typeof loginIti === 'undefined') {
+  var loginIti = null;
+}
+if (typeof defaultLoginCountry === 'undefined') {
+  var defaultLoginCountry = '{{ default_phone_country|default("ua") }}';
+}
+
+if (typeof loginPhoneMasks === 'undefined') {
+  var loginPhoneMasks = {};
+  try {
+    const phoneMasksJson = {{ phone_masks|raw }};
+    if (phoneMasksJson && typeof phoneMasksJson === 'object') {
+      loginPhoneMasks = phoneMasksJson;
+    }
+  } catch (e) {
+    console.warn('Failed to parse phone masks:', e);
+  }
+}
+
+if (typeof loginAllowedCountries === 'undefined') {
+  var loginAllowedCountries = [];
+  try {
+    const allowedCountriesJson = {{ allowed_countries|raw }};
+    if (allowedCountriesJson && Array.isArray(allowedCountriesJson)) {
+      loginAllowedCountries = allowedCountriesJson;
+    }
+  } catch (e) {
+    console.warn('Failed to parse allowed countries:', e);
+  }
+}
+
+if (typeof getLoginFullPhoneNumber === 'undefined') {
+  function getLoginFullPhoneNumber() {
+    if (!loginIti) return '';
+    
+    const telInput = document.querySelector('#input-telephone');
+    if (!telInput) return '';
+    
+    const selectedCountryData = loginIti.getSelectedCountryData();
+    const dialCode = selectedCountryData.dialCode || '';
+    let rawValue = telInput.value.replace(/\D/g, '');
+    
+    if (rawValue.length > 15) {
+      rawValue = rawValue.substring(0, 15);
+    }
+    
+    return rawValue ? '+' + dialCode + rawValue : '';
+  }
+}
+
+if (typeof updateLoginHiddenPhoneField === 'undefined') {
+  function updateLoginHiddenPhoneField() {
+    const fullNumber = getLoginFullPhoneNumber();
+    const hiddenField = document.querySelector('#inputTelephoneFull');
+    if (hiddenField) {
+      hiddenField.value = fullNumber;
+    }
+    return fullNumber;
+  }
+}
+
+if (typeof initLoginIntlTelInput === 'undefined') {
+  function initLoginIntlTelInput() {
+    const telInput = document.querySelector('#input-telephone');
+    if (telInput && !telInput.classList.contains('iti__tel-input')) {
+      if (loginIti) {
+        loginIti.destroy();
+      }
+
+      const itiOptions = {
+        initialCountry: defaultLoginCountry,
+        geoIpLookup: function(callback) {
+          callback(defaultLoginCountry);
+        },
+        separateDialCode: true,
+        nationalMode: true,
+        formatOnDisplay: false,
+        strictMode: false,
+        allowDropdown: true,
+        useFullscreenPopup: false,
+        containerClass: "input-group"
+      };
+
+      if (loginAllowedCountries.length > 0) {
+        itiOptions.onlyCountries = loginAllowedCountries;
+        
+        if (loginAllowedCountries.length === 1) {
+          itiOptions.allowDropdown = false;
+        }
+      }
+
+      loginIti = window.intlTelInput(telInput, itiOptions);
+
+      const applyLoginInputMask = function() {
+        if (typeof $.fn.inputmask === 'undefined') {
+          console.warn('Inputmask not loaded yet');
+          return;
+        }
+        
+        const countryData = loginIti.getSelectedCountryData();
+        let maskData = loginPhoneMasks[countryData.iso2];
+        let mask = null;
+        
+        if (maskData && typeof maskData === 'object' && maskData.mask) {
+          mask = maskData.mask;
+        } else if (typeof maskData === 'string') {
+          mask = maskData;
+        }
+        
+        if (!mask) {
+          const defaultMasks = {
+            'ua': '99 999 99 99',
+            'pl': '999 999 999',
+            'us': '(999) 999-9999',
+            'ca': '(999) 999-9999',
+            'gb': '99999 999999',
+            'de': '9999 99999999',
+            'fr': '9 99 99 99 99',
+            'it': '999 999 9999',
+            'es': '999 99 99 99',
+            'ru': '(999) 999-99-99',
+            'by': '(99) 999-99-99',
+          };
+          mask = defaultMasks[countryData.iso2];
+        }
+        
+        if (!mask) {
+          const dialCodeLength = countryData.dialCode.length;
+          if (dialCodeLength === 1) {
+            mask = '(999) 999-9999';
+          } else if (dialCodeLength === 2) {
+            mask = '99 999 99 99';
+          } else {
+            mask = '999 999 9999';
+          }
+        }
+        
+        if ($(telInput).inputmask) {
+          $(telInput).inputmask('remove');
+        }
+        
+        $(telInput).inputmask({
+          mask: mask,
+          clearMaskOnLostFocus: false,
+          showMaskOnHover: false,
+          placeholder: '_',
+          onincomplete: function() {
+            updateLoginHiddenPhoneField();
+          },
+          oncomplete: function() {
+            updateLoginHiddenPhoneField();
+          },
+          oncleared: function() {
+            updateLoginHiddenPhoneField();
+          }
+        });
+        
+        // Оновлюємо прихований input з кодом країни
+        $('#country-code').val(countryData.iso2);
+        
+        const placeholderText = mask.replace(/9/g, '_');
+        telInput.setAttribute('placeholder', placeholderText);
+      };
+      
+      setTimeout(function() {
+        applyLoginInputMask();
+      }, 300);
+
+      telInput.addEventListener('input', function(e) {
+        updateLoginHiddenPhoneField();
+      });
+
+      telInput.addEventListener('paste', function(e) {
+        setTimeout(function() {
+          updateLoginHiddenPhoneField();
+        }, 10);
+      });
+
+      telInput.addEventListener('countrychange', function() {
+        applyLoginInputMask();
+        updateLoginHiddenPhoneField();
+      });
+
+      telInput.addEventListener('blur', function() {
+        updateLoginHiddenPhoneField();
+      });
+    }
+  }
+}
+
+$('#loginModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+  initLoginIntlTelInput();
+});
+</script>
+{% elseif mask is defined and mask is not empty %}
+<script>
+$('#loginModal #input-telephone').inputmask({
+  mask: '{{ mask }}',
+  clearMaskOnLostFocus: false
+});
+</script>
+{% endif %}
+{% endif %}

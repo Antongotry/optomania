@@ -1,0 +1,14 @@
+{% if oct_popup_cart_status is defined and oct_popup_cart_status %}
+<button title="{{ oct_cart }}" id="cart" class="pr-header-buttons-item pr-header-buttons-item-cart no-btn px-lg-3 fsz-12 dark-text fw-500 d-flex flex-column gap-2 align-items-center" type="button" onclick="octSidebarCart();">
+{% else %}
+<button title="{{ oct_cart }}" id="cart" type="button" class="pr-header-buttons-item pr-header-buttons-item-cart no-btn px-lg-3 fsz-12 dark-text fw-500 d-flex flex-column gap-2 align-items-center" onclick="location = '{{ cart }}';">
+{% endif %}
+    <span class="pr-header-buttons-item-icon position-relative">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
+            <path d="M15.9031 14.301H7.4931C6.33794 14.301 5.34659 13.4783 5.1337 12.3429L3.34511 2.80371C3.20318 2.04679 2.54228 1.49829 1.77218 1.49829H1.5M6.70111 17.1016C6.70111 17.3226 6.52198 17.5017 6.30102 17.5017C6.08006 17.5017 5.90094 17.3226 5.90094 17.1016M6.70111 17.1016C6.70111 16.8807 6.52198 16.7015 6.30102 16.7015C6.08006 16.7015 5.90094 16.8807 5.90094 17.1016M6.70111 17.1016H5.90094M15.503 17.1016C15.503 17.3226 15.3239 17.5017 15.1029 17.5017C14.8819 17.5017 14.7028 17.3226 14.7028 17.1016M15.503 17.1016C15.503 16.8807 15.3239 16.7015 15.1029 16.7015C14.8819 16.7015 14.7028 16.8807 14.7028 17.1016M15.503 17.1016H14.7028M3.4004 3.09863H15.8993C16.8784 3.09863 17.6279 3.96986 17.4817 4.93792L16.7568 9.73894C16.6386 10.5216 15.9659 11.1003 15.1744 11.1003H4.90072L3.4004 3.09863Z" stroke="var(--pr-black-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="pr-header-buttons-item-count pr-header-buttons-item-count-cart position-absolute{% if total_products > 0 %} active{% endif %}">{{ total_products }}</span>
+    </span>
+    <span class="pr-header-buttons-item-text d-none d-md-inline">{{ oct_cart }}</span>
+</button>
+<span class="d-none" {% if oct_promo_data.isbuttoninteractive is defined %}data-cart-ids="{{ cart_product_ids }}"{% endif %} data-cart-text="{{ cart_text }}" data-cart-text-in="{{ cart_text_in }}"></span>

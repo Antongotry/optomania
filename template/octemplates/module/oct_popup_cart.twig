@@ -1,0 +1,669 @@
+{% if isPopup is defined and isPopup %}
+	<div class="pr-sidebar-cart position-fixed">
+		<div class="pr-sidebar-cart-inner bg-white d-flex flex-column h-100" id="cartSidebar">
+			<div class="pr-sidebar-cart-header py-3 px-3 px-lg-4 d-flex justify-content-between align-items-center">
+				<span class="pr-sidebar-cart-title dark-text fsz-20 fw-700">{{ heading_title }}</span>
+				<button type="button" class="pr-sidebar-cart-close button-close br-8" aria-label="Close cart">
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+						<path d="M1 1L13 13M13 1L1 13" stroke="#4F5F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+					</svg>
+				</button>
+			</div>
+			{% if products or vouchers %}
+				<div class="pr-sidebar-cart-top bg-grey py-3 px-3 px-lg-4 d-flex justify-content-between align-items-center fsz-14">
+					<span class="pr-sidebar-cart-products-count dark-text fw-600 fsz-20">{{ text_cart_items }}</span>
+					<span class="pr-sidebar-cart-products-delete blue-link fw-500" onclick="removeAll();">{{ text_delete_all_products }}</span>
+				</div>
+				<div class="pr-sidebar-cart-content p-3 p-lg-4" id="modalCartBody">
+					{% if error_minimum %}
+						<div id="error_minimum" class="required mt-3">
+							<div>***{{ error_minimum }}</div>
+						</div>
+						{% endif %}
+					{% if free_shipping_html %}
+						<div id="free_shipping_html">{{ free_shipping_html }}</div>
+					{% endif %}
+					{% if totals %}
+						{% for total in totals %}
+							<div class="pr-sidebar-cart-total total-oct d-flex justify-content-between align-items-center mt-3 py-2 py-lg-3 px-3 px-lg-4 mb-4 dark-text bg-grey br-12">
+								<span class="fsz-20 fw-600">{{ total.title }}:</span>
+								<span class="fsz-20 fw-700 red" id="modalCartTotalsText">{{ total.text }}</span>
+							</div>
+						{% endfor %}
+					{% endif %}
+					<div class="pr-sidebar-cart-products p-3">
+						{% for product in products %}
+							<div class="pr-sidebar-cart-product d-flex align-items-center gap-3 gap-lg-4">
+								{% if product.thumb %}
+									<a class="pr-sidebar-cart-product-image" href="{{ product.href }}">
+										<img src="{{ product.thumb }}" alt="{{ product.name }}" class="d-block img-fluid" width="70" height="70" />
+									</a>
+								{% endif %}
+								<div class="pr-sidebar-cart-product-info position-relative flex-grow-1">
+									<div class="pr-sidebar-cart-product-title dark-text fsz-14 fw-500 pe-5">
+										<a href="{{ product.href }}" class="dark-link">{{ product.name }}</a>
+										{% if not product.stock %}
+											<span class="required">***</span>
+										{% endif %}
+									</div>
+									{% if product.model %}
+										<div class="pr-sidebar-cart-product-code light-text fsz-12">{{ column_model }}: {{ product.model }}</div>
+									{% endif %}
+									{% if product.option %}
+										{% for option in product.option %}
+											<div class="pr-sidebar-cart-product-option light-text fsz-12">{{ option.name }}: {{ option.value }}</div>
+										{% endfor %}
+									{% endif %}
+									<button type="button" class="pr-sidebar-cart-product-delete no-btn position-absolute" onclick="remove(this, 'remove'); return false;" aria-label="Delete">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 20 22" fill="none">
+											<path d="M2.5 4.5L3.60314 16.6346C3.74323 18.1756 3.81328 18.9461 4.15838 19.5288C4.4623 20.0419 4.91229 20.4529 5.45087 20.7091C6.06242 21 6.83609 21 8.38343 21H11.6166C13.1639 21 13.9376 21 14.5491 20.7091C15.0877 20.4529 15.5377 20.0419 15.8416 19.5288C16.1867 18.9461 16.2568 18.1756 16.3969 16.6346L17.5 4.5M7.5 10V15M12.5 10V15M5 4.5L6.07865 2.61236C6.41422 2.02512 6.582 1.7315 6.81776 1.51789C7.02635 1.32889 7.27249 1.18605 7.54007 1.09871C7.84251 1 8.18068 1 8.85703 1H11.143C11.8193 1 12.1575 1 12.4599 1.09871C12.7275 1.18605 12.9737 1.32889 13.1822 1.51789C13.418 1.7315 13.5858 2.02512 13.9213 2.61236L15 4.5M5 4.5H1M5 4.5H15M15 4.5H19" stroke="#9DA4AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+										</svg>
+									</button>
+									<div class="buttons-quantity pr-sidebar-cart-product-bottom d-flex flex-column flex-lg-row justify-content-lg-between mt-3 align-items-lg-center">
+										<div class="pr-sidebar-cart-product-quantity d-flex align-items-center">
+											<div class="d-inline-flex align-items-stretch">
+												<input name="product_id_q" value="{{ product.product_id }}" type="hidden" />
+												<input name="product_id" value="{{ product.key }}" type="hidden" />
+												<input name="product_stock_{{ product.key }}" id="product_stock_{{ product.key }}" value="{{ product.quantity_product }}" type="hidden" />
+												<input name="product_minimum_{{ product.key }}" id="product_minimum_{{ product.key }}" value="{{ product.minimum }}" type="hidden" />
+												<button type="button" aria-label="Minus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="update_manual('#main-quantity-val-{{ product.key }}', 'minus', '{{ product.key }}'); return validate('#main-quantity-val-{{ product.key }}');">
+													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="2" viewBox="0 0 16 2" fill="none">
+														<path d="M1 1H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+													</svg>
+												</button>
+												<input type="text" name="quantity" class="number fw-500 border-0 p-0 text-center fw-500" id="main-quantity-val-{{ product.key }}" value="{{ product.quantity }}" onchange="update_manual('#main-quantity-val-{{ product.key }}', 'manual', '{{ product.key }}'); return validate('#main-quantity-val-{{ product.key }}');" keypress="update_manual('#main-quantity-val-{{ product.key }}', '', '{{ product.key }}'); return validate('#main-quantity-val-{{ product.key }}');" inputmode="numeric" aria-label="Quantity">
+												<button type="button" aria-label="Plus" class="pr-quantity-button button button-light button-small p-2 br-8" onclick="update_manual('#main-quantity-val-{{ product.key }}', 'plus', '{{ product.key }}'); return validate('#main-quantity-val-{{ product.key }}');">
+													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+														<path d="M8 1V15M1 8H15" stroke="#4F5F99" stroke-linecap="round" stroke-linejoin="round"></path>
+													</svg>
+												</button>
+											</div>
+											<svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+												<path d="M1 1L9 9M9 1L1 9" stroke="var(--pr-black-color)" stroke-linecap="round" stroke-linejoin="round"></path>
+											</svg>
+											<span class="pr-sidebar-cart-product-price-one light-text fw-500">{{ product.price }}</span>
+										</div>
+										<span class="dark-text fw-600 fsz-20 mt-3 mt-lg-0"><span class="pr-sidebar-cart-product-total">{{ product.total }}</span></span>
+									</div>
+									<input name="product_key" value="{{ product.key }}" style="display: none;" hidden />
+									<input name="product_id_q" value="{{ product.product_id }}" style="display: none;" hidden />
+								</div>
+							</div>
+						{% endfor %}
+						{% for voucher in vouchers %}
+							<div class="pr-cart-item content-block p-2 p-md-3">
+								<div class="d-flex align-items-center justify-content-between">
+									<div class="dark-text fw-300 me-2">{{ voucher.description }}</div>
+									<button type="button" class="no-btn" onclick="voucher.remove('{{ voucher.key }}');">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+											<path
+												d="M13.7783 12.2207C14.0713 12.5137 14.0713 12.9888 13.7783 13.2818C13.6323 13.4278 13.4403 13.5017 13.2483 13.5017C13.0563 13.5017 12.8643 13.4288 12.7183 13.2818L7.24828 7.81173L1.77828 13.2818C1.63228 13.4278 1.44028 13.5017 1.24828 13.5017C1.05628 13.5017 0.864285 13.4288 0.718285 13.2818C0.425285 12.9888 0.425285 12.5137 0.718285 12.2207L6.18829 6.75076L0.718285 1.28079C0.425285 0.987785 0.425285 0.51275 0.718285 0.21975C1.01129 -0.07325 1.48629 -0.07325 1.77929 0.21975L7.24929 5.68978L12.7193 0.21975C13.0123 -0.07325 13.4873 -0.07325 13.7803 0.21975C14.0733 0.51275 14.0733 0.987785 13.7803 1.28079L8.31028 6.75076L13.7783 12.2207Z"
+												fill="#D84040"></path>
+										</svg>
+									</button>
+								</div>
+							</div>
+						{% endfor %}
+						{% if error_warning %}
+							<div class="required mb-4">*** {{ error_warning }}</div>
+						{% endif %}
+					</div>
+					<div class="pr-sidebar-cart-footer">
+						{% if oct_byoneclick is defined and oct_byoneclick %}
+							{{ oct_byoneclick }}
+						{% endif %}
+						<a href="{{ checkout_link }}" class="button button-primary br-8 w-100">{{ button_checkout }}</a>
+					</div>
+					<div id="recommended_products" class="pr-sidebar-cart-recommended">
+						{% if recommended_products %} 
+							{{ recommended_products }}
+						{% endif %}
+					</div>
+				</div>
+			{% else %}
+				<div class="pr-sidebar-cart-content p-3 p-lg-4" id="modalCartBody">
+					<div class="pr-sidebar-cart-empty px-5">
+						<svg xmlns="http://www.w3.org/2000/svg" width="446" height="446" viewBox="0 0 446 446" fill="none" class="d-block img-fluid mx-auto mb-5 oct-empty-cart-svg">
+						<g clip-path="url(#clip0_372_2624)">
+							<path class="oct-empty-cart-blob" d="M262.892 90.0021C286.673 79.8427 312.881 98.0937 311.599 123.922L308.855 179.242C307.978 196.916 320.431 212.465 337.871 215.468L368.266 220.704C400.282 226.218 408.163 268.584 380.273 285.244L308.648 328.027C302.441 331.734 297.535 337.272 294.603 343.881L276.551 384.571C268.122 403.57 245.089 411.08 227.081 400.701L158.388 361.11C155.513 359.453 152.417 358.213 149.192 357.428L84.7754 341.74C64.7231 336.857 53.2282 315.772 59.9872 296.272L77.3957 246.047C79.6242 239.617 79.9302 232.678 78.2762 226.077L65.3464 174.477C59.647 151.732 77.4873 129.926 100.91 131.007L152.474 133.387C157.739 133.63 162.991 132.68 167.837 130.61L262.892 90.0021Z" fill="#E3EDFD"/>
+							<path class="oct-empty-cart-star oct-empty-cart-star-1" d="M124.747 377.418C125.127 374.548 128.951 373.828 130.348 376.364L134.025 383.036C134.485 383.871 135.314 384.437 136.259 384.562L143.811 385.563C146.681 385.944 147.401 389.767 144.865 391.165L138.192 394.842C137.358 395.302 136.792 396.131 136.666 397.075L135.665 404.628C135.285 407.498 131.461 408.217 130.064 405.682L126.387 399.009C125.927 398.175 125.098 397.608 124.153 397.483L116.601 396.482C113.731 396.102 113.011 392.278 115.547 390.881L122.22 387.204C123.054 386.744 123.62 385.915 123.746 384.97L124.747 377.418Z" fill="#4F5F99" fill-opacity="0.38"/>
+							<path class="oct-empty-cart-star oct-empty-cart-star-2" d="M341.688 355.794C344.272 354.489 347.023 357.24 345.718 359.825L342.283 366.625C341.854 367.476 341.854 368.48 342.283 369.33L345.718 376.131C347.023 378.715 344.272 381.466 341.688 380.161L334.887 376.727C334.037 376.297 333.033 376.297 332.182 376.727L325.382 380.161C322.797 381.466 320.046 378.715 321.351 376.131L324.786 369.33C325.215 368.48 325.215 367.476 324.786 366.625L321.351 359.825C320.046 357.24 322.797 354.489 325.382 355.794L332.182 359.229C333.033 359.658 334.037 359.658 334.887 359.229L341.688 355.794Z" fill="#4F5F99" fill-opacity="0.38"/>
+							<path class="oct-empty-cart-star oct-empty-cart-star-3" d="M357.418 155.565C358.982 153.128 362.749 154.101 362.937 156.99L363.431 164.593C363.493 165.544 364.003 166.409 364.804 166.923L371.216 171.038C373.653 172.602 372.68 176.369 369.791 176.556L362.188 177.051C361.237 177.112 360.372 177.622 359.858 178.424L355.743 184.836C354.179 187.273 350.412 186.299 350.224 183.41L349.73 175.808C349.668 174.857 349.159 173.992 348.357 173.478L341.945 169.363C339.508 167.799 340.481 164.032 343.371 163.844L350.973 163.35C351.924 163.288 352.789 162.778 353.303 161.977L357.418 155.565Z" fill="#9DA4AE" fill-opacity="0.27"/>
+							<path class="oct-empty-cart-star oct-empty-cart-star-4" d="M168.303 75.2235C169.692 72.6834 173.518 73.3907 173.908 76.2596L175.537 88.2619C175.665 89.2059 176.234 90.033 177.07 90.4903L187.696 96.303C190.236 97.6925 189.529 101.518 186.66 101.908L174.658 103.537C173.714 103.665 172.887 104.234 172.43 105.07L166.617 115.696C165.227 118.236 161.402 117.529 161.012 114.66L159.383 102.658C159.255 101.714 158.686 100.887 157.85 100.43L147.223 94.6169C144.683 93.2274 145.391 89.4016 148.26 89.0122L160.262 87.3828C161.206 87.2547 162.033 86.6857 162.49 85.8498L168.303 75.2235Z" fill="#4F5F99" fill-opacity="0.38"/>
+							<path class="oct-empty-cart-star oct-empty-cart-star-5" d="M47.9496 218.094C50.1081 216.164 53.4774 218.11 52.8856 220.944L51.4166 227.979C51.2218 228.911 51.4817 229.881 52.1166 230.591L56.9064 235.949C58.836 238.108 56.8907 241.477 54.0566 240.885L47.0215 239.416C46.0889 239.222 45.1192 239.481 44.4089 240.116L39.0509 244.906C36.8924 246.836 33.523 244.89 34.1148 242.056L35.5839 235.021C35.7786 234.089 35.5188 233.119 34.8838 232.409L30.094 227.051C28.1645 224.892 30.1098 221.523 32.9439 222.115L39.9789 223.584C40.9116 223.778 41.8813 223.519 42.5916 222.884L47.9496 218.094Z" fill="#9DA4AE" fill-opacity="0.27"/>
+							<g class="oct-empty-cart-main">
+								<path d="M251.109 216.1L242.978 216.957L246.527 199.618C246.846 198.056 247.583 196.61 248.659 195.433C249.734 194.256 251.109 193.393 252.636 192.935L268.959 188.027C272.199 187.056 275.466 189.475 275.466 192.865C275.466 196.052 272.296 198.276 269.304 197.191L267.035 196.679L257.889 199.389C257 199.654 256.195 200.147 255.555 200.819C254.916 201.491 254.463 202.319 254.243 203.22L251.109 216.1ZM242.678 252.905L237.019 276.962L230.142 274.534L234.38 252.905H242.678Z" fill="#9DA4AE"/>
+								<path d="M238.679 269.899H183.132V277.253H237.425L238.679 269.899Z" fill="#9DA4AE"/>
+								<path d="M168.221 222.298L174.763 254.185C175.266 256.657 177.438 258.423 179.954 258.423H240.444C240.844 258.423 241.231 258.288 241.544 258.039C241.857 257.791 242.076 257.443 242.166 257.054L252.777 211.139C253.051 209.965 252.097 208.879 250.897 208.985L172.936 215.959C172.193 216.025 171.472 216.248 170.821 216.612C170.17 216.976 169.604 217.474 169.159 218.072C168.713 218.671 168.4 219.357 168.238 220.085C168.077 220.813 168.071 221.567 168.221 222.298ZM180.537 223.26L184.297 222.925C184.664 222.891 185.033 222.935 185.382 223.053C185.731 223.17 186.051 223.359 186.323 223.608C186.595 223.856 186.812 224.158 186.96 224.495C187.108 224.832 187.185 225.196 187.184 225.564V229.819C187.184 231.285 186.001 232.468 184.536 232.468H180.581C179.327 232.468 178.241 231.585 177.985 230.349L177.403 227.489C177.3 227.002 177.301 226.499 177.407 226.013C177.513 225.526 177.721 225.068 178.017 224.668C178.313 224.269 178.691 223.936 179.126 223.694C179.56 223.451 180.041 223.303 180.537 223.26ZM214.269 239.521H219.283C220.749 239.521 221.932 240.704 221.932 242.17V247.829C221.932 249.294 220.749 250.477 219.283 250.477H214.269C212.804 250.477 211.621 249.294 211.621 247.829V242.17C211.621 240.704 212.804 239.521 214.269 239.521ZM219.283 232.459H214.269C212.804 232.459 211.621 231.276 211.621 229.811V222.898C211.621 221.53 212.671 220.382 214.031 220.259L219.045 219.808C219.412 219.775 219.781 219.819 220.13 219.936C220.478 220.054 220.799 220.243 221.071 220.491C221.342 220.74 221.559 221.042 221.707 221.379C221.856 221.716 221.932 222.08 221.932 222.448V229.811C221.932 231.276 220.749 232.459 219.283 232.459ZM204.558 242.17V247.829C204.558 249.294 203.375 250.477 201.91 250.477H196.895C195.43 250.477 194.247 249.294 194.247 247.829V242.17C194.247 240.704 195.43 239.521 196.895 239.521H201.91C203.375 239.521 204.558 240.704 204.558 242.17ZM201.91 232.459H196.895C195.43 232.459 194.247 231.276 194.247 229.811V224.452C194.247 223.084 195.297 221.936 196.657 221.812L201.671 221.362C202.038 221.329 202.407 221.373 202.756 221.49C203.105 221.608 203.425 221.797 203.697 222.045C203.968 222.294 204.185 222.596 204.334 222.933C204.482 223.27 204.558 223.634 204.558 224.002V229.811C204.558 231.276 203.375 232.459 201.91 232.459ZM242.289 221.212L240.162 230.402C240.027 230.985 239.699 231.504 239.231 231.876C238.762 232.248 238.182 232.451 237.584 232.45H231.643C230.177 232.45 228.994 231.267 228.994 229.802V221.344C228.994 219.976 230.045 218.828 231.404 218.705L239.464 217.981C241.265 217.822 242.696 219.464 242.289 221.212ZM232.72 250.477H230.769C229.798 250.477 229.003 249.683 229.003 248.712V242.17C229.003 240.704 230.186 239.521 231.652 239.521H234.733C236.436 239.521 237.699 241.111 237.31 242.77L236.163 247.749C235.98 248.525 235.54 249.217 234.916 249.712C234.291 250.207 233.517 250.477 232.72 250.477ZM180.404 242.143C180.122 240.784 181.163 239.513 182.55 239.513H184.536C186.001 239.513 187.184 240.696 187.184 242.161V248.279C187.184 248.86 186.954 249.417 186.543 249.827C186.132 250.238 185.576 250.468 184.995 250.468C183.318 250.468 181.87 249.285 181.534 247.643L180.404 242.143Z" fill="#4F5F99"/>
+								<path d="M233.188 283.433C238.551 283.433 242.898 279.085 242.898 273.722C242.898 268.358 238.551 264.011 233.188 264.011C227.824 264.011 223.477 268.358 223.477 273.722C223.477 279.085 227.824 283.433 233.188 283.433Z" fill="#2F2F2F"/>
+								<path d="M233.188 278.25C235.689 278.25 237.716 276.223 237.716 273.722C237.716 271.22 235.689 269.193 233.188 269.193C230.686 269.193 228.659 271.22 228.659 273.722C228.659 276.223 230.686 278.25 233.188 278.25Z" fill="#9DA4AE"/>
+								<path d="M186.54 283.433C191.903 283.433 196.251 279.085 196.251 273.722C196.251 268.358 191.903 264.011 186.54 264.011C181.177 264.011 176.829 268.358 176.829 273.722C176.829 279.085 181.177 283.433 186.54 283.433Z" fill="#2F2F2F"/>
+								<path d="M186.54 278.25C189.041 278.25 191.069 276.223 191.069 273.722C191.069 271.22 189.041 269.193 186.54 269.193C184.039 269.193 182.011 271.22 182.011 273.722C182.011 276.223 184.039 278.25 186.54 278.25Z" fill="#9DA4AE"/>
+								<path d="M271.193 200.74C274.805 200.74 277.734 197.811 277.734 194.198C277.734 190.585 274.805 187.656 271.193 187.656C267.58 187.656 264.651 190.585 264.651 194.198C264.651 197.811 267.58 200.74 271.193 200.74Z" fill="#9DA4AE"/>
+							</g>
+						</g>
+						<defs>
+							<clipPath id="clip0_372_2624">
+								<rect width="446" height="446" fill="white"/>
+							</clipPath>
+						</defs>
+					</svg>
+					<p class="fsz-20 dark-text fw-600 text-center">{{ text_empty }}</p>
+					</div>
+				</div>
+				<div class="pr-sidebar-cart-footer p-3 mt-auto">
+					<button type="button" class="button button-primary br-8 w-100 pr-sidebar-cart-close">{{ button_shopping }}</button>
+				</div>
+			{% endif %}
+			<script>
+                if (typeof cartUrls === 'undefined') {
+                    window.cartUrls = {
+                        cart: '{{ ajax_cart_url|raw }}',
+                        status: '{{ ajax_status_url|raw }}',
+                        remove: '{{ ajax_remove_url|raw }}',
+                        update: '{{ ajax_update_url|raw }}'
+                    };
+                }
+
+                window.cartSidebarIsOpen = true;
+                window.preventSidebarReopen = false;
+
+                if (!window.originalOctSidebarCart && window.octSidebarCart) {
+                    window.originalOctSidebarCart = window.octSidebarCart;
+                }
+                
+                window.octSidebarCart = function() {
+                    const sidebarVisible = isSidebarVisible();
+                    
+                    if (window.preventSidebarReopen && sidebarVisible) {
+                        refreshCartContent();
+                        return;
+                    }
+                    
+                    window.preventSidebarReopen = false;
+                    window.cartSidebarIsOpen = true;
+                    
+                    if (window.originalOctSidebarCart) {
+                        window.originalOctSidebarCart.apply(this, arguments);
+                    }
+                };
+
+                if (window.cart && window.cart.add && !window.originalCartAdd) {
+                    window.originalCartAdd = window.cart.add;
+                    window.cart.add = function(product_id, quantity, page, clickedButton) {
+                        const isFromSidebar = clickedButton && $(clickedButton).closest('.pr-sidebar-cart').length > 0;
+                        
+                        if (isFromSidebar && isSidebarVisible()) {
+                            window.preventSidebarReopen = true;
+                        }
+                        
+                        return window.originalCartAdd.apply(this, arguments);
+                    };
+                }
+
+                function refreshCartContent() {
+                    masked('body', true);
+                    
+                    const smsModal = $('#smsVerificationModalByoneclick');
+                    const isSmsModalOpen = smsModal.hasClass('show');
+                    const currentTimerValue = $('#timer-seconds-byoneclick').text();
+                    
+                    $.ajax({
+                        url: window.cartUrls.cart,
+                        type: 'get',
+                        dataType: 'html',
+                        cache: false,
+                        success: function(data) {
+                            const cartSidebar = document.getElementById('cartSidebar');
+                            if (cartSidebar) {
+                                const parser = new DOMParser();
+                                const dataParsed = parser.parseFromString(data, 'text/html');
+                                const newCartSidebar = dataParsed.getElementById('cartSidebar');
+                                if (newCartSidebar) {
+                                    cartSidebar.innerHTML = newCartSidebar.innerHTML;
+                                    
+                                    setTimeout(function() {
+                                        const smsModalInCart = $('#cartSidebar #smsVerificationModalByoneclick');
+                                        if (smsModalInCart.length) {
+                                            $('body').children('#smsVerificationModalByoneclick').remove();
+                                            smsModalInCart.appendTo('body');
+                                        }
+                                        
+                                        if (typeof window.initializePhoneMask === 'function') {
+                                            window.initializePhoneMask();
+                                        }
+                                        
+                                        if (isSmsModalOpen) {
+                                            const restoredSmsModal = $('#smsVerificationModalByoneclick');
+                                            if (restoredSmsModal.length && !restoredSmsModal.hasClass('show')) {
+                                                if (currentTimerValue) {
+                                                    $('#timer-seconds-byoneclick').text(currentTimerValue);
+                                                }
+                                                restoredSmsModal.modal('show');
+                                            }
+                                        }
+                                    }, 150);
+                                }
+                            }
+
+                            $.ajax({
+                                url: window.cartUrls.status,
+                                type: 'get',
+                                dataType: 'json',
+                                cache: false,
+                                success: function(json) {
+                                    masked('body', false);
+                                    
+                                    window.cartSidebarIsOpen = isSidebarVisible();
+                                    
+                                    $('.pr-header-buttons-item-count-cart').addClass('active').html(json['total_products'] || '0');
+                                    
+                                    let cartIdsHolder = document.querySelector("[data-cart-ids]");
+                                    if (cartIdsHolder) {
+                                        cartIdsHolder.dataset.cartIds = json.oct_cart_ids || '';
+                                    }
+                                }
+                            });
+                        },
+                        error: function() {
+                            masked('body', false);
+                        }
+                    });
+                }
+
+				$(document).on('click', '.pr-sidebar-cart-close', function() {
+					window.cartSidebarIsOpen = false;
+					window.preventSidebarReopen = false;
+					
+					const sidebar = document.querySelector('.pr-sidebar-cart');
+					const overlay = document.querySelector('#overlay');
+					const header = document.querySelector('.pr-header');
+					
+					if (sidebar) sidebar.classList.remove('active');
+					if (overlay) overlay.classList.remove('active');
+					if (header) header.classList.remove('sidebar-opened');
+					document.body.classList.remove('overflow-hidden');
+					document.body.removeAttribute('style');
+				});
+
+				$(document).on('click', '#overlay', function() {
+					window.cartSidebarIsOpen = false;
+					window.preventSidebarReopen = false;
+					
+					const sidebar = document.querySelector('.pr-sidebar-cart');
+					const header = document.querySelector('.pr-header');
+					
+					if (sidebar) sidebar.classList.remove('active');
+					if (header) header.classList.remove('sidebar-opened');
+					document.body.removeAttribute('style');
+				});
+
+				$(document).on('keydown', function(e) {
+					if (e.keyCode === 27 && window.cartSidebarIsOpen) {
+						window.cartSidebarIsOpen = false;
+						window.preventSidebarReopen = false;
+						
+						const sidebar = document.querySelector('.pr-sidebar-cart');
+						const overlay = document.querySelector('#overlay');
+						const header = document.querySelector('.pr-header');
+						
+						if (sidebar && sidebar.classList.contains('active')) {
+							sidebar.classList.remove('active');
+							if (overlay) overlay.classList.remove('active');
+							if (header) header.classList.remove('sidebar-opened');
+							document.body.classList.remove('overflow-hidden');
+							document.body.removeAttribute('style');
+						}
+					}
+				});
+
+				function isSidebarVisible() {
+					const sidebar = document.querySelector('.pr-sidebar-cart');
+					if (!sidebar) return false;
+					
+					const sidebarStyle = window.getComputedStyle(sidebar);
+					const rect = sidebar.getBoundingClientRect();
+					
+					return sidebarStyle.display !== 'none' && 
+						sidebarStyle.visibility !== 'hidden' && 
+						sidebarStyle.opacity !== '0' &&
+						rect.width > 0 && rect.height > 0;
+				}
+
+				$(document).on('click', '#cart, [data-sidebar="cart"]', function() {
+					setTimeout(function() {
+						if (isSidebarVisible()) {
+							window.cartSidebarIsOpen = true;
+						}
+					}, 100);
+				});
+
+				$(document).on('click', '.pr-sidebar-cart button[onclick*="cart.add"], .pr-sidebar-cart .button[onclick*="cart.add"]', function() {
+					if (isSidebarVisible()) {
+						window.preventSidebarReopen = true;
+						
+						setTimeout(function() {
+							window.preventSidebarReopen = false;
+						}, 3000);
+					}
+				});
+
+				function showInput() {
+					$('#popup_cart_one_click').fadeOut(1);
+					$('.hidden-input-group').fadeIn(300).css('height', '44px');
+				}
+
+				function validate(input) {
+					$(input).val($(input).val().replace(/[^\d,]/g, ''));
+				}
+
+				function removeAll() {
+					const productKeys = [];
+					const productIds = [];
+					
+					document.querySelectorAll('input[name="product_key"]').forEach(input => {
+						productKeys.push(input.value);
+						const productIdInput = input.parentElement.querySelector('input[name="product_id_q"]');
+						if (productIdInput && productIdInput.value) {
+							productIds.push(productIdInput.value);
+						}
+					});
+					
+					if (productKeys.length === 0) {
+						return;
+					}
+
+					if (window.interactiveButtonsManager && window.interactiveButtonsManager.initialized) {
+						productIds.forEach(productId => {
+							window.interactiveButtonsManager.remove(productId, 'cart');
+						});
+					}
+
+					masked('body', true);
+
+					const removePromises = productKeys.map(key => {
+						return $.ajax({
+							url: window.cartUrls.remove + key,
+							type: 'get',
+							dataType: 'html',
+							cache: false
+						});
+					});
+
+					Promise.all(removePromises).then(() => {
+						refreshCartContent();
+					}).catch(() => {
+						masked('body', false);
+						cartSidebarToggle();
+					});
+				}
+
+				function remove(target, status) {
+					product_key = $(target).parent().find('input[name="product_key"]').val();
+					const productId = $(target).parent().find('input[name="product_id_q"]').val();
+					
+					if (window.interactiveButtonsManager && window.interactiveButtonsManager.initialized && productId) {
+						window.interactiveButtonsManager.remove(productId, 'cart');
+					}
+					
+					url = null;
+
+				if (status == 'remove') {
+					url = window.cartUrls.remove + product_key;
+				}
+
+				const smsModal = $('#smsVerificationModalByoneclick');
+				const isSmsModalOpen = smsModal.hasClass('show');
+				const currentTimerValue = $('#timer-seconds-byoneclick').text();
+
+				masked('body', true);
+					$.ajax({
+						url: url,
+						type: 'get',
+						dataType: 'html',
+						cache: false,
+						success: function(data) {
+							$.ajax({
+								url: window.cartUrls.status,
+								type: 'get',
+								dataType: 'json',
+								cache: false,
+								success: function(json) {
+									if (data) {
+										if (!json['total_products'] || json['total_products'] == 0) {
+											refreshCartContent();
+											return;
+										}
+										
+										let cartIdsHolder = document.querySelector("[data-cart-ids]");
+										if (json.oct_cart_ids && cartIdsHolder) {
+											cartIdsHolder.dataset.cartIds = json.oct_cart_ids;
+										} else {
+											if (cartIdsHolder) {
+												cartIdsHolder.dataset.cartIds = '';
+											}
+										}
+
+										let parser = new DOMParser();
+										let dataParsed = parser.parseFromString(data, 'text/html');
+
+										const modalCartInner = document.getElementById('modalCartBody');
+										const dataParsedCartInner = dataParsed.getElementById('modalCartBody');
+										
+										if (dataParsedCartInner) {
+											modalCartInner.innerHTML = dataParsedCartInner.innerHTML;
+										}
+									}
+									
+									masked('body', false);
+									
+									setTimeout(function() {
+										$('.pr-header-buttons-item-count-cart').html(json['total_products']);
+										$('.pr-cart-popup-total').html(json['total_amount']);
+
+										cartSidebarToggle();
+
+										if (json['totals'] && json['totals'].length > 0) {
+											$('#modalCartTotalsText').html(json['totals'][0]['text']);
+										} else {
+											$('.total-oct').remove();
+										}
+
+										if (json['free_shipping_html']) {
+											$('#free_shipping_html').html(json['free_shipping_html']);
+										} else {
+											$('#free_shipping_html').html('');
+										}
+
+										if (json['recommended_products']) {
+											$('#recommended_products').html(json['recommended_products']);
+										} else {
+											$('#recommended_products').html('');
+										}
+
+										if (json['error_minimum']) {
+											$('#error_minimum').html(json['error_minimum']);
+										} else {
+											$('#error_minimum').html('');
+										}
+										
+										const smsModalInCart = $('#cartSidebar #smsVerificationModalByoneclick');
+										if (smsModalInCart.length) {
+											$('body').children('#smsVerificationModalByoneclick').remove();
+											smsModalInCart.appendTo('body');
+										}
+										
+										if (typeof window.initializePhoneMask === 'function') {
+											window.initializePhoneMask();
+										}
+										
+										if (isSmsModalOpen) {
+											const restoredSmsModal = $('#smsVerificationModalByoneclick');
+											if (restoredSmsModal.length && !restoredSmsModal.hasClass('show')) {
+												if (currentTimerValue) {
+													$('#timer-seconds-byoneclick').text(currentTimerValue);
+												}
+												restoredSmsModal.modal('show');
+											}
+										}
+									}, 100);
+								}
+							});
+						}
+					});
+				}
+
+				function update_manual(target, change, productID) {
+					let use_minimum_step = {{ use_minimum_step ?? 0 }};
+				let input_val = $(target).val();
+				let quantity = parseInt(input_val);
+				let changeQuantity;
+
+				const smsModal = $('#smsVerificationModalByoneclick');
+				const isSmsModalOpen = smsModal.hasClass('show');
+				const currentTimerValue = $('#timer-seconds-byoneclick').text();
+
+				const cartProductKeyInput = $(target).closest('.pr-sidebar-cart-product-info').find('input[name="product_key"]');
+					const cartProductKey = cartProductKeyInput.val();
+
+					let productKey = productID;
+					let minimum = parseInt(document.getElementById('product_minimum_' + productKey).value) || 1;
+					let step = use_minimum_step ? minimum : 1;
+
+					if (isNaN(quantity)) {
+						$(target).val(minimum);
+						return;
+					}
+
+					if (quantity <= 0) {
+						if (cartProductKeyInput && cartProductKey) {
+							remove(cartProductKeyInput[0], 'remove');
+						}
+
+						return;
+					} else if (change === 'minus') {
+						changeQuantity = quantity - step;
+					} else if (change === 'plus') {
+						changeQuantity = quantity + step;
+					} else {
+						changeQuantity = quantity;
+					}
+
+					if (change === 'minus' && changeQuantity <= 0 && cartProductKey) {
+						remove(cartProductKeyInput[0], 'remove');
+						return;
+					}
+					if (use_minimum_step) {
+						if (changeQuantity < minimum) {
+							changeQuantity = minimum;
+						} else if (change === 'manual' || change === '') {
+							let remainder = changeQuantity % minimum;
+							if (remainder !== 0) {
+								changeQuantity = changeQuantity - remainder + minimum;
+							}
+						}
+					} else {
+						if (changeQuantity < 1) changeQuantity = 1;
+					}
+
+					masked('body', true);
+
+					let productStock = $('#product_stock_' + productID).val();
+					let productStockCheckout = '{{ product_stock_checkout }}';
+
+					if (productStockCheckout == false) {
+						if (changeQuantity > productStock) {
+							prNotify('danger', '{{ error_stock }}');
+							masked('body', false);
+							if (productStock != 0) quantity = $(target).val(productStock);
+							changeQuantity = productStock;
+							if (change === 'minus') {
+								if (productStock != 0) quantity = minimum;
+								changeQuantity = minimum;
+							}
+						}
+					}
+
+					$.ajax({
+						url: window.cartUrls.update + productID + '&quantity=' + changeQuantity,
+						type: 'get',
+						dataType: 'html',
+						cache: false,
+						success: function(data) {
+							$.ajax({
+								url: window.cartUrls.status,
+								type: 'get',
+								dataType: 'json',
+								cache: false,
+								success: function(json) {
+									if (data) {
+										let parser = new DOMParser();
+										let dataParsed = parser.parseFromString(data, 'text/html');
+
+										const modalCartInner = document.getElementById('modalCartBody');
+										const dataParsedCartInner = dataParsed.getElementById('modalCartBody');
+										if (dataParsedCartInner) {
+											modalCartInner.innerHTML = dataParsedCartInner.innerHTML;
+										}
+									}
+
+									setTimeout(function() {
+										$('.pr-header-buttons-item-count-cart').html(json['total_products']);
+										$('.pr-cart-popup-total').html(json['total_amount']);
+
+										if (json['totals'] && json['totals'].length > 0) {
+											$('#modalCartTotalsText').html(json['totals'][0]['text']);
+										} else {
+											$('.total-oct').remove();
+										}
+
+										if (json['free_shipping_html']) {
+											$('#free_shipping_html').html(json['free_shipping_html']);
+										} else {
+											$('#free_shipping_html').html('');
+										}
+
+										if (json['recommended_products']) {
+											$('#recommended_products').html(json['recommended_products']);
+										} else {
+											$('#recommended_products').html('');
+										}
+
+										if (json['error_minimum']) {
+											$('#error_minimum').html(json['error_minimum']);
+										} else {
+											$('#error_minimum').html('');
+										}
+
+										masked('body', false);
+										cartSidebarToggle();
+										
+										const smsModalInCart = $('#cartSidebar #smsVerificationModalByoneclick');
+										if (smsModalInCart.length) {
+											$('body').children('#smsVerificationModalByoneclick').remove();
+											smsModalInCart.appendTo('body');
+										}
+										
+										if (typeof window.initializePhoneMask === 'function') {
+											window.initializePhoneMask();
+										}
+										
+										if (isSmsModalOpen) {
+											const restoredSmsModal = $('#smsVerificationModalByoneclick');
+											if (restoredSmsModal.length && !restoredSmsModal.hasClass('show')) {
+												if (currentTimerValue) {
+													$('#timer-seconds-byoneclick').text(currentTimerValue);
+												}
+												restoredSmsModal.modal('show');
+											}
+										}
+									}, 100);
+								}
+							});
+						}
+					});
+				}
+			</script>
+		</div>
+	</div>
+{% endif %}
